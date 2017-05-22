@@ -1,2 +1,2 @@
 # Extension Pay
-A extension for Notadd !
+A extension for Notadd 
