@@ -58,6 +58,6 @@ class GetHandler extends DataHandler
             'certDir'=>$this->settings->get('unionpay.certDir',''),
             'ureturnUrl'=>$this->settings->get('unionpay.ureturnUrl',''),
             'unotifyUrl'=>$this->settings->set('unionpay.unotifyUrl',''),
-        ];
+        ] ;
     }
 }

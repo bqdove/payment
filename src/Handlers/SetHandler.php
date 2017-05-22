@@ -76,7 +76,7 @@ class SetHandler extends AbstractSetHandler
         $this->settings->set('unionpay.certDir',$this->request->input('certDir'));
         $this->settings->set('unionpay.ureturnUrl',$this->request->input('ureturnUrl'));
         $this->settings->set('unionpay.unotifyUrl',$this->request->input('unotifyUrl'));
-        return true;
+        return true ;
     }
 
 
