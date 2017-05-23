@@ -41,5 +41,3 @@ class MultipayController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 }
-
-
