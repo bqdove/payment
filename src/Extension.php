@@ -26,4 +26,78 @@ class Extension extends AbstractExtension
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
     }
+    /**
+     * Description of extension
+     *
+     * @return string
+     */
+    public static function description()
+    {
+        return '多种支付方式的配置和管理。';
+    }
+
+    /**
+     * Installer for extension.
+     *
+     * @return \Closure
+     */
+    public static function install()
+    {
+        return function () {
+            return true;
+        };
+    }
+
+    /**
+     * Name of extension.
+     *
+     * @return string
+     */
+    public static function name()
+    {
+        return '多支付插件';
+    }
+
+    /**
+     * Get script of extension.
+     *
+     * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function script()
+    {
+        return asset('');
+    }
+
+    /**
+     * Get stylesheet of extension.
+     *
+     * @return array
+     */
+    public static function stylesheet()
+    {
+        return [];
+    }
+
+    /**
+     * Uninstall for extension.
+     *
+     * @return \Closure
+     */
+    public static function uninstall()
+    {
+        return function () {
+            return true;
+        };
+    }
+
+    /**
+     * Version of extension.
+     *
+     * @return string
+     */
+    public static function version()
+    {
+        return '0.1.0';
+    }
 }
