@@ -76,7 +76,7 @@ class Extension extends AbstractExtension
      */
     public static function stylesheet()
     {
-        return [];
+        return [dd ];
     }
 
     /**
