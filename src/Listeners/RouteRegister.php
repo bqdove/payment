@@ -22,7 +22,7 @@ class RouteRegister extends AbstractRouteRegister
     public function handle()
     {
         $this->router->group(['middleware' => ['auth:api', 'cross', 'web'], 'prefix' => 'api/baidu'], function () {
-            $this->router->post('get', MultipayController::class . '@get');
+            $this->router->get('get', MultipayController::class . '@get');
             $this->router->post('set', MultipayController::class . '@set');
         });
     }

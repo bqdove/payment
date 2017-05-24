@@ -1,43 +1,42 @@
 <?php
 /**
- * This file is part of Notadd.
- *
- * @author AllenGu <674397601@qq.com>
- * @copyright (c) 2017, iBenchu.org
- * @datetime 2017-05-22 16:26
+ * Created by PhpStorm.
+ * User: ibenchu-024
+ * Date: 2017/5/24
+ * Time: 11:48
  */
+
 namespace Notadd\Multipay\Controllers;
+use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+use Notadd\Multipay\Handlers\SetAlipayconfHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Multipay\Handlers\GetHandler;
-use Notadd\Multipay\Handlers\SetHandler;
 
 /**
- * Class MultipayController.
+ * Class AilpayconfController.
  */
-class MultipayController extends Controller
+class AlipayconfController extends Controller
 {
     /**
      * Get handler.
      *
-     * @param \Notadd\Alipay\Handlers\GetHandler $handler
+     * @param \Notadd\Multipay\Handlers\GetHandler $handler
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function get(GetHandler $handler)
+    public function get(GetAlipayconfHandler $handler)
     {
-        return 1;
         return $handler->toResponse()->generateHttpResponse();
     }
 
     /**
      * Set handler.
      *
-     * @param \Notadd\Alipay\Handlers\SetHandler $handler
+     * @param \Notadd\MUltipay\Handlers\SetHandler $handler
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetHandler $handler)
+    public function set(SetAlipayconfHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
