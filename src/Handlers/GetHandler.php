@@ -42,16 +42,19 @@ class GetHandler extends DataHandler
     public function data()
     {
         return [
+            'alipay_enabled' => $this->settings->get('alipay.enabled', false),
             'partner_id'=>$this->settings->get('alipay.partner_id', ''),
             'seller_id'=>$this->settings->get('alipay.seller_id',''),
             'wkey'=>$this->settings->get('alipay.wkey',''),
             'wsign_type'=>$this->settings->get('alipay.wsign_type',''),
             'wnotify_type'=>$this->settings->get('alipay.wnotify_url',''),
             'wreturn_url'=>$this->settings->get('alipay.wreturn_url',''),
+            'wechat_enabled' => $this->settings->get('wechat.enabled', false),
             'app_id'=>$this->settings->get('wechat.app_id',''),
             'secret'=>$this->settings->get('wechat.secret',''),
             'token'=>$this->settings->get('wechat.token',''),
             'aes_key'=>$this->settings->get('wechat.aes_key',''),
+            'union_enabled' => $this->settings->get('union.enabled', false),
             'merId'=>$this->settings->get('unionpay.merId',''),
             'cerPath'=>$this->settings->get('unionpay.certPath',''),
             'certPassword'=>$this->settings->get('unionpay.certPassword',''),
