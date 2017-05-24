@@ -57,24 +57,25 @@ class SetHandler extends AbstractSetHandler
      */
     public function execute()
     {
+<<<<<<< HEAD
         $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
         $this->settings->set('alipay.partner_id', $this->request->input('partner_id'));
+=======
+
+        $this->settings->set('alipay.alipay_enabled',$this->request->input('alipay_enbaled'));
+>>>>>>> 0a43e4c8bfde4e6b9b2b285c2c2f437717c3bc39
         $this->settings->set('alipay.key',$this->request->input('key'));
 
-        $this->settings->set('wechat.enabled', $this->request->input('wechat_enabled'));
+        $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));
         $this->settings->set('wechat.app_id',$this->request->input('app_id'));
         $this->settings->set('wechat.secret',$this->request->input('secret'));
         $this->settings->set('wechat.token',$this->request->input('token'));
         $this->settings->set('wechat.aes_key',$this->request->input('aes_key'));
 
-        $this->settings->set('unionpay.enabled', $this->request->input('unionpay_enabled'));
+        $this->settings->set('unionpay.unionpay_enabled', $this->request->input('unionpay_enabled'));
         $this->settings->set('unionpay.merId',$this->request->input('merId'));
         $this->settings->set('unionpay.certPath',$this->request->input('certPath'));
         $this->settings->set('unionpay.certPassword',$this->request->input('certPassword'));
-        $this->settings->set('unionpay.certDir',$this->request->input('certDir'));
-        $this->settings->set('unionpay.ureturnUrl',$this->request->input('ureturnUrl'));
-        $this->settings->set('unionpay.unotifyUrl',$this->request->input('unotifyUrl'));
-
         return true ;
     }
 
