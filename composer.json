@@ -18,10 +18,8 @@
     },
     "require": {
         "php": ">=7.0",
-        "notadd/installers": "0.1.*",
-        "latrell/alipay": "dev-master",
-        "overtrue/laravel-wechat": "~3.0",
-        "lokielse/omnipay-unionpay": "dev-master"
+        "notadd/installers": "0.1.*"
+
 
 
     }
