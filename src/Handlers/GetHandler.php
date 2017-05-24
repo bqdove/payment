@@ -42,22 +42,18 @@ class GetHandler extends DataHandler
     public function data()
     {
         return [
-            'partner_id'=>$this->settings->get('alipay.partner_id', ''),
-            'seller_id'=>$this->settings->get('alipay.seller_id',''),
-            'wkey'=>$this->settings->get('alipay.wkey',''),
-            'wsign_type'=>$this->settings->get('alipay.wsign_type',''),
-            'wnotify_type'=>$this->settings->get('alipay.wnotify_url',''),
-            'wreturn_url'=>$this->settings->get('alipay.wreturn_url',''),
+            'alipay_enabled'=>$this->settings->get('alipay.alipay_enabled',false),
+            'key'=>$this->settings->get('alipay.key',''),
+            'wechat_enabled'=>$this->settings->get('wechat.wechat_enabled',false),
             'app_id'=>$this->settings->get('wechat.app_id',''),
             'secret'=>$this->settings->get('wechat.secret',''),
             'token'=>$this->settings->get('wechat.token',''),
             'aes_key'=>$this->settings->get('wechat.aes_key',''),
+            'unionpay_enabled'=>$this->settings->get('unionpay.unionpay_enabled',false),
             'merId'=>$this->settings->get('unionpay.merId',''),
             'cerPath'=>$this->settings->get('unionpay.certPath',''),
             'certPassword'=>$this->settings->get('unionpay.certPassword',''),
             'certDir'=>$this->settings->get('unionpay.certDir',''),
-            'ureturnUrl'=>$this->settings->get('unionpay.ureturnUrl',''),
-            'unotifyUrl'=>$this->settings->set('unionpay.unotifyUrl',''),
         ] ;
     }
 }
