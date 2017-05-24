@@ -9,6 +9,7 @@
 namespace Notadd\Multipay;
 
 use AopClient;
+use AlipayOpenPublicTemplateMessageIndustryModifyRequest;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 
@@ -17,11 +18,13 @@ class Alipay
   $alipay = new AopClient;
   $alipay->gatewayUrl = "https://openapi.alipay.com/gateway.do";
   $alipay->appId = "";
-  $alipay->rsaPrivateKey = '' ;
+  $alipay->rsaPrivateKey = '';
   $alipay->format = "json";
   $alipay->charset= "GBK";
   $alipay->signType= "RSA2";
   $alipay->alipayrsaPublicKey = '';
+  $request->setReturnUrl('请填写您的页面同步跳转地址');
+  $request->setNotifyUrl('请填写您的异步通知地址');
   //实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.open.public.template.message.industry.modify
   $request = new AlipayOpenPublicTemplateMessageIndustryModifyRequest();
   //SDK已经封装掉了公共参数，这里只需要传入业务参数

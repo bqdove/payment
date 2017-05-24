@@ -18,8 +18,8 @@
     },
     "require": {
         "php": ">=7.0",
-        "notadd/installers": "0.1.*"
-
+        "notadd/installers": "0.1.*",
+        "latrell/alipay": "1.2"
 
 
     }

@@ -59,11 +59,7 @@ class SetHandler extends AbstractSetHandler
     {
         $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
         $this->settings->set('alipay.partner_id', $this->request->input('partner_id'));
-        // $this->settings->set('alipay.seller_id',$this->request->input('seller_id'));
         $this->settings->set('alipay.key',$this->request->input('key'));
-        // $this->settings->set('alipay.sign_type',$this->request->input('sign_type'));
-        // $this->settings->set('alipay.wnotify_url',$this->request->input('wnotify_type'));
-        // $this->settings->set('alipay.wreturn_url',$this->request->input('wreturn_url'));
 
         $this->settings->set('wechat.enabled', $this->request->input('wechat_enabled'));
         $this->settings->set('wechat.app_id',$this->request->input('app_id'));

@@ -8,3 +8,10 @@
  */
 
 namespace Notadd\Multipay;
+
+Interface Pay
+{
+    public function pay();
+
+    public function result();
+}
