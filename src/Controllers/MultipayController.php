@@ -25,7 +25,7 @@ class MultipayController extends Controller
      */
     public function get(GetHandler $handler)
     {
-        return 1;
+
         return $handler->toResponse()->generateHttpResponse();
     }
 
