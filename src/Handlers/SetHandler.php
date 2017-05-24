@@ -60,39 +60,17 @@ class SetHandler extends AbstractSetHandler
 
         $this->settings->set('alipay.alipay_enabled',$this->request->input('alipay_enbaled'));
         $this->settings->set('alipay.key',$this->request->input('key'));
-        $this->settings->set('alipay.sign_type',$this->request->input('sign_type'));
 
-        $this->settings->set('wechat.wechat_enabled',$this->request->input('wechat_enabled'));
-
-        $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
-        $this->settings->set('alipay.partner_id', $this->request->input('partner_id'));
-        // $this->settings->set('alipay.seller_id',$this->request->input('seller_id'));
-        $this->settings->set('alipay.key',$this->request->input('key'));
-        // $this->settings->set('alipay.sign_type',$this->request->input('sign_type'));
-        // $this->settings->set('alipay.wnotify_url',$this->request->input('wnotify_type'));
-        // $this->settings->set('alipay.wreturn_url',$this->request->input('wreturn_url'));
-
-        $this->settings->set('wechat.enabled', $this->request->input('wechat_enabled'));
-
+        $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));
         $this->settings->set('wechat.app_id',$this->request->input('app_id'));
         $this->settings->set('wechat.secret',$this->request->input('secret'));
         $this->settings->set('wechat.token',$this->request->input('token'));
         $this->settings->set('wechat.aes_key',$this->request->input('aes_key'));
 
-
-        $this->settings->set('unionpay.unionpay_enabled',$this->request->input('unionpay_enabled'));
-
-        $this->settings->set('unionpay.enabled', $this->request->input('unionpay_enabled'));
-
+        $this->settings->set('unionpay.unionpay_enabled', $this->request->input('unionpay_enabled'));
         $this->settings->set('unionpay.merId',$this->request->input('merId'));
         $this->settings->set('unionpay.certPath',$this->request->input('certPath'));
         $this->settings->set('unionpay.certPassword',$this->request->input('certPassword'));
-
-
-        $this->settings->set('unionpay.ureturnUrl',$this->request->input('ureturnUrl'));
-        $this->settings->set('unionpay.unotifyUrl',$this->request->input('unotifyUrl'));
-
-
         return true ;
     }
 
