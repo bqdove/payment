@@ -32,7 +32,6 @@ class Alipay implements Pay
   	return redirect()->to($alipay->getPayLink());
   }
 
-
   /**
  * 异步通知
  */
