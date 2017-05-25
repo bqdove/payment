@@ -11,7 +11,10 @@ namespace Notadd\Multipay;
 
 Interface Pay
 {
+    //支付申请
     public function pay();
-
-    public function result();
+    //异步通知
+    public function webNotify();
+    // 同步通知
+    public function webReturn();
 }
