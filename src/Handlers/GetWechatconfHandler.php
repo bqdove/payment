@@ -1,11 +1,11 @@
 <?php
 /**
- * This file is part of Notadd.
- *
- * @author TwilRoad <269044570@qq.com>
- * @copyright (c) 2017, iBenchu.org
- * @datetime 2017-03-18 15:24
+ * Created by PhpStorm.
+ * User: ibenchu-024
+ * Date: 2017/5/25
+ * Time: 19:33
  */
+
 namespace Notadd\Multipay\Handlers;
 
 use Illuminate\Container\Container;
@@ -13,9 +13,9 @@ use Notadd\Foundation\Passport\Abstracts\DataHandler;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 
 /**
- * Class GetHandler.
+ * Class GetWechatconfHandler.
  */
-class GetHandler extends DataHandler
+class GetWechatconfHandler extends DataHandler
 {
     /**
      * @var \Notadd\Foundation\Setting\Contracts\SettingsRepository
@@ -23,7 +23,7 @@ class GetHandler extends DataHandler
     protected $settings;
 
     /**
-     * GetHandler constructor.
+     * GetWechatconfHandler constructor.
      *
      * @param Container $container
      * @param SettingsRepository $settings
@@ -42,19 +42,17 @@ class GetHandler extends DataHandler
     public function data()
     {
         return [
-
-            'alipay_enabled'=>$this->settings->get('alipay.alipay_enabled',false),
-            'key'=>$this->settings->get('alipay.key',''),
             'wechat_enabled'=>$this->settings->get('wechat.wechat_enabled',false),
             'appid'=>$this->settings->get('wechat.appid',''),
-            'mchid'=>$this->settings->get('wechat.mchid',''),
+            'mch_id'=>$this->settings->get('wechat.mch_id',''),
             'appsecret'=>$this->settings->get('wechat.appsecret',''),
             'wkey'=>$this->settings->get('wechat.wkey',''),
-            'unionpay_enabled'=>$this->settings->get('unionpay.unionpay_enabled',false),
-            'merId'=>$this->settings->get('unionpay.merId',''),
-            'cerPath'=>$this->settings->get('unionpay.certPath',''),
-            'certPassword'=>$this->settings->get('unionpay.certPassword',''),
-            'certDir'=>$this->settings->get('unionpay.certDir',''),
+            'body'=>$this->settings->get('wachat.body',''),
+            'out_trade_no'=>$this->settings->get('wechat.out_trade_no',''),
+            'total_fee'=>$this->settings->get('wechat.total_fee',''),
+            'trade_type'=>$this->settings->get('wechat.trade_type',''),
+            'openid'=>$this->settings->get('wechat.openid',''),
+            'product_id'=>$this->settings->get('wechat.product_id','')
         ] ;
     }
 }

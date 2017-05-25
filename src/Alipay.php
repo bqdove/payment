@@ -8,12 +8,21 @@
 
 namespace Notadd\Multipay;
 
+<<<<<<< HEAD
+use Latrell\Alipay\Web;
+=======
+>>>>>>> bb4b422031aec94dd6e5dd3b82c0c59d1e9e712f
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Alipay\Facades\AlipayWeb;
 
 class Alipay
 {
+<<<<<<< HEAD
+    public function pay(){
+        new Web\SdkPayment();
+    }
+=======
   /**
   *申请支付
   */
@@ -86,4 +95,5 @@ class Alipay
 
 		return view('alipay.success');
 	}
+>>>>>>> bb4b422031aec94dd6e5dd3b82c0c59d1e9e712f
 }

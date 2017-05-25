@@ -1,11 +1,11 @@
 <?php
 /**
- * This file is part of Notadd.
- *
- * @author TwilRoad <269044570@qq.com>
- * @copyright (c) 2017, iBenchu.org
- * @datetime 2017-02-18 20:33
+ * Created by PhpStorm.
+ * User: ibenchu-024
+ * Date: 2017/5/25
+ * Time: 19:35
  */
+
 namespace Notadd\Multipay\Handlers;
 
 use Illuminate\Container\Container;
@@ -13,9 +13,9 @@ use Notadd\Foundation\Passport\Abstracts\SetHandler as AbstractSetHandler;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 
 /**
- * Class AlipayHandler.
+ * Class SetWechatconfHandler.
  */
-class SetHandler extends AbstractSetHandler
+class SetWechatconfHandler extends AbstractSetHandler
 {
     /**
      * @var \Notadd\Foundation\Setting\Contracts\SettingsRepository
@@ -57,26 +57,18 @@ class SetHandler extends AbstractSetHandler
      */
     public function execute()
     {
-<<<<<<< HEAD
-        $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
-        $this->settings->set('alipay.partner_id', $this->request->input('partner_id'));
-=======
-
-        $this->settings->set('alipay.alipay_enabled',$this->request->input('alipay_enbaled'));
->>>>>>> 0a43e4c8bfde4e6b9b2b285c2c2f437717c3bc39
-        $this->settings->set('alipay.key',$this->request->input('key'));
-
         $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));
         $this->settings->set('wechat.appid',$this->request->input('appid'));
-        $this->settings->set('wechat.mchid',$this->request->input('mchid'));
+        $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));
         $this->settings->set('wechat.appsecret',$this->request->input('appsecret'));
         $this->settings->set('wechat.wkey',$this->request->input('wkey'));
-        $this->settings->set('wechat.sub_mch_id',$this->request->input('sub_mch_id'));
+        $this->settings->set('wechat.body',$this->request->input('body'));
+        $this->settings->set('wechat.out_trade_no',$this->request->input('out_trade_no'));
+        $this->settings->set('wechat.total_fee',$this->request->input('total_fee'));
+        $this->settings->set('wechat.trade_type',$this->request->input('trade_type'));
+        $this->settings->set('wechat.openid',$this->request->input('openid'));
+        $this->settings->set('wechat.product_id',$this->request->input('product_id'));
 
-        $this->settings->set('unionpay.unionpay_enabled', $this->request->input('unionpay_enabled'));
-        $this->settings->set('unionpay.merId',$this->request->input('merId'));
-        $this->settings->set('unionpay.certPath',$this->request->input('certPath'));
-        $this->settings->set('unionpay.certPassword',$this->request->input('certPassword'));
         return true ;
     }
 }

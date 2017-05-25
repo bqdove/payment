@@ -7,14 +7,14 @@
  */
 
 namespace Notadd\Multipay\Controllers;
-use Notadd\Multipay\Handlers\GetAlipayconfHandler;
-use Notadd\Multipay\Handlers\SetAlipayconfHandler;
+use Notadd\Multipay\Handlers\GetWechatconfHandler;
+use Notadd\Multipay\Handlers\SetWechatconfHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 
 /**
- * Class AilpayconfController.
+ * Class WechatconfController.
  */
-class AlipayconfController extends Controller
+class WechatconfController extends Controller
 {
     /**
      * Get handler.
@@ -23,7 +23,7 @@ class AlipayconfController extends Controller
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function get(GetAlipayconfHandler $handler)
+    public function get(GetWechatconfHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
@@ -36,7 +36,7 @@ class AlipayconfController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetAlipayconfHandler $handler)
+    public function set(SetWechatconfHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
