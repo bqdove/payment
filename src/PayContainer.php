@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Container;
+namespace Notadd\Container;
 
 use Closure;
 use ArrayAccess;

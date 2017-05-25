@@ -5,15 +5,13 @@ namespace Notadd\Support;
 use Illuminate\Support\ServiceProvider as ServiceProvider;
 use Illuminate\Console\Application as Artisan;
 
-class AlipayServiceProvider extends ServiceProvider
+class PayServiceProvider extends ServiceProvider
 {
     /**
      * The pay instance.
      *
-     * @var \Notadd\Multipay\Alipay
+     * @var \Notadd\Multipay\
      */
-     protected $alipay;
-
-     
+     protected $payment;
 
 }

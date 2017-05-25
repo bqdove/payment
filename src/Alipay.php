@@ -10,10 +10,9 @@ namespace Notadd\Multipay;
 
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Notadd\Multipay\Pay as Pay;
 use Notadd\Alipay\Facades\AlipayWeb;
 
-class Alipay implements Pay
+class Alipay
 {
   /**
   *申请支付

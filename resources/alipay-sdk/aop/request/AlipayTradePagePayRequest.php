@@ -19,7 +19,7 @@ class AlipayTradePagePayRequest
 	private $apiVersion="1.0";
 	private $notifyUrl;
 	private $returnUrl;
-    private $needEncrypt=false;
+    	private $needEncrypt=false;
 
 	
 	public function setBizContent($bizContent)
@@ -103,16 +103,16 @@ class AlipayTradePagePayRequest
 		return $this->apiVersion;
 	}
 
-  public function setNeedEncrypt($needEncrypt)
-  {
+	  public function setNeedEncrypt($needEncrypt)
+	  {
 
-     $this->needEncrypt=$needEncrypt;
+	     $this->needEncrypt=$needEncrypt;
 
-  }
+	  }
 
-  public function getNeedEncrypt()
-  {
-    return $this->needEncrypt;
-  }
+	  public function getNeedEncrypt()
+	  {
+	    return $this->needEncrypt;
+	  }
 
 }
