@@ -14,7 +14,7 @@ use Notadd\Multipay\Handlers\SetHandler;
 /**
  * Class MultipayController.
  */
-class MultipayController extends Controller
+class AlipayController extends Controller
 {
     /**
      * Get handler.
@@ -23,7 +23,7 @@ class MultipayController extends Controller
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function get(GetHandler $handler)
+    public function pay(GetHandler $handler)
     {
 
         return $handler->toResponse()->generateHttpResponse();
@@ -37,11 +37,11 @@ class MultipayController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetHandler $handler)
+    public function result(SetHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    
+
 
 }

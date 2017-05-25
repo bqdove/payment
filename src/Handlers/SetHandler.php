@@ -57,8 +57,13 @@ class SetHandler extends AbstractSetHandler
      */
     public function execute()
     {
+<<<<<<< HEAD
+        $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
+        $this->settings->set('alipay.partner_id', $this->request->input('partner_id'));
+=======
 
         $this->settings->set('alipay.alipay_enabled',$this->request->input('alipay_enbaled'));
+>>>>>>> 0a43e4c8bfde4e6b9b2b285c2c2f437717c3bc39
         $this->settings->set('alipay.key',$this->request->input('key'));
 
         $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));

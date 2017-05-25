@@ -19,10 +19,14 @@
     "require": {
         "php": ">=7.0",
         "notadd/installers": "0.1.*",
+<<<<<<< HEAD
         "latrell/alipay": "dev-master",
         "latrell/wxpay": "0.03",
         "overtrue/laravel-wechat": "~3.0"
 
+=======
+        "latrell/alipay": "1.2"
+>>>>>>> bb4b422031aec94dd6e5dd3b82c0c59d1e9e712f
 
 
     }
