@@ -60,7 +60,10 @@ class SetAlipayconfHandler extends AbstractSetHandler
      */
     public function execute()
     {
+        $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
+        $this->settings->set('alipay.partner_id', $this->request->input('partner_id'));
         $this->settings->set('alipay.app_id', $this->request->input('app_id'));
+        $this->settings->set('alipay.key',$this->request->input('key'));
         $this->settings->set('alipay.merchant_private_key',$this->request->input('merchant_private_key'));
         $this->settings->set('alipay.alipay_public_key',$this->request->input('alipay_public_key'));
 

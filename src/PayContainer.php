@@ -1165,15 +1165,25 @@ class PayContainer implements ArrayAccess, ContainerContract
     }
 
     /**
-     * get the payment driver
+     * get the driver
      *
      * @param  string  $type
      * @return void
      */
-    public function driver($type)
-    {
+     public function getDriver($type){
+         switch($type){
+             case 'alipay':
+                 return new Alipay();
+             case 'wechat':
+                 return new Wechatpay();
+             case 'unionpay':
+                 return new Unionpay();
+         }
+     }
 
-    }
+     public function getDefaultDriver($name){
+         return new Alipay($name);
+     }
 
     /**
      * Dynamically access container services.

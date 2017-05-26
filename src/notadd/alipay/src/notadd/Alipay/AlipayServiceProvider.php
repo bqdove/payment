@@ -38,6 +38,8 @@ class AlipayServiceProvider extends PayServiceProvider
 				->setReturnUrl($payment->config->get('notadd-alipay-web.return_url'))
 				->setExterInvokeIp($payment->request->getClientIp());
 
+			$this->payment
+
 			return $alipay;
 		});
 
