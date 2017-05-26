@@ -86,5 +86,4 @@ class Alipay
 
 		return view('alipay.success');
 	}
->>>>>>> bb4b422031aec94dd6e5dd3b82c0c59d1e9e712f
 }

@@ -103,4 +103,14 @@ class Extension extends AbstractExtension
     {
         return '0.1.0';
     }
+
+    public function register(){
+        return $this->registerPay();
+    }
+
+    public function registerPay(){
+        return $this->app->singleton('multipay',function($app){
+            return new Multipay($app);
+        });
+    }
 }
