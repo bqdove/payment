@@ -198,7 +198,7 @@ class SdkPayment
 		$this->qr_pay_mode = $qr_pay_mode;
 		return $this;
 	}
-
+	
 	/**
 	 * 生成要请求给支付宝的参数数组
 	 * @param $para_temp 请求前的参数数组

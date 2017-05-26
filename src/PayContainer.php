@@ -1165,6 +1165,17 @@ class PayContainer implements ArrayAccess, ContainerContract
     }
 
     /**
+     * get the payment driver
+     *
+     * @param  string  $type
+     * @return void
+     */
+    public function driver($type)
+    {
+
+    }
+
+    /**
      * Dynamically access container services.
      *
      * @param  string  $key

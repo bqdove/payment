@@ -10,7 +10,7 @@ class PayServiceProvider extends ServiceProvider
     /**
      * The pay instance.
      *
-     * @var \Notadd\Multipay\
+     * @var \Notadd\Multipay\Payment
      */
      protected $payment;
 
