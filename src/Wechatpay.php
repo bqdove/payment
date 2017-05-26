@@ -12,8 +12,8 @@ use Latrell\Wxpay\Pay\Refund;
 use Latrell\Wxpay\pay\JsApi;
 use Latrell\Wxpay\pay\Native;
 use Illuminate\Container\Container;
+use Latrell\Wxpay\WxpayException;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-
 class Wechatpay
 {
     protected $config;
@@ -34,8 +34,10 @@ class Wechatpay
      * 公众号支付
      */
     public function jsapi(){
-        $openid = $this->settings->get('wechat.openid');
-        return new JsApi($openid);
+        $jsApi = new JsApi();
+        //网页授权获取用户openid
+       $openid = $jsApi->Getopenid();
+       $jsApi->GetJsApiParameters();
     }
     /*
      * 刷卡支付
