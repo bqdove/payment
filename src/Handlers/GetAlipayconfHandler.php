@@ -38,7 +38,7 @@ class GetAlipayconfHandler extends DataHandler
      *
      * @return array
      */
-    public static function data()
+    public  function data()
     {
         return [
             'alipay_enabled'=> $this->settings->get('alipay.alipay_enabled',false),
@@ -53,7 +53,7 @@ class GetAlipayconfHandler extends DataHandler
             'merchant_private_key'=> $this->settings->get('alipay.merchant_private_key',''),
             'alipay_public_key'=> $this->settings->get('alipay.alipay_public_key',''),
             'partner_id'=> $this->settings->get('alipay.partner_id'),
-            'app_id'=> $this->setttings->get('alipay.app_id'),
+            'app_id'=> $this->settings->get('alipay.app_id'),
             'service'=> $this->settings->get('alipay.service'),
             'partner'=> $this->settings->get('alipay.partner'),
             'payment_type'=> $this->settings->get('alipay.payment_type'),
