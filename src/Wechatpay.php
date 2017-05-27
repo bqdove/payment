@@ -17,11 +17,13 @@ use Latrell\Wxpay\Models\UnifiedOrder;
 use Latrell\Wxpay\Sdk\Api;
 use Latrell\Wxpay\Sdk\Notify;
 use Latrell\Wxpay\Models\BizPayUrl;
-
+use Latrell\Wxpay\Models\Refund as RefundModel;
+use Latrell\Wxpay\Models\MicroPay;
 class Wechatpay
 {
     protected $settings;
     protected $app;
+    protected $input;
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
@@ -76,13 +78,15 @@ class Wechatpay
     * 刷卡支付
     */
     public function micro(){
-        return new Micro($this->getconfig());
+        $input = new MicroPay();
+        return new Micro($input);
     }
 
     /*
      * 申请退款
      */
     public function refund(){
-        return new Refund($this->getconfig());
+        $input = new RefundModel();
+        return new Refund($input);
     }
 }
