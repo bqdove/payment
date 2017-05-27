@@ -1,6 +1,8 @@
 <?php
 namespace Notadd\Alipay\Web;
 
+use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+
 class SdkPayment
 {
 
@@ -60,24 +62,7 @@ class SdkPayment
 	 */
 	public function getPayLink()
 	{
-		$parameter = array(
-			'service' => $this->service,
-			'partner' => $this->partner,
-			'payment_type' => $this->payment_type,
-			'notify_url' => $this->notify_url,
-			'return_url' => $this->return_url,
-			'seller_email' => $this->seller_id,
-			'out_trade_no' => $this->out_trade_no,
-			'subject' => $this->subject,
-			'total_fee' => $this->total_fee,
-			'body' => $this->body,
-			'it_b_pay' => $this->it_b_pay,
-			'show_url' => $this->show_url,
-			'anti_phishing_key' => $this->anti_phishing_key,
-			'exter_invoke_ip' => $this->exter_invoke_ip,
-			'_input_charset' => strtolower($this->_input_charset),
-			'qr_pay_mode' => $this->qr_pay_mode
-		);
+		$parameter = GetAlipayconfHandler::data();
 
 		$para = $this->buildRequestPara($parameter);
 

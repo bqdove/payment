@@ -3,6 +3,7 @@ namespace Notadd\Alipay;
 
 use Notadd\Support\PayServiceProvider;
 
+
 class AlipayServiceProvider extends PayServiceProvider
 {
 	/**
@@ -25,19 +26,18 @@ class AlipayServiceProvider extends PayServiceProvider
 	{
 		$this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'notadd-alipay');
 		$this->mergeConfigFrom(__DIR__ . '/../../config/web.php', 'notadd-alipay-web');
-		$this->payment->bind('alipay.web', function ($payment)
+
+		$this->app->bind('alipay.web', function ($app)
 		{
-			$alipay = new Web\SdkPayment();
+			$alipay = new Web\Sdkapp();
 
-			$alipay->setPartner($payment->config->get('notadd-alipay.partner_id'))
-				->setSellerId($payment->config->get('notadd-alipay.seller_id'))
-				->setKey($payment->config->get('notadd-alipay-web.key'))
-				->setSignType($payment->config->get('notadd-alipay-web.sign_type'))
-				->setNotifyUrl($payment->config->get('notadd-alipay-web.notify_url'))
-				->setReturnUrl($payment->config->get('notadd-alipay-web.return_url'))
-				->setExterInvokeIp($payment->request->getClientIp());
-
-			$this->payment
+			$alipay->setPartner($app->config->get('notadd-alipay.partner_id'))
+				->setSellerId($app->config->get('notadd-alipay.seller_id'))
+				->setKey($app->config->get('notadd-alipay-web.key'))
+				->setSignType($app->config->get('notadd-alipay-web.sign_type'))
+				->setNotifyUrl($app->config->get('notadd-alipay-web.notify_url'))
+				->setReturnUrl($app->config->get('notadd-alipay-web.return_url'))
+				->setExterInvokeIp($app->request->getClientIp());
 
 			return $alipay;
 		});

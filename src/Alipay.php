@@ -26,9 +26,9 @@ class Alipay
   	$alipay->setSubject('goods_name');
   	$alipay->setBody('goods_description');
   	$alipay->setQrPayMode('4'); //该设置为可选，添加该参数设置，支持二维码支付。
-
+    
+    return $aplipay->getPayLink();
   	// 跳转到支付页面。
-  	return redirect()->to($alipay->getPayLink());
   }
 
   /**
