@@ -25,7 +25,6 @@ class AlipayServiceProvider extends PayServiceProvider
 	{
 		$this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'notadd-alipay');
 		$this->mergeConfigFrom(__DIR__ . '/../../config/web.php', 'notadd-alipay-web');
-
 		$this->payment->bind('alipay.web', function ($payment)
 		{
 			$alipay = new Web\SdkPayment();
