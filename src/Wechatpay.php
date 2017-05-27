@@ -17,22 +17,30 @@ use Latrell\Wxpay\Models\UnifiedOrder;
 use Latrell\Wxpay\Sdk\Api;
 use Latrell\Wxpay\Sdk\Notify;
 use Latrell\Wxpay\Models\BizPayUrl;
-
+use Latrell\Wxpay\Models\Refund as RefundModel;
+use Latrell\Wxpay\Models\MicroPay;
 class Wechatpay
 {
-    protected $config;
     protected $settings;
-
-    public function __construct($config){
-        $this->config = $config;
+    protected $app;
+    protected $input;
+    public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    public function getconfig($name=null){
-        if(is_null($name)){
-            return $this->config;
-        }
-        return array_get($this->config,$name, null);
+    public function getconfig($config){
+        $this->config = $config;
+    }
+    public function register(){
+        $this->app->singleton('jsapi',function($app){
+            return new Wechatpay($app->jsapi);
+        });
+        $this->app->singleton('micro',function($app){
+            return new Wechatpay($app->micro);
+        });
+        $this->app->singleton('native',function($app){
+            return new Wechatpay($app->native);
+        });
     }
     /*
      * 公众号支付
@@ -50,12 +58,7 @@ class Wechatpay
         $result = $notify->handle(false);
         return $result;
     }
-    /*
-     * 刷卡支付
-     */
-    public function micro(){
-        return new Micro($this->config);
-    }
+
     /*
      * 扫码支付
      */
@@ -67,18 +70,23 @@ class Wechatpay
         $url = $native->GetPrePayUrl($productId);
         return $url;
         //模式二
-        $api = new Api();
-        $trade_type =$this->settings->get('wechat.$trade_type');
-        if($trade_type == 'NATIVE'){
-            $result = $api->unifiedOrder();
-        }
+        $result = $native->GetPayUrl();
         return $result;
+    }
+
+    /*
+    * 刷卡支付
+    */
+    public function micro(){
+        $input = new MicroPay();
+        return new Micro($input);
     }
 
     /*
      * 申请退款
      */
     public function refund(){
-        return new Refund($this->config);
+        $input = new RefundModel();
+        return new Refund($input);
     }
 }
