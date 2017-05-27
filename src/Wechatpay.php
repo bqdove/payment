@@ -12,8 +12,12 @@ use Latrell\Wxpay\Pay\Refund;
 use Latrell\Wxpay\pay\JsApi;
 use Latrell\Wxpay\pay\Native;
 use Illuminate\Container\Container;
-use Latrell\Wxpay\WxpayException;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
+use Latrell\Wxpay\Models\UnifiedOrder;
+use Latrell\Wxpay\Sdk\Api;
+use Latrell\Wxpay\Sdk\Notify;
+use Latrell\Wxpay\Models\BizPayUrl;
+
 class Wechatpay
 {
     protected $config;
@@ -37,7 +41,14 @@ class Wechatpay
         $jsApi = new JsApi();
         //网页授权获取用户openid
        $openid = $jsApi->Getopenid();
-       $jsApi->GetJsApiParameters();
+       $input = new UnifiedOrder();
+       $api = new Api();
+       $order = $api->UnifiedOrder($input);
+       $parameters = $jsApi->GetJsApiParameters($order);
+       //支付结果通知
+        $notify =  new Notify();
+        $result = $notify->handle(false);
+        return $result;
     }
     /*
      * 刷卡支付
@@ -50,11 +61,17 @@ class Wechatpay
      */
     public function native(){
         $native = new Native();
+        $biz = new BizPayUrl();
         //模式一
-        $productId = $this->settings->get('wechat.product_id');
-        return $native->GetPrePayUrl($productId);
+        $productId = $this->settings->get('wechat.$productId');
+        $url = $native->GetPrePayUrl($productId);
+        return $url;
         //模式二
-        $result =  $native->GetPayUrl($input);
+        $api = new Api();
+        $trade_type =$this->settings->get('wechat.$trade_type');
+        if($trade_type == 'NATIVE'){
+            $result = $api->unifiedOrder();
+        }
         return $result;
     }
 
