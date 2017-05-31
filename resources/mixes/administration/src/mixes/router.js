@@ -5,7 +5,7 @@ export default function (injection) {
         {
             beforeEnter: injection.middleware.requireAuth,
             component: Baidu,
-            path: 'search',
+            path: 'pay',
         },
     ]);
 }
