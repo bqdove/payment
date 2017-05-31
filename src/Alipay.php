@@ -24,6 +24,10 @@ class Alipay
   	$GetAlipayconfHandler = new GetAlipayconfHandler;
 	$data = $GetAlipayconfHandler->data();
 	$alipay = app('alipay.web');
+           	$alipay->setTotalFee($data['total_fee']);
+                $alipay->setService ($data['service']);
+                $alipay->setPartner($data['partner']);
+                $alipay->setPayment_type('payment_type');
   	$alipay->setOutTradeNo($data['out_trade_no']);
   	$alipay->setTotalFee($data['total_fee']);
   	$alipay->setSubject(data['subject']);
@@ -99,7 +103,7 @@ public function refund()
   	$alipay->setSubject(data['subject']);
   	$alipay->setBody($data['body']);
   	$alipay->setQrPayMode('4'); 
-    	return $aplipay->getRefundLink();
+    	return $aplipay->refunds();
   	// 跳转到退款页面。
 }
 }

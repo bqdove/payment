@@ -43,7 +43,7 @@ class GetUnionpayconfHandler extends DataHandler
     {
         return [
             $config=array(
-                'driver'=>$this->settings->get('unionpay.driver',''),
+                'unionpay.enabled'=>$this->settings->get('unionpay.enabled', false),
                 'merId'=>$this->settings->get('unionpay.merId',''),
                 'certPath'=>$this->settings->get('Unionpay.certPath',''),
                 'certPassword'=>$this->settings->get('Unionpay.certPassword',''),

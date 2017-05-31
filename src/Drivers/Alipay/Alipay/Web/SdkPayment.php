@@ -97,7 +97,7 @@ class SdkPayment
 	/**
 	    * 退款
 	    */
-	    public function Refunds()
+	public function refunds()
 	{
 	               $parameter = array(
 		            'service' => $this->refunds_service,
@@ -148,6 +148,18 @@ class SdkPayment
 	public function setPartner($partner)
 	{
 		$this->partner = $partner;
+		return $this;
+	}
+
+	public function setPayment_type($type)
+	{
+		$this->payment_type = $type;
+		return $this;
+	}
+
+	public function setService($service)
+	{
+		$this->service = $service;
 		return $this;
 	}
 
