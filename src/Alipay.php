@@ -26,10 +26,10 @@ class Alipay
 	$alipay = app('alipay.web');
   	$alipay->setOutTradeNo($data['out_trade_no']);
   	$alipay->setTotalFee($data['total_fee']);
-  	$alipay->setSubject(data['subject']);
+  	$alipay->setSubject($data['subject']);
   	$alipay->setBody($data['body']);
   	$alipay->setQrPayMode('4'); //该设置为可选，添加该参数设置，支持二维码支付。
-    	return $aplipay->getPayLink();
+    	return $alipay->getPayLink();
   	// 跳转到支付页面。
   }
 
