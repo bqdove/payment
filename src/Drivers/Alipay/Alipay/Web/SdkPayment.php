@@ -13,11 +13,13 @@ class SdkPayment
 
 	private $service = 'create_direct_pay_by_user';
 
-	private $partner;
+	private $refunds_service = 'refund_fastpay_by_platform_pwd';
 
 	private $_input_charset = 'UTF-8';
 
 	private $sign_type = 'MD5';
+
+	private $partner;
 
 	private $notify_url;
 
@@ -51,33 +53,66 @@ class SdkPayment
 
 	private $qr_pay_mode;
 
-	private $app_Id
-	public function __construct()
-	{
-		$this->cacert = getcwd() . '/../cacert.pem';
-	}
+	private $refund_date;
+    	
+    	private $batch_no;
+    	
+    	private $batch_num;
+
+	private $detail_data;
 
 	/**
 	 * 取得支付链接
 	 */
 	public function getPayLink()
 	{	
-		$GetAlipayconfHandler = new GetAlipayconfHandler;
+		// $getAlipayconfHandler = new GetAlipayconfHandler;
 		
-		$parameter = $GetAlipayconfHandler->data();
+		// $parameter = $getAlipayconfHandler->data();
+
+		$parameter = array(
+		            'service' => $this->service,
+		            'partner' => $this->partner,
+		            'payment_type' => $this->payment_type,
+		            'notify_url' => $this->notify_url,
+		            'return_url' => $this->return_url,
+		            'seller_email' => $this->seller_id,
+		            'out_trade_no' => $this->out_trade_no,
+		            'subject' => $this->subject,
+		            'total_fee' => $this->total_fee,
+		            'body' => $this->body,
+		            'it_b_pay' => $this->it_b_pay,
+		            'show_url' => $this->show_url,
+		            'anti_phishing_key' => $this->anti_phishing_key,
+		            'exter_invoke_ip' => $this->exter_invoke_ip,
+		            '_input_charset' => strtolower($this->_input_charset),
+		            'qr_pay_mode' => $this->qr_pay_mode
+		 );
 
 		$para = $this->buildRequestPara($parameter);
 
 		return $this->__gateway_new . $this->createLinkstringUrlencode($para);
 	}
 
-	public function getRefundLink()
+	/**
+	    * 退款
+	    */
+	public function refunds()
 	{
-		
-
-		$para = $this->buildRequestPara($parameter);
-		
-		return $this->__gateway_new . $this->createLinkstringUrlencode($para);
+	               $parameter = array(
+		            'service' => $this->refunds_service,
+		            'partner' => $this->partner,
+		            'notify_url' => $this->notify_url,
+		            'return_url' => $this->return_url,
+		            'seller_email' => $this->seller_id,
+		            'refund_date' => $this->refund_date,
+		            'batch_no' => $this->batch_no,
+		            'batch_num' => $this->batch_num,
+		            'detail_data' => $this->detail_data,
+		            '_input_charset' => strtolower($this->_input_charset)
+	                );
+	        	$para = $this->buildRequestPara($parameter);
+	        	return $this->__gateway_new . $this->createLinkstringUrlencode($para);
 	}
 	/**
 	 * 验证消息是否是支付宝发出的合法消息
@@ -113,6 +148,18 @@ class SdkPayment
 	public function setPartner($partner)
 	{
 		$this->partner = $partner;
+		return $this;
+	}
+
+	public function setPayment_type($type)
+	{
+		$this->payment_type = $type;
+		return $this;
+	}
+
+	public function setService($service)
+	{
+		$this->service = $service;
 		return $this;
 	}
 
@@ -182,6 +229,30 @@ class SdkPayment
 		return $this;
 	}
 
+	public function setrefund_date()
+	{
+	    $this->refund_date = date("Y-m-d H:i:s");
+	    return $this;
+	}
+
+	public function setbatch_no($batch_no)
+	{
+	    $this->batch_no = $batch_no;
+	    return $this;
+	}
+
+	public function setbatch_num($batch_num)
+	{
+	    $this->batch_num = $batch_num;
+	    return $this;
+	}
+
+	public function setdetail_data($detail_data)
+	{
+	    $this->detail_data = $detail_data;
+	    return $this;
+	}
+
 	public function setExterInvokeIp($exter_invoke_ip)
 	{
 		$this->exter_invoke_ip = $exter_invoke_ip;
@@ -193,7 +264,12 @@ class SdkPayment
 		$this->qr_pay_mode = $qr_pay_mode;
 		return $this;
 	}
-
+	
+	public function setCacert($cacert)
+	{
+	    $this->cacert = $cacert;
+	    return $this;
+	}
 	/**
 	 * 生成要请求给支付宝的参数数组
 	 * @param $para_temp 请求前的参数数组
