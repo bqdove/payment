@@ -21,7 +21,8 @@
         "notadd/installers": "0.1.*",
         "latrell/alipay": "dev-master",
         "latrell/wxpay": "0.03",
-        "overtrue/laravel-wechat": "~3.0"
+        "overtrue/laravel-wechat": "~3.0",
+        "lokielse/omnipay-unionpay": "dev-master"
 
 
 

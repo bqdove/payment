@@ -24,12 +24,16 @@ class Alipay
   	$GetAlipayconfHandler = new GetAlipayconfHandler;
 	$data = $GetAlipayconfHandler->data();
 	$alipay = app('alipay.web');
+           	$alipay->setTotalFee($data['total_fee']);
+                $alipay->setService ($data['service']);
+                $alipay->setPartner($data['partner']);
+                $alipay->setPayment_type('payment_type');
   	$alipay->setOutTradeNo($data['out_trade_no']);
   	$alipay->setTotalFee($data['total_fee']);
-  	$alipay->setSubject(data['subject']);
+  	$alipay->setSubject($data['subject']);
   	$alipay->setBody($data['body']);
   	$alipay->setQrPayMode('4'); //该设置为可选，添加该参数设置，支持二维码支付。
-    	return $aplipay->getPayLink();
+    	return $alipay->getPayLink();
   	// 跳转到支付页面。
   }
 
@@ -99,7 +103,7 @@ public function refund()
   	$alipay->setSubject(data['subject']);
   	$alipay->setBody($data['body']);
   	$alipay->setQrPayMode('4'); 
-    	return $aplipay->getRefundLink();
+    	return $aplipay->refunds();
   	// 跳转到退款页面。
 }
 }
