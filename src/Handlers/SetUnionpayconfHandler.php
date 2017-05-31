@@ -58,8 +58,12 @@ class SetUnionpayconfHandler extends AbstractSetHandler
     public function execute()
     {
         $config=array(
+<<<<<<< HEAD
+=======
             $this->settings->set('unionpay.enabled',  $this->request->input('union_enabled'));
+>>>>>>> 74aa38abbc3db56a12d73255b32d9560258cb4cf
             $this->settings->set('unionpay.unionpay_enabled', $this->request->input('unionpay_enabled')),
+            $this->settings->set('unionpay.driver', $this->request->input('driver')),
             $this->settings->set('unionpay.merId',$this->request->input('merId')),
             $this->settings->set('unionpay.certPath',$this->request->input('certPath')),
             $this->settings->set('unionpay.certPassword',$this->request->input('certPassword')),

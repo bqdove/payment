@@ -26,7 +26,7 @@ class Extension extends AbstractExtension
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
         $this->publishes([
-            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/multipay') => public_path('assets/extensions/multipay'),
+            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/pay') => public_path('assets/extensions/pay'),
         ], 'public');
     }
     /**
@@ -69,7 +69,7 @@ class Extension extends AbstractExtension
      */
     public static function script()
     {
-        return asset('');
+        return asset('assets/extensions/pay/js/extension.min.js');
     }
 
     /**
@@ -109,7 +109,11 @@ class Extension extends AbstractExtension
     }
 
     public function registerPay(){
+<<<<<<< HEAD
+        $this->app->singleton('multipay',function($app){
+=======
             $this->app->singleton('multipay',function($app){
+>>>>>>> 74aa38abbc3db56a12d73255b32d9560258cb4cf
             return new Multipay($app);
         });
     }
