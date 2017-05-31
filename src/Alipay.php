@@ -20,7 +20,7 @@ class Alipay
   */
 
   public function pay()
-  {	
+  {	 
   	$GetAlipayconfHandler = new GetAlipayconfHandler;
 	$data = $GetAlipayconfHandler->data();
 	$alipay = app('alipay.web');
