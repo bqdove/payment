@@ -5,7 +5,6 @@ use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 
 class SdkPayment
 {
-
 	private $__gateway_new = 'https://mapi.alipay.com/gateway.do?';
 
 	private $__https_verify_url = 'https://mapi.alipay.com/gateway.do?service=notify_verify&';
@@ -52,6 +51,7 @@ class SdkPayment
 
 	private $qr_pay_mode;
 
+	private $app_Id
 	public function __construct()
 	{
 		$this->cacert = getcwd() . '/../cacert.pem';
@@ -61,14 +61,24 @@ class SdkPayment
 	 * 取得支付链接
 	 */
 	public function getPayLink()
-	{
-		$parameter = GetAlipayconfHandler::data();
+	{	
+		$GetAlipayconfHandler = new GetAlipayconfHandler;
+		
+		$parameter = $GetAlipayconfHandler->data();
 
 		$para = $this->buildRequestPara($parameter);
 
 		return $this->__gateway_new . $this->createLinkstringUrlencode($para);
 	}
 
+	public function getRefundLink()
+	{
+		
+
+		$para = $this->buildRequestPara($parameter);
+		
+		return $this->__gateway_new . $this->createLinkstringUrlencode($para);
+	}
 	/**
 	 * 验证消息是否是支付宝发出的合法消息
 	 */

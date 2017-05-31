@@ -69,7 +69,7 @@ class GetAlipayconfHandler extends DataHandler
             'anti_phishing_key'=> $this->settings->get('alipay.anti_phishing_key'),
             'exter_invoke_ip'=> $this->settings->get('alipay.exter_invoke_ip'),
             '_input_charset'=> $this->settings->get('alipay._input_charset'),
-            'qr_pay_mode'=> $this->settings->get('alipay.qr_pay_mode'),
+            'qr_pay_mode'=> $this->settings->get('alipay.qr_pay_mode')
         ] ;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Notadd\Alipay;
+namespace Notadd\Multipay\Alipay;
 
 use Notadd\Support\PayServiceProvider;
 

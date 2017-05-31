@@ -103,16 +103,16 @@ class AlipayTradeRefundRequest
 		return $this->apiVersion;
 	}
 
-  public function setNeedEncrypt($needEncrypt)
-  {
+	  public function setNeedEncrypt($needEncrypt)
+	  {
 
-     $this->needEncrypt=$needEncrypt;
+	     $this->needEncrypt=$needEncrypt;
 
-  }
+	  }
 
-  public function getNeedEncrypt()
-  {
-    return $this->needEncrypt;
-  }
+	  public function getNeedEncrypt()
+	  {
+	    return $this->needEncrypt;
+	  }
 
 }

@@ -23,7 +23,7 @@ class AlipayController extends Controller
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function pay(GetHandler $handler)
+    public function get(GetHandler $handler)
     {
 
         return $handler->toResponse()->generateHttpResponse();
@@ -37,7 +37,7 @@ class AlipayController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function result(SetHandler $handler)
+    public function set(SetHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }

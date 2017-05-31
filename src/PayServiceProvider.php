@@ -3,12 +3,11 @@
 namespace Notadd\Support;
 
 use Illuminate\Support\ServiceProvider as ServiceProvider;
-use Illuminate\Console\Application as Artisan;
 
-class PayServiceProvider extends ServiceProvider
+abstract class PayServiceProvider extends ServiceProvider
 {
     /**
-     * The pay instance.
+     * The application instance
      *
      * @var
      */
@@ -46,13 +45,7 @@ class PayServiceProvider extends ServiceProvider
          $this->app = $app;
      }
 
-     public function register()
-     {
-        
-     }
+     public function register();
 
-     public function boot()
-     {
-
-     }
+     public function boot();
 }
