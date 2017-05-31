@@ -42,17 +42,19 @@ class GetWechatconfHandler extends DataHandler
     public function data()
     {
         return [
-            $config['wechat_enabled']=>$this->settings->get('wechat.wechat_enabled',false),
-            $config['appid']=>$this->settings->get('wechat.appid',''),
-            $config['mch_id']=>$this->settings->get('wechat.mch_id',''),
-            $config['appsecret']=>$this->settings->get('wechat.appsecret',''),
-            $config['wkey']=>$this->settings->get('wechat.wkey',''),
-            $config['body']=>$this->settings->get('wachat.body',''),
-            $config['out_trade_no']=>$this->settings->get('wechat.out_trade_no',''),
-            $config['total_fee']=>$this->settings->get('wechat.total_fee',''),
-            $config['trade_type']=>$this->settings->get('wechat.trade_type',''),
-            $config['openid']=>$this->settings->get('wechat.openid',''),
-            $config['product_id']=>$this->settings->get('wechat.product_id','')
+            $config=array(
+                'wechat_enabled'=>$this->settings->get('wechat.wechat_enabled',false),
+                'appid'=>$this->settings->get('wechat.appid',''),
+                'mch_id'=>$this->settings->get('wechat.mch_id',''),
+                'appsecret'=>$this->settings->get('wechat.appsecret',''),
+                'wkey'=>$this->settings->get('wechat.wkey',''),
+                'body'=>$this->settings->get('wachat.body',''),
+                'out_trade_no'=>$this->settings->get('wechat.out_trade_no',''),
+                'total_fee'=>$this->settings->get('wechat.total_fee',''),
+                'trade_type'=>$this->settings->get('wechat.trade_type',''),
+                'openid'=>$this->settings->get('wechat.openid',''),
+                'product_id'=>$this->settings->get('wechat.product_id',''),
+            )
         ] ;
     }
 }

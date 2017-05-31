@@ -24,13 +24,17 @@ class Wechatpay
     protected $settings;
     protected $app;
     protected $input;
+    protected $config=[];
+    CONST SSLCERT_PATH = 'wxpay/config/cert/apiclient_cert.pem';
+    CONST SSLKEY_PATH = 'wxpay/config/cert/apiclient_key.pem';
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
     public function getconfig($config){
-        $this->config = $config;
+        $this->settings->get($config);
     }
+
     public function register(){
         $this->app->singleton('jsapi',function($app){
             return new Wechatpay($app->jsapi);
@@ -46,9 +50,10 @@ class Wechatpay
      * 公众号支付
      */
     public function jsapi(){
+
         $jsApi = new JsApi();
         //网页授权获取用户openid
-       $openid = $jsApi->Getopenid();
+       $openid = $jsApi->GetOpenidFromMp($_GET['code']);
        $input = new UnifiedOrder();
        $api = new Api();
        $order = $api->UnifiedOrder($input);
