@@ -234,8 +234,8 @@
                                 </i-col>
                             </row>
                             <row>
-                                <i-col span="12">
-                                    <form-item label="证书" prop="certificate">
+                                <i-col span="16">
+                                    <form-item label="证书" prop="certificate" class="unionPay-upload">
                                         <div class="image-preview" v-if="unionPay.certificate">
                                             <img :src="unionPay.certificate">
                                             <icon type="close" @click.native="removeLogo"></icon>
