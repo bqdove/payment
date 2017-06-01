@@ -187,6 +187,15 @@
                             </row>
                             <row>
                                 <i-col span="12">
+                                    <form-item label="上传文件">
+                                        <upload :action="action">
+                                            <i-button type="ghost">+上传</i-button>
+                                        </upload>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                            <row>
+                                <i-col span="12">
                                     <form-item label="是否开启">
                                         <i-switch size="large" v-model="weChatForm.enabled">
                                             <span slot="open">开启</span>
