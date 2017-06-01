@@ -7,10 +7,10 @@
  */
 
 namespace Notadd\Multipay;
+
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
-use Omnipay\Common\Message\AbstractRequest;
 
 class Unionpay
 {
@@ -26,7 +26,7 @@ class Unionpay
 
    public function pay(){
        $gateway = Ominpay::gateway('unionpay');
-
+       $alipay = app('omnipay');
    }
 
 

@@ -41,7 +41,4 @@ class AlipayController extends Controller
     {
         return $handler->toResponse()->generateHttpResponse();
     }
-
-
-
 }

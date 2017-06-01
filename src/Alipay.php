@@ -12,6 +12,7 @@ use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Alipay\Facades\AlipayWeb;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+use Omnipay\Omnipay;
 
 class Alipay
 {
@@ -21,6 +22,14 @@ class Alipay
 
   public function pay()
   {	 
+  	$gateway = Omnipay::create('Alipay_AopPage');
+	$gateway->setSignType('RSA2'); //RSA/RSA2
+	$gateway->setAppId('the_app_id');
+	$gateway->setPrivateKey('the_app_private_key');
+	$gateway->setAlipayPublicKey('the_alipay_public_key');
+	$gateway->setReturnUrl('https://www.example.com/return');
+	$gateway->setNotifyUrl('https://www.example.com/notify');
+	
   	$GetAlipayconfHandler = new GetAlipayconfHandler;
 	$data = $GetAlipayconfHandler->data();
 	$alipay = app('alipay.web');
