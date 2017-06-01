@@ -79,7 +79,9 @@ class Extension extends AbstractExtension
      */
     public static function stylesheet()
     {
-        return [];
+        return [
+            asset('assets/extensions/pay/css/extension.min.css'),
+        ];
     }
 
     /**
