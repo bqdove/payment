@@ -30,6 +30,7 @@ class Alipay
 	$gateway->setSellerEmail( $data['seller_email']); //收款账户 email
 	$gateway->setReturnUrl( $data['return_url']);
 	$gateway->setNotifyUrl( $data['notify_url'] );
+	
 	return $gateway;
   }
 
