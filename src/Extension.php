@@ -109,11 +109,7 @@ class Extension extends AbstractExtension
     }
 
     public function registerPay(){
-<<<<<<< HEAD
-        $this->app->singleton('multipay',function($app){
-=======
             $this->app->singleton('multipay',function($app){
->>>>>>> 74aa38abbc3db56a12d73255b32d9560258cb4cf
             return new Multipay($app);
         });
     }
