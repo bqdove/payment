@@ -9,15 +9,78 @@
         },
         data() {
             return {
+                action: `${window.api}/mall/admin/upload`,
                 alipayForm: {
                     enabled: true,
                     key: '',
                     number: '',
                 },
+                loading: false,
+                unionPay: {
+                    certificate: '',
+                    enabled: true,
+                    id: '',
+                    key: '',
+                },
+                weChatForm: {
+                    apply: '',
+                    enabled: true,
+                    key: '',
+                    merchantId: '',
+                    merchantKey: '',
+                },
             };
         },
         methods: {
-            submit() {},
+            removeLogo() {
+                this.unionPay.certificate = '';
+            },
+            submit() {
+                const self = this;
+                self.loading = true;
+                self.$refs.unionPay.validate(valid => {
+                    if (valid) {
+                        self.$Message.success('提交成功!');
+                    } else {
+                        self.loading = false;
+                        self.$notice.error({
+                            title: '请正确填写设置信息！',
+                        });
+                    }
+                });
+            },
+            uploadBefore() {
+                injection.loading.start();
+            },
+//            uploadError(error, data) {
+//                const self = this;
+//                injection.loading.error();
+//                if (typeof data.message === 'object') {
+//                    for (const p in data.message) {
+//                        self.$notice.error({
+//                            title: data.message[p],
+//                        });
+//                    }
+//                } else {
+//                    self.$notice.error({
+//                        title: data.message,
+//                    });
+//                }
+//            },
+            uploadFormatError(file) {
+                this.$notice.warning({
+                    title: '文件格式不正确',
+                    desc: `文件 ${file.name} 格式不正确`,
+                });
+            },
+            uploadSuccess(data) {
+                const self = this;
+                injection.loading.finish();
+                self.$notice.open({
+                    title: data.message,
+                });
+                self.unionPay.certificate = data.data.path;
+            },
         },
     };
 </script>
@@ -164,7 +227,24 @@
                             <row>
                                 <i-col span="12">
                                     <form-item label="证书" prop="certificate">
-                                        <i-input v-model="unionPay.certificate"></i-input>
+                                        <div class="image-preview" v-if="unionPay.certificate">
+                                            <img :src="unionPay.certificate">
+                                            <icon type="close" @click.native="removeLogo"></icon>
+                                        </div>
+                                        <upload :action="action"
+                                                :before-upload="uploadBefore"
+                                                :format="['jpg','jpeg','png']"
+                                                :headers="{
+                                                        Authorization: `Bearer ${$store.state.token.access_token}`
+                                                    }"
+                                                :max-size="2048"
+                                                :on-error="uploadError"
+                                                :on-format-error="uploadFormatError"
+                                                :on-success="uploadSuccess"
+                                                ref="upload"
+                                                :show-upload-list="false"
+                                                v-if="unionPay.certificate === '' || unionPay.certificate === null">
+                                        </upload>
                                     </form-item>
                                 </i-col>
                             </row>
