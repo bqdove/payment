@@ -15,12 +15,37 @@
                     key: '',
                     number: '',
                 },
+                alipayRules: {
+                    number: [
+                        {
+                            message: '商户号不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    key: [
+                        {
+                            message: '秘钥不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                },
                 loading: false,
                 unionPay: {
                     certificate: '',
                     enabled: true,
                     id: '',
                     key: '',
+                },
+                unionPayRules: {
+                    id: [
+                        {
+                            message: 'ID不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
                 },
                 weChatForm: {
                     apply: '',
@@ -29,13 +54,43 @@
                     merchantId: '',
                     merchantKey: '',
                 },
+                weChatRules: {
+                    apply: [
+                        {
+                            message: 'APP_ID不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    key: [
+                        {
+                            message: 'APP_KEY不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                },
             };
         },
         methods: {
+            alipaySubmit() {
+                const self = this;
+                self.loading = true;
+                self.$refs.alipayForm.validate(valid => {
+                    if (valid) {
+                        self.$Message.success('提交成功!');
+                    } else {
+                        self.loading = false;
+                        self.$notice.error({
+                            title: '请正确填写设置信息！',
+                        });
+                    }
+                });
+            },
             removeLogo() {
                 this.unionPay.certificate = '';
             },
-            submit() {
+            unionPaySubmit() {
                 const self = this;
                 self.loading = true;
                 self.$refs.unionPay.validate(valid => {
@@ -81,6 +136,20 @@
                 });
                 self.unionPay.certificate = data.data.path;
             },
+            weChatSubmit() {
+                const self = this;
+                self.loading = true;
+                self.$refs.weChatForm.validate(valid => {
+                    if (valid) {
+                        self.$Message.success('提交成功!');
+                    } else {
+                        self.loading = false;
+                        self.$notice.error({
+                            title: '请正确填写设置信息！',
+                        });
+                    }
+                });
+            },
         },
     };
 </script>
@@ -106,7 +175,7 @@
                             </row>
                             <row>
                                 <i-col span="12">
-                                    <form-item label="秘钥" prop="key">
+                                    <form-item label="密钥" prop="key">
                                         <i-input v-model="alipayForm.key"></i-input>
                                         <a href="">点击此处获取</a>
                                     </form-item>
@@ -208,7 +277,7 @@
                                 <i-col span="12">
                                     <form-item>
                                         <i-button :loading="loading" type="primary"
-                                                  @click.native="alipaySubmit">
+                                                  @click.native="weChatSubmit">
                                             <span v-if="!loading">确认提交</span>
                                             <span v-else>正在提交…</span>
                                         </i-button>
@@ -225,7 +294,7 @@
                             <p>支付宝，全球领先的独立第三方支付平台,致力于为广大用户提供安全快速的
                                 电子支付/网上支付/安全支付/手机支付体验,及转账收款/水电煤缴费/信用卡还款/AA收款等生活..</p>
                         </div>
-                        <i-form :label-width="200" :model="unionPay" ref="unionPay" :rules="alipayRules">
+                        <i-form :label-width="200" :model="unionPay" ref="unionPay" :rules="unionPayRules">
                             <row>
                                 <i-col span="12">
                                     <form-item label="ID" prop="id">
@@ -259,7 +328,7 @@
                             </row>
                             <row>
                                 <i-col span="12">
-                                    <form-item label="秘钥" prop="key">
+                                    <form-item label="密钥" prop="key">
                                         <i-input v-model="unionPay.key"></i-input>
                                     </form-item>
                                 </i-col>
