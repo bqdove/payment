@@ -1,10 +1,10 @@
-import Baidu from '../pages/Baidu.vue';
+import Pay from '../pages/Pay.vue';
 
 export default function (injection) {
     injection.useExtensionRoute([
         {
             beforeEnter: injection.middleware.requireAuth,
-            component: Baidu,
+            component: Pay,
             path: 'pay',
         },
     ]);
