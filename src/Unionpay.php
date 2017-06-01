@@ -26,8 +26,5 @@ class Unionpay
 
    public function pay(){
        $gateway = Ominpay::gateway('unionpay');
-       $alipay = app('omnipay');
    }
-
-
 }

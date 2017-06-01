@@ -20,99 +20,105 @@ class Alipay
   *申请支付
   */
 
-  public function pay()
+  public function get_gate_way()
+  {
+  	$getAlipayconfHandler = new GetAlipayconfHandler;
+	$data = $getAlipayconfHandler->data();
+  	$gateway = Omnipay::create( 'Alipay_LegacyExpress' );
+	$gateway->setPartner($data ['partner_id']); //支付宝 PID
+	$gateway->setKey( '' );  //支付宝 Key
+	$gateway->setSellerEmail( $data['seller_email']); //收款账户 email
+	$gateway->setReturnUrl( $data['return_url']);
+	$gateway->setNotifyUrl( $data['notify_url'] );
+	return $gateway;
+  }
+
+  public function pay($partner_id = null, $merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type='RSA2', $sign, $timestamp, $version = 1.0,  $biz_content = null, $out_trade_no = 0) 
   {	 
-  	$gateway = Omnipay::create('Alipay_AopPage');
-	$gateway->setSignType('RSA2'); //RSA/RSA2
-	$gateway->setAppId('the_app_id');
-	$gateway->setPrivateKey('the_app_private_key');
-	$gateway->setAlipayPublicKey('the_alipay_public_key');
-	$gateway->setReturnUrl('https://www.example.com/return');
-	$gateway->setNotifyUrl('https://www.example.com/notify');
+  	$enabled = $this->container->request->input('alipay_enabled'); //是否开启支付宝支付
+
+  	$partner_id = $this->container->request->input('partner_id');//partner_id
+
+  	$merchant_private_key = $this->container->request->input('merchant_private_key');//private_key
 	
-  	$GetAlipayconfHandler = new GetAlipayconfHandler;
-	$data = $GetAlipayconfHandler->data();
-	$alipay = app('alipay.web');
-           	$alipay->setTotalFee($data['total_fee']);
-                $alipay->setService ($data['service']);
-                $alipay->setPartner($data['partner']);
-                $alipay->setPayment_type('payment_type');
-  	$alipay->setOutTradeNo($data['out_trade_no']);
-  	$alipay->setTotalFee($data['total_fee']);
-  	$alipay->setSubject($data['subject']);
-  	$alipay->setBody($data['body']);
-  	$alipay->setQrPayMode('4'); //该设置为可选，添加该参数设置，支持二维码支付。
-    	return $alipay->getPayLink();
-  	// 跳转到支付页面。
+	$timestamp = new date("Y-m-d G-i-s", time());//format order time
+
+	$biz_content = {};
+
+	$options = [
+		'partner_id' => $partner_id,
+		'merchant_private_key' => $merchant_private_key
+		 // 'out_trade_no' => $tn, //生成唯一订单号
+		 // 'subject' => '', //订单标题
+		 // 'total_fee' => , //订单总金额
+	];
+
+	// 获取支付网关
+	$gateway = $this->get_gate_way();
+
+	$response = $gateway->purchase( $options )->send();
+
+	$response->redirect();
   }
 
   /**
- * 异步通知
+ * 异步&&同步通知
  */
   public function webNotify()
 {
-	// 验证请求。
-	if (! app('alipay.web')->verify()) {
-		Log::notice('Alipay notify post data verification fail.', [
-			'data' => Request::instance()->getContent()
-		]);
-		return 'fail';
-	}
+	$gateway = $this->get_gate_way();
+	$request = $gateway->completePurchase();
+	$request->setParams(array_merge($_POST, $_GET)); //Don't use $_REQUEST for may contain $_COOKIE
 
-	// 判断通知类型。
-	switch (Input::get('trade_status')) {
-		case 'TRADE_SUCCESS':
-		case 'TRADE_FINISHED':
-			// TODO: 支付成功，取得订单号进行其它相关操作。
-			Log::debug('Alipay notify post data verification success.', [
-				'out_trade_no' => Input::get('out_trade_no'),
-				'trade_no' => Input::get('trade_no')
-			]);
-			break;
-	}
+	/**
+	* @var AopCompletePurchaseResponse $response
+	*/
+	try {
+		$response = $request->send();
 
-	return 'success';
+	if($response->isPaid()){
+	/**
+	* Payment is successful
+	*/
+		die('你已经支付成功'); //The notify response should be 'success' only
+	}else{
+	/**
+	* Payment is not successful
+	*/
+		die('你已经支付失败, 请稍候重试'); //The notify response
+	}
+	} catch (Exception $e) {
+	/**
+	* Payment is not successful
+	*/
+		die('你已经支付失败, 请稍候重试'); //The notify response
+	}
 }
 
-/**
- * 同步通知
- */
-public function webReturn()
-{
-	// 验证请求。
-	if (! app('alipay.web')->verify()) {
-		Log::notice('Alipay return query data verification fail.', [
-			'data' => Request::getQueryString()
-		]);
-		return view('alipay.fail');
-	}
 
-	// 判断通知类型。
-	switch (Input::get('trade_status')) {
-		case 'TRADE_SUCCESS':
-		case 'TRADE_FINISHED':
-			// TODO: 支付成功，取得订单号进行其它相关操作。
-			Log::debug('Alipay notify get data verification success.', [
-				'out_trade_no' => Input::get('out_trade_no'),
-				'trade_no' => Input::get('trade_no')
-			]);
-			break;
-	}
-
-	return view('alipay.success');
-}
-
-public function refund()
+public function refund($app_id, $method = "alipay.trade.refund", $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp , $version = 1.0, $biz_content = null)
 {	
-	$GetAlipayconfHandler = new GetAlipayconfHandler;
-	$data = $GetAlipayconfHandler->data();
-	$alipay = app('alipay.web');
-  	$alipay->setOutTradeNo($data['out_trade_no']);
-  	$alipay->setTotalFee($data['total_fee']);
-  	$alipay->setSubject(data['subject']);
-  	$alipay->setBody($data['body']);
-  	$alipay->setQrPayMode('4'); 
-    	return $aplipay->refunds();
-  	// 跳转到退款页面。
-}
+  	$partner_id = $this->container->request->input('partner_id');
+  	
+  	$merchant_private_key = $this->container->request->input('merchant_private_key');
+	
+	$timestamp = new date("Y-m-d G-i-s", time());//format order time
+
+	$biz_content = {};
+
+	$options = [
+		'partner_id' => $partner_id,
+		'merchant_private_key' => $merchant_private_key
+		 // 'out_trade_no' => $tn, //生成唯一订单号
+		 // 'subject' => '', //订单标题
+		 // 'total_fee' => , //订单总金额
+		'biz_content' => {}
+	];
+
+	// 获取支付网关
+	$gateway = $this->get_gate_way();
+
+	$response = $gateway->refund( $options )->send();
+
+	$response->redirect();
 }
