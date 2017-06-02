@@ -5,7 +5,6 @@
  * Date: 2017/5/22
  * Time: 18:01
  */
-
 namespace Notadd\Multipay;
 
 use Illuminate\Container\Container;
@@ -106,8 +105,25 @@ public function pay($merchant_private_key = null, $method = 'alipay.trade.query'
       *  查询接口
       */
 
-    public function query()
+    public function query($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
     {
+        $partner_id = $this->settings->get('partner_id');//partner_id
+
+        $merchant_private_key = $this->settings->get('merchant_private_key');//private_key
+
+        $timestamp = new date("Y-m-d G-i-s", time());//format order time
+
+        $biz_content = {
+        };
+
+        $options = [
+              'partner_id' => $partner_id,
+              'merchant_private_key' => $merchant_private_key
+              // 'out_trade_no' => $tn, //生成唯一订单号
+              // 'subject' => '', //订单标题
+              // 'total_fee' => , //订单总金额
+          ];
+
         $gateway = $this->get_gate_way();
 
         $response = $gateway->query($options)->send();
@@ -115,7 +131,9 @@ public function pay($merchant_private_key = null, $method = 'alipay.trade.query'
         $response->redirect();
     }
 
-
+    /**
+    *退款接口
+    */
     public function refund($app_id, $method = "alipay.trade.refund", $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null)
     {
         $partner_id = $this->settings->get('partner_id');
