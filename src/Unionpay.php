@@ -11,39 +11,37 @@ namespace Notadd\Multipay;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
+use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 
 class Unionpay
 {
-    protected $settings;
-
-public function __construct(){
-        $this->settings = Container::getInstance()->make(SettingsRepository::class);
-
-}
-    //获取配置
-public function getconfig($config){
-        return $this->settings->get($config);
+    private $config;
+//获取配置
+public function getConfig(){
+        $getUnionpayconfHandler  = new GetUnionpayconfHandler();
+        $this->config = $getUnionpayconfHandler->data();
 }
 
 public function get_gate_way()
 {
         $gateway    = Omnipay::create('UnionPay_Express');
-        $gateway->setMerId($config['merId']);
-        $gateway->setCertPath($config['certPath']); // .pfx file
-        $gateway->setCertPassword($config['certPassword']);
-        $gateway->setReturnUrl($config['returnUrl']);
-        $gateway->setNotifyUrl($config['notifyUrl']);
+        $this->getConfig();
+        $gateway->setMerId($this->config['merId']);
+        $gateway->setCertPath($this->config['certPath']); // .pfx file
+        $gateway->setCertPassword($this->config['certPassword']);
+        $gateway->setReturnUrl($this->config['returnUrl']);
+        $gateway->setNotifyUrl($this->config['notifyUrl']);
 
         return $gateway;
 }
 
-public function pay()
+public function pay($orderId, $txnTime, $orderDesc, $txnAmt)
 {
         $order = [
-                'orderId'   => date('YmdHis'), //Your order ID
-                'txnTime'   => date('YmdHis'), //Should be format 'YmdHis'
-                'orderDesc' => 'My order title', //Order Title
-                'txnAmt'    => '100', //Order Total Fee
+                'orderId'   => $orderId, //Your order ID
+                'txnTime'   => $txnTime, //Should be format 'YmdHis'
+                'orderDesc' => $orderDesc, //Order Title
+                'txnAmt'    => $txnAmt, //Order Total Fee
         ];
 
         $gateway = $this->gateway();
@@ -56,13 +54,14 @@ public function pay()
 public function webNotify()
 {
         $gateway    = Omnipay::create('UnionPay_Express');
+        $this->getConfig();
         $gateway->setMerId($config['merId']);
         $gateway->setCertDir($config['certDir']); //The directory contain *.cer files
         $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
         if ($response->isPaid()) {
-                
+            exit('支付成功！');
         }else{
-              
+            exit('支付失败！');
         }
 }
 
