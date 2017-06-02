@@ -18,11 +18,13 @@ class Unionpay
     private $config;
 //获取配置
 public function getConfig(){
+        
         $getUnionpayconfHandler  = new GetUnionpayconfHandler();
+
         $this->config = $getUnionpayconfHandler->data();
 }
 
-public function get_gate_way()
+private function get_gate_way()
 {
         $gateway    = Omnipay::create('UnionPay_Express');
         $this->getConfig();
@@ -35,13 +37,15 @@ public function get_gate_way()
         return $gateway;
 }
 
-public function pay($orderId, $txnTime, $orderDesc, $txnAmt)
+public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
 {
         $order = [
                 'orderId'   => $orderId, //Your order ID
                 'txnTime'   => $txnTime, //Should be format 'YmdHis'
                 'orderDesc' => $orderDesc, //Order Title
                 'txnAmt'    => $txnAmt, //Order Total Fee
+                'merId' => $merId,//merId
+                'transType' => $transType// transtype
         ];
 
         $gateway = $this->gateway();
@@ -54,27 +58,60 @@ public function pay($orderId, $txnTime, $orderDesc, $txnAmt)
 public function webNotify()
 {
         $gateway    = Omnipay::create('UnionPay_Express');
+
         $this->getConfig();
+        
         $gateway->setMerId($config['merId']);
+        
         $gateway->setCertDir($config['certDir']); //The directory contain *.cer files
+        
         $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
+        
         if ($response->isPaid()) {
-            exit('支付成功！');
+            //exit('支付成功！');
         }else{
-            exit('支付失败！');
+            //exit('支付失败！');
         }
 }
-
-public function refund()
+/**
+  *  查询接口
+  */ 
+public function query($merId, $transType, $orderId, $orderTime)
 {
-          $response = $gateway->refund([
-                'orderId' => '20150815121214', //Your site trade no, not union tn.
-                'txnTime' => '20150815121214', //Order trade time
-                'txnAmt'  => '200', //Order total fee
-          ])->send();
+        $order = [
+                'merId' => $merId,//merId
+                'transType' => $transType// transtype
+                'orderId'   => $orderId, //Your order ID
+                'orderTime'   => $orderTime, //Should be format 'YmdHis'
+        ];
 
-          var_dump($response->isSuccessful());
-          var_dump($response->getData());
+        $gateway = $this->gateway();
+
+        $response = $gateway->query($order)->send();
+}
+
+/**
+*
+*退款接口
+*/
+
+public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
+{
+        $gateway = $this->gateway();
+
+        $order = [
+                'merId'  => $merId,
+                'transType' => $transType,
+                'orderId' => $orderId, //Your site trade no, not union tn.
+                'orderTime' => $orderTime, //Order trade time
+                'txnAmt'  => $totalFee, //Order total fee
+        ];
+
+        $response = $gateway->refund($order)->send();
+
+        var_dump($response->isSuccessful());
+        
+        var_dump($response->getData());
 }
 
 }
