@@ -13,60 +13,35 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Alipay\Facades\AlipayWeb;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Omnipay\Omnipay;
-use Illuminate\Http\Request;
 
 class Alipay
 {
+    protected $settings;
 
-  /**
-  *申请支付
-  */
-
-  public function get_gate_way()
-  {
-  	$getAlipayconfHandler = new GetAlipayconfHandler;
-	$data = $getAlipayconfHandler->data();
-  	$gateway = Omnipay::create( 'Alipay_LegacyExpress' );
-	$gateway->setPartner($data ['partner_id']); //支付宝 PID
-	$gateway->setKey( '' );  //支付宝 Key
-	$gateway->setSellerEmail( $data['seller_email']); //收款账户 email
-	$gateway->setReturnUrl( $data['return_url']);
-	$gateway->setNotifyUrl( $data['notify_url'] );
-	
-	return $gateway;
-  }
-
-  public function pay($partner_id = null, $merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type='RSA2', $sign, $timestamp, $version = 1.0,  $biz_content = null, $out_trade_no = 0) 
-  {	 
-  	$enabled = $this->container->request->input('alipay_enabled'); //是否开启支付宝支付
-
-  	$partner_id = $this->container->request->input('partner_id');//partner_id
-
-  	$merchant_private_key = $this->container->request->input('merchant_private_key');//private_key
-	
-	$timestamp = new date("Y-m-d G-i-s", time());//format order time
-
-	$biz_content = {};
-
-
-    public function __construct()
-    {
+    public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-
+    public function getconfig($config){
+        return $this->settings->get($config);
+    }
+    
     public function get_gate_way()
     {
-        $getAlipayconfHandler = new GetAlipayconfHandler;
-        $data = $getAlipayconfHandler->data();
-        $gateway = Omnipay::create('Alipay_LegacyExpress');
-        $gateway->setPartner($data ['partner_id']); //支付宝 PID
-        $gateway->setKey('');  //支付宝 Key
-        $gateway->setSellerEmail($data['seller_email']); //收款账户 email
-        $gateway->setReturnUrl($data['return_url']);
-        $gateway->setNotifyUrl($data['notify_url']);
-        return $gateway;
-    }
+          $data = $this->settings;
+          $gateway = Omnipay::create( 'Alipay_LegacyExpress' );
+          $gateway->setPartner($data ['partner_id']); //支付宝 PID
+          $gateway->setKey( '' );  //支付宝 Key
+          $gateway->setSellerEmail( $data['seller_email']); //收款账户 email
+          $gateway->setReturnUrl( $data['return_url']);
+          $gateway->setNotifyUrl( $data['notify_url'] );
+    
+          return $gateway;
+     }
+
+    /**
+  *申请支付
+  */
 
     public function pay($partner_id = null, $merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
     {
@@ -79,7 +54,7 @@ class Alipay
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
         $biz_content = {
-    };
+        };
 
 	$options = [
         'partner_id' => $partner_id,
@@ -116,7 +91,7 @@ class Alipay
                 /**
                  * Payment is successful
                  */
-                die('你已经支付成功'); //The notify response should be 'success' only
+                die('success'); //The notify response should be 'success' only
             } else {
                 /**
                  * Payment is not successful
