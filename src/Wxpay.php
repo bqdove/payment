@@ -29,6 +29,9 @@ class Wxpay
         $request->file('cert')->move($path,$filename);
     }
 
+    /*
+     * 扫码支付
+     */
     public function get_wechat_Nativegateway(){
         $gateway = Omnipay::create('WechatPay_Native');
         $gateway->setAppId($config['app_id']);
@@ -38,7 +41,6 @@ class Wxpay
         return $gateway;
     }
     public function pay_native(){
-        $enabled = $this->settings->get('wechat.wechat_enabled'); //是否开启微信支付
         $nonce_str = $this->settings->get('wechat.nonce_str');
         $sign = $this->settings->get('wechat.sign');
         $body = $this->settings->get('wechat.body');
@@ -93,6 +95,10 @@ class Wxpay
             'refund_fee'=>$this->settings->get('wechat.redund_fee')
         ])->send();
     }
+
+    /*
+     * 公众号支付
+     */
     public function get_wechat_Jsgateway(){
 
         $gateway = Omnipay::create('WechatPay_Jsapi');
@@ -101,7 +107,6 @@ class Wxpay
         $gateway->setApiKey($config['wkey']);
     }
     public function pay_jspai(){
-        $enabled = $this->settings->get('wechat.wechat_enabled'); //是否开启微信支付
         $openid = $this->settings->get('wechat.openid');//jsapi必传
         $nonce_str = $this->settings->get('wechat.nonce_str');
         $sign = $this->settings->get('wechat.sign');
@@ -132,35 +137,39 @@ class Wxpay
 
     }
     //回调通知
-    public function jsnotify(){
+    public function jsnotify()
+    {
         $gateway = $this->get_wechat_Jsgateway();
         $request = $gateway->completePurchase();
-        if (  $request->isPaid()) {
-            $total_fee = $_GET[ 'total_fee' ];
-            $trade_no = $_GET[ 'trade_no' ];
-            $out_trade_no = $_GET[ 'out_trade_no' ];
-            $body = $_GET[ 'body' ];
+        if ($request->isPaid()) {
+            $total_fee = $_GET['total_fee'];
+            $trade_no = $_GET['trade_no'];
+            $out_trade_no = $_GET['out_trade_no'];
+            $body = $_GET['body'];
 
             echo "支付成功";
         } else {
             echo "支付失败";
         }
-
-        //退款
-        public function jsrefund(){
-            $gateway = $this->get_wechat_Jsgateway();
-            $gateway->setCertPath($this->settings->get('path'));
-            $gateway->setKeyPath($this->settings->get('path'));
-            $response = $gateway->refund([
-                'nonce_str'=>$this->settings->get('wechat.nonce_str'),
-                'out_trade_no'=>$this->settings->get('wechat.out_trade_no'),
-                'sign'=>$this->settings->get('wechat.sign'),
-                'out_refund_no'=>$this->settings->get('wechat.out_refund_no'),
-                'total_fee'=>$this->settings->get('wechat.total_fee'),
-                'refund_fee'=>$this->settings->get('wechat.redund_fee')
-            ])->send();
-        }
     }
+    //退款
+    public function jsrefund(){
+        $gateway = $this->get_wechat_Jsgateway();
+        $gateway->setCertPath($this->settings->get('path'));
+        $gateway->setKeyPath($this->settings->get('path'));
+        $response = $gateway->refund([
+            'nonce_str'=>$this->settings->get('wechat.nonce_str'),
+            'out_trade_no'=>$this->settings->get('wechat.out_trade_no'),
+            'sign'=>$this->settings->get('wechat.sign'),
+            'out_refund_no'=>$this->settings->get('wechat.out_refund_no'),
+            'total_fee'=>$this->settings->get('wechat.total_fee'),
+            'refund_fee'=>$this->settings->get('wechat.redund_fee')
+        ])->send();
+    }
+
+     /*
+      * 刷卡支付
+      */
     public function get_wechat_Posgateway(){
 
         $gateway = Omnipay::create('WechatPay_Jsapi');

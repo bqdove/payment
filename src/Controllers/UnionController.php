@@ -14,7 +14,7 @@ use Notadd\Multipay\Handlers\SetHandler;
 /**
  * Class MultipayController.
  */
-class AlipayController extends Controller
+class UnionController extends Controller
 {
     /**
      * Get handler.

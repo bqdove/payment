@@ -59,14 +59,14 @@ class SetWechatconfHandler extends AbstractSetHandler
     {
         $config=array(
             $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled')),
-            $this->settings->set('wechat.appid',$this->request->input('appid')),
+            $this->settings->set('wechat.app_id',$this->request->input('app_id')),
             $this->settings->set('wechat.mch_id',$this->request->input('mch_id')),
             $this->settings->set('wechat.nonce_str',$this->request->input('nonce_str')),
             $this->settings->set('wechat.appsecret',$this->request->input('appsecret')),
             $this->settings->set('wechat.sign',$this->request->input('sign')),
             $this->settings->set('wechat.path',$this->request->input('path')),
             $this->settings->set('wechat.body',$this->request->input('body')),
-            $this->settings->set('wechat.refund',$this->request->input('refund')),
+            $this->settings->set('wechat.refund',$this->request->input('refund'))
             $this->settings->set('wechat.wkey',$this->request->input('wkey')),
             $this->settings->set('wechat.body',$this->request->input('body')),
             $this->settings->set('wechat.out_trade_no',$this->request->input('out_trade_no')),
