@@ -45,7 +45,7 @@ abstract class PayServiceProvider extends ServiceProvider
          $this->app = $app;
      }
 
-     public function register();
+     public function register(){};
 
-     public function boot();
+     public function boot(){};
 }

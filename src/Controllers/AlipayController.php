@@ -8,8 +8,8 @@
  */
 namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Multipay\Handlers\GetHandler;
-use Notadd\Multipay\Handlers\SetHandler;
+use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+use Notadd\Multipay\Handlers\SetAlipayconfHandler;
 
 /**
  * Class MultipayController.
