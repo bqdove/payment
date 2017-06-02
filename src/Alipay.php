@@ -10,17 +10,10 @@ namespace Notadd\Multipay;
 
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Omnipay\Omnipay;
 
 class Alipay
 {
-    protected $settings;
-
-
-  /**
-  *申请支付
-  */
 protected $settings;
 
 public function __construct(){
@@ -36,7 +29,7 @@ public function get_gate_way()
       $data = $this->settings;
       $gateway = Omnipay::create( 'Alipay_LegacyExpress' );
       $gateway->setPartner($data ['partner_id']); //支付宝 PID
-      $gateway->setKey( '' );  //支付宝 Key
+      $gateway->setKey( $data['']);  //支付宝 Key
       $gateway->setSellerEmail( $data['seller_email']); //收款账户 email
       $gateway->setReturnUrl( $data['return_url']);
       $gateway->setNotifyUrl( $data['notify_url'] );
@@ -48,38 +41,36 @@ public function get_gate_way()
   *申请支付
   */
 
-  public function pay($partner_id = null, $merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
-  {
-      $enabled = $this->settings->get('alipay_enabled'); //是否开启支付宝支付
+public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
+{
+        $partner_id = $this->settings->get('partner_id');//partner_id
 
-      $partner_id = $this->settings->get('partner_id');//partner_id
+        $merchant_private_key = $this->settings->get('merchant_private_key');//private_key
 
-      $merchant_private_key = $this->settings->get('merchant_private_key');//private_key
+        $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-      $timestamp = new date("Y-m-d G-i-s", time());//format order time
+        $biz_content = {
+        };
 
-      $biz_content = {
-      };
+        $options = [
+              'partner_id' => $partner_id,
+              'merchant_private_key' => $merchant_private_key
+              // 'out_trade_no' => $tn, //生成唯一订单号
+              // 'subject' => '', //订单标题
+              // 'total_fee' => , //订单总金额
+          ];
 
-$options = [
-      'partner_id' => $partner_id,
-      'merchant_private_key' => $merchant_private_key
-      // 'out_trade_no' => $tn, //生成唯一订单号
-      // 'subject' => '', //订单标题
-      // 'total_fee' => , //订单总金额
-  ];
+        // 获取支付网关
+        $gateway = $this->get_gate_way();
 
-// 获取支付网关
-$gateway = $this->get_gate_way();
+        $response = $gateway->purchase($options)->send();
 
-$response = $gateway->purchase($options)->send();
+        $response->redirect();
+}
 
-$response->redirect();
-  }
-
-    /**
-     * 异步&&同步通知
-     */
+/**
+ * 异步&&同步通知
+ */
     public function webNotify()
     {
         $gateway = $this->get_gate_way();
@@ -109,6 +100,19 @@ $response->redirect();
              */
             die('你已经支付失败, 请稍候重试'); //The notify response
         }
+    }
+    
+    /**
+      *  查询接口
+      */
+
+    public function query()
+    {
+        $gateway = $this->get_gate_way();
+
+        $response = $gateway->query($options)->send();
+
+        $response->redirect();
     }
 
 
