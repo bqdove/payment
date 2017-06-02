@@ -66,7 +66,7 @@ class SetWechatconfHandler extends AbstractSetHandler
             $this->settings->set('wechat.sign',$this->request->input('sign')),
             $this->settings->set('wechat.path',$this->request->input('path')),
             $this->settings->set('wechat.body',$this->request->input('body')),
-            $this->settings->set('wechat.refund',$this->request->input('refund'))
+            $this->settings->set('wechat.refund',$this->request->input('refund')),
             $this->settings->set('wechat.wkey',$this->request->input('wkey')),
             $this->settings->set('wechat.body',$this->request->input('body')),
             $this->settings->set('wechat.out_trade_no',$this->request->input('out_trade_no')),
