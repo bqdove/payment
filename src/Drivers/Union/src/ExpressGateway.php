@@ -31,7 +31,7 @@ class ExpressGateway extends AbstractGateway
             'txnSubType'     => '01',
             'bizType'        => '000201',
             'signMethod'     => '01',
-            'channelType'    => '08', //07-PC，08-手机
+            'channelType'    => '07', //07-PC，08-手机
             'accessType'     => '0',
             'currencyCode'   => '156',
             'orderDesc'      => 'an order',
