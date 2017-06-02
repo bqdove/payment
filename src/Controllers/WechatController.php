@@ -14,7 +14,7 @@ use Notadd\Foundation\Routing\Abstracts\Controller;
 /**
  * Class WechatconfController.
  */
-class WechatconfController extends Controller
+class WechatController extends Controller
 {
     /**
      * Get handler.

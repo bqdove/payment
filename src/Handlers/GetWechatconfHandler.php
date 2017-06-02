@@ -44,11 +44,15 @@ class GetWechatconfHandler extends DataHandler
         return [
             $config=array(
                 'wechat_enabled'=>$this->settings->get('wechat.wechat_enabled',false),
-                'appid'=>$this->settings->get('wechat.appid',''),
+                'app_id'=>$this->settings->get('wechat.app_id',''),
                 'mch_id'=>$this->settings->get('wechat.mch_id',''),
                 'nonce_str'=>$this->settings->get('wechat.nonce_str'),
                 'appsecret'=>$this->settings->get('wechat.appsecret',''),
                 'wkey'=>$this->settings->get('wechat.wkey',''),
+                'nonce_str'=>$this->settings->get('wechat.nonce_str',''),
+                'body'=>$this->settings->get('wechat.body',''),
+                'refund'=>$this->settings->get('wechat.refund',''),
+                'path'=>$this->settings->get('wechat.path',''),
                 'body'=>$this->settings->get('wachat.body',''),
                 'out_trade_no'=>$this->settings->get('wechat.out_trade_no',''),
                 'total_fee'=>$this->settings->get('wechat.total_fee',''),
