@@ -8,8 +8,8 @@
  */
 namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Multipay\Handlers\GetHandler;
-use Notadd\Multipay\Handlers\SetHandler;
+use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+use Notadd\Multipay\Handlers\SetAlipayconfHandler;
 
 /**
  * Class MultipayController.
@@ -23,7 +23,7 @@ class AlipayController extends Controller
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function get(GetHandler $handler)
+    public function get(GetAlipayconfHandler $handler)
     {
 
         return $handler->toResponse()->generateHttpResponse();
@@ -37,7 +37,7 @@ class AlipayController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetHandler $handler)
+    public function set(SetAlipayconfHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }

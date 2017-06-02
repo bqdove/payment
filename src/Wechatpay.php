@@ -16,16 +16,14 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Latrell\Wxpay\Models\UnifiedOrder;
 use Latrell\Wxpay\Sdk\Api;
 use Illuminate\Http\Request;
-use Latrell\Wxpay\Models\Refund as RefundModel;
-use Latrell\Wxpay\Models\MicroPay;
+use Latrell\Wxpay\Models\Base;
 class Wechatpay
 {
     protected $settings;
     protected $app;
     protected $input;
     protected $config=[];
-    CONST SSLCERT_PATH = 'wxpay/config/cert/apiclient_cert.pem';
-    CONST SSLKEY_PATH = 'wxpay/config/cert/apiclient_key.pem';
+
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
@@ -38,12 +36,20 @@ class Wechatpay
      * 统一下单
      */
     public function unifiedOrder(){
-        $api=new Api($options);
-        $params['body']=$this->settings->get('wechat.body');
-        $params['out_trade_no']=$this->settings->get('wechat.out_trade_no');
-        $params['total_fee'] = $this->settings->get('wechat.total_fee');
-        $params['trade_type']=$this->settings->get('wechat.trade_type');
-        $api->unifideOrder($params);
+        $api=new Api();
+        $unifi = new UnifiedOrder();
+        $base = new Base();
+        $params['appid']=$this->settings->get('wechat.appid');
+        $params['mch_id']=$this->settings->get('wechat.mch_id');
+        $params['nonce_str'] =$unifi->getNonceStr();
+        $params['sign']=$base->getSign();
+        $params['body']=$unifi->getbody();
+        $params['out_trade_no']=$unifi->getOutTradeNo();
+        $params['total_fee']=$this->settings->get('total_fee');
+        $params['spbill_create_ip']=$_SERVER['REMOTE_ADDR'];
+        $params['notify_url']='http://www.weixin.qq.com/wxpay/pay.php';
+        $params['trade_type']=$this->settings->get('trade_type');
+        $api->unifiedOrder($params);
     }
 
     public function register(){
@@ -61,7 +67,7 @@ class Wechatpay
     /*
      * 公众号支付
      */
-    public function jsapi(){
+    public function jsapi($trade_type='JSAPI'){
 
         $jsApi = new JsApi($this->config);
         //网页授权获取用户openid
@@ -76,7 +82,7 @@ class Wechatpay
     /*
      * 扫码支付
      */
-    public function native(){
+    public function native($trade_type='NATIVE'){
         $native = new Native($this->config);
         //模式一
         $productId = $this->settings->get('wechat.productId');
@@ -92,8 +98,7 @@ class Wechatpay
     * 刷卡支付
     */
     public function micro(){
-        $input = new MicroPay();
-        return new Micro($input);
+        return new Micro($this->config);
     }
 
     /*
@@ -113,8 +118,7 @@ class Wechatpay
      * 申请退款
      */
     public function refund(){
-        $input = new RefundModel();
-        return new Refund($input);
+        return new Refund($this->config);
     }
     /*
      * 上传证书
