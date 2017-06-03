@@ -13,6 +13,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Notadd\Foundation\Passport\Abstracts\Handler;
+
 /**
  * Class UploadHandler.
  */
