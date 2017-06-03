@@ -61,15 +61,9 @@ class SetWechatconfHandler extends AbstractSetHandler
             $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled')),
             $this->settings->set('wechat.app_id',$this->request->input('app_id')),
             $this->settings->set('wechat.mch_id',$this->request->input('mch_id')),
-            $this->settings->set('wechat.appsecret',$this->request->input('appsecret')),
-            $this->settings->set('wechat.path',$this->request->input('path')),
+            $this->settings->set('wechat.certpath',$this->request->input('certpath')),
+            $this->settings->set('wechat.keypath',$this->request->input('keypath')),
             $this->settings->set('wechat.key',$this->request->input('key')),
-            $this->settings->set('wechat.out_trade_no',$this->request->input('out_trade_no')),
-            $this->settings->set('wechat.total_fee',$this->request->input('total_fee')),
-            $this->settings->set('wechat.trade_type',$this->request->input('trade_type')),
-            $this->settings->set('wechat.notify_url',$this->request->input('notify_url')),
-            $this->settings->set('wechat.openid',$this->request->input('openid')),
-            $this->settings->set('wechat.product_id',$this->request->input('product_id')),
         );
 
         return true ;
