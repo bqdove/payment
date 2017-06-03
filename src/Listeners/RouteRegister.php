@@ -8,8 +8,10 @@
  */
 namespace Notadd\Multipay\Listeners;
 
-use Notadd\Multipay\Controllers\MultipayController;
+use Notadd\Multipay\Controllers\AlipayController;
 use Notadd\Foundation\Routing\Abstracts\RouteRegister as AbstractRouteRegister;
+use Notadd\Multipay\Controllers\UnionController;
+use Notadd\Multipay\Controllers\WechatController;
 
 /**
  * Class RouteRegister.
@@ -21,10 +23,13 @@ class RouteRegister extends AbstractRouteRegister
      */
     public function handle()
     {
-        $this->router->group(['middleware' => ['auth:api', 'cross', 'web'], 'prefix' => 'api/multipay'], function () {
-            $this->router->post('get', MultipayController::class . '@get');
-            $this->router->post('set', MultipayController::class . '@set');
-            $this->router->get('alipay', AlipayController::class . '@pay');
+        $this->router->group(['middleware' => ['auth:api', 'cross', 'web'], 'prefix' => 'api/baidu'], function () {
+            $this->router->post('get',AlipayController::class . '@get');
+            $this->router->post('set', AlipayController::class . '@set');
+            $this->router->post('get',WechatController::class . '@get');
+            $this->router->post('set',WechatController::class . '@set');
+            $this->router->post('get',UnionController::class . '@get');
+            $this->router->post('set',UnionController::class . '@set');
         });
     }
 }

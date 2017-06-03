@@ -47,9 +47,9 @@ class Wechatpay
      */
     public function get_wechat_Nativegateway(){
         $gateway = Omnipay::create('WechatPay_Native');
-        $gateway->setAppId($config['app_id']);
-        $gateway->setMchId($config['mch_id']);
-        $gateway->setApiKey($config['wkey']);
+        $gateway->setAppId($this->settings->get('wechat.app_id'));
+        $gateway->setMchId($this->settings->get('wechat.mch_id'));
+        $gateway->setApiKey($this->settings->get('wechat.key'));
 
         return $gateway;
     }
@@ -114,7 +114,7 @@ class Wechatpay
      */
     public function get_wechat_Jsgateway(){
 
-        $gateway = Omnipay::create('WechatPay_Jsapi');
+        $gateway = Omnipay::create('WechatPay_Js');
         $gateway->setAppId($config['app_id']);
         $gateway->setMchId($config['mch_id']);
         $gateway->setApiKey($config['wkey']);
