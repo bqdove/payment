@@ -15,6 +15,7 @@ use Omnipay\Omnipay;
 class UnionPay
 {
     protected $settings;
+    protected $gateway;
 
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
@@ -30,7 +31,7 @@ class UnionPay
             $gateway->setReturnUrl($this->settings->get('union.returnUrl'));
             $gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
 
-            return $gateway;
+            return $this;
     }
 
     public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
@@ -44,8 +45,6 @@ class UnionPay
                     'transType' => $transType// transtype
             ];
 
-            $gateway = $this->getGateWay();
-
             $response = $gateway->purchase($order)->send();
 
             $response->getRedirectHtml(); //For PC/Wap
@@ -53,8 +52,6 @@ class UnionPay
 
     public function webNotify()
     {
-            $gateway = $this->getGateWay();
-
             $gateway->setMerId($this->settings->get('union.merId'));
 
             $gateway->setCertDir($this->settings->get('union.certDir')); //The directory contain *.cer files
@@ -79,9 +76,9 @@ class UnionPay
                     'orderTime'   => $orderTime, //Should be format 'YmdHis'
             ];
 
-            $gateway = $this->getGateWay();
 
             $response = $gateway->query($order)->send();
+            $response->isSuccessful();
     }
 
     /**
@@ -91,8 +88,6 @@ class UnionPay
 
     public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
     {
-            $gateway = $this->getGateWay();
-
             $order = [
                     'merId'  => $merId,
                     'transType' => $transType,
