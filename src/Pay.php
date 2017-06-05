@@ -26,12 +26,15 @@ class Pay
     protected $drivers = [];
 
     /**
+      *  The url
+      */
+    protected $url = '';
+
+    /**
      *
      * The driver is the selected pay-driver;
      *
      */
-    protected $driver;
-
     public function __construct($app){
         $this->app = $app;
     }
@@ -57,13 +60,16 @@ class Pay
     private function getDefaultDriver(){
         return new AliPay();
     }
+
+    
     /**
-     *
-     *
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
      *
      */
     public function pay($driver, $way, $para){
-        $this->driver = $this->getDriver($driver)->getGateWay($way)->pay($para);
+        $this->url = $this->getDriver($driver)->getGateWay($way)->pay($para);
 
     }
 }

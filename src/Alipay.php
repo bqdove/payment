@@ -25,16 +25,16 @@ class Alipay
         return $this->settings->get($config);
     }
 
-    public function getGateWay($gatewayName)
+    public function getGateWay(gatewayName)
     {
         $data = $this->settings;
-        $gateway = Omnipay::create( $gatewayName );
-        $gateway->setPartner($data ['partner_id']); //支付宝 PID
-        $gateway->setKey($data['']);  //支付宝 Key
-        $gateway->setSellerEmail($data['seller_email']); //收款账户 email
-        $gateway->setReturnUrl($data['return_url']);
-        $gateway->setNotifyUrl($data['notify_url']);
-        $this->gateway = $gateway;
+        $this->gateway = Omnipay::create(gatewayName );
+        $this->gateway->setPartner($data ['partner_id']); //支付宝 PID
+        $this->gateway->setKey($data['']);  //支付宝 Key
+        $this->gateway->setSellerEmail($data['seller_email']); //收款账户 email
+        $this->gateway->setReturnUrl($data['return_url']);
+        $this->gateway->setNotifyUrl($data['notify_url']);
+
         return $this;
      }
 
@@ -72,8 +72,7 @@ class Alipay
    */
     public function webNotify()
     {
-        $gateway = $this->getGateWay();
-        $request = $gateway->completePurchase();
+        $request = $this->gateway->completePurchase();
         $request->setParams(array_merge($_POST, $_GET)); //Don't use $_REQUEST for may contain $_COOKIE
 
         /**
@@ -123,9 +122,7 @@ class Alipay
               // 'total_fee' => , //订单总金额
           ];
 
-        $gateway = $this->getGateWay();
-
-        $response = $gateway->query($options)->send();
+        $response = $this->gateway->query($options)->send();
 
         $response->redirect();
     }
@@ -152,10 +149,7 @@ class Alipay
         'biz_content' => []
 	];
 
-	// 获取支付网关
-	$gateway = $this->getGateWay();
-
-	$response = $gateway->refund($options)->send();
+	$response = $this->gateway->refund($options)->send();
 
 	$response->redirect();
     }
