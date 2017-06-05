@@ -13,35 +13,36 @@ use Omnipay\Omnipay;
 
 class Alipay
 {
-protected $settings;
+    protected $settings;
 
-public function __construct(){
-    $this->settings = Container::getInstance()->make(SettingsRepository::class);
+    public function __construct()
+    {
+        $this->settings = Container::getInstance()->make(SettingsRepository::class);
+    }
 
+    public function getConfig($config){
+        return $this->settings->get($config);
 }
-public function getconfig($config){
-    return $this->settings->get($config);
-}
 
-public function get_gate_way()
-{
-      $data = $this->settings;
-      $gateway = Omnipay::create( 'Alipay_LegacyExpress' );
-      $gateway->setPartner($data ['partner_id']); //支付宝 PID
-      $gateway->setKey( $data['']);  //支付宝 Key
-      $gateway->setSellerEmail( $data['seller_email']); //收款账户 email
-      $gateway->setReturnUrl( $data['return_url']);
-      $gateway->setNotifyUrl( $data['notify_url'] );
+    public function getGateWay($gatewayName)
+    {
+        $data = $this->settings;
+        $gateway = Omnipay::create( $gatewayName );
+        $gateway->setPartner($data ['partner_id']); //支付宝 PID
+        $gateway->setKey( $data['']);  //支付宝 Key
+        $gateway->setSellerEmail( $data['seller_email']); //收款账户 email
+        $gateway->setReturnUrl( $data['return_url']);
+        $gateway->setNotifyUrl( $data['notify_url'] );
 
-      return $gateway;
- }
+        return $gateway;
+     }
 
     /**
   *申请支付
   */
 
-public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
-{
+    public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
+    {
         $partner_id = $this->settings->get('partner_id');//partner_id
 
         $merchant_private_key = $this->settings->get('merchant_private_key');//private_key
@@ -52,12 +53,12 @@ public function pay($merchant_private_key = null, $method = 'alipay.trade.query'
         };
 
         $options = [
-              'partner_id' => $partner_id,
-              'merchant_private_key' => $merchant_private_key
-              // 'out_trade_no' => $tn, //生成唯一订单号
-              // 'subject' => '', //订单标题
-              // 'total_fee' => , //订单总金额
-          ];
+        'partner_id' => $partner_id,
+        'merchant_private_key' => $merchant_private_key
+        // 'out_trade_no' => $tn, //生成唯一订单号
+       // 'subject' => '', //订单标题
+      // 'total_fee' => , //订单总金额
+        ];
 
         // 获取支付网关
         $gateway = $this->get_gate_way();
@@ -65,11 +66,11 @@ public function pay($merchant_private_key = null, $method = 'alipay.trade.query'
         $response = $gateway->purchase($options)->send();
 
         $response->redirect();
-}
+    }
 
-/**
- * 异步&&同步通知
- */
+  /**
+   * 异步&&同步通知
+   */
     public function webNotify()
     {
         $gateway = $this->get_gate_way();
