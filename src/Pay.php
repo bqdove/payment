@@ -10,7 +10,7 @@ namespace Notadd\Multipay;
 
 use Illuminate\Contracts\Foundation\Application;
 
-class Multipay
+class Pay
 {
     /**
      * The application instance.
@@ -37,11 +37,11 @@ class Multipay
     public function getDriver($name){
         switch($name){
             case 'alipay':
-                return new Alipay();
+                return new AliPay();
             case 'wechat':
-                return new Wechatpay();
+                return new WechatPay();
             case 'unionpay':
-                return new Unionpay();
+                return new UnionPay();
         }
     }
 
