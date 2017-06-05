@@ -13,105 +13,100 @@ use Illuminate\Container\Container;
 use Omnipay\Omnipay;
 use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 
-class Unionpay
+class UnionPay
 {
-    private $config;
-//获取配置
-public function getConfig(){
-        
-        $getUnionpayconfHandler  = new GetUnionpayconfHandler();
+    protected $settings;
+    //获取配置
+    public function __construct(){
+        $this->settings = Container::getInstance()->make(SettingsRepository::class);
+    }
 
-        $this->config = $getUnionpayconfHandler->data();
-}
+    public function getGateway()
+    {
+            $gateway = Omnipay::create('UnionPay_Express');
+            $gateway->setMerId($this->settings->get('union.merId'));
+            $gateway->setCertPath($this->settings->get('union.certPath'));
+            $gateway->setCertPassword($this->settings->get('union.certPassword'));
+            $gateway->setCertDir($this->settings->get('union.certDir'));
+            $gateway->setReturnUrl($this->settings->get('union.returnUrl'));
+            $gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
 
-private function get_gate_way()
-{
-        $gateway    = Omnipay::create('UnionPay_Express');
-        $this->getConfig();
-        $gateway->setMerId($this->config['merId']);
-        $gateway->setCertPath($this->config['certPath']); // .pfx file
-        $gateway->setCertPassword($this->config['certPassword']);
-        $gateway->setReturnUrl($this->config['returnUrl']);
-        $gateway->setNotifyUrl($this->config['notifyUrl']);
+            return $gateway;
+    }
 
-        return $gateway;
-}
+    public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
+    {
+            $order = [
+                    'orderId'   => $orderId, //Your order ID
+                    'txnTime'   => $txnTime, //Should be format 'YmdHis'
+                    'orderDesc' => $orderDesc, //Order Title
+                    'txnAmt'    => $txnAmt, //Order Total Fee
+                    'merId' => $merId,//merId
+                    'transType' => $transType// transtype
+            ];
 
-public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
-{
-        $order = [
-                'orderId'   => $orderId, //Your order ID
-                'txnTime'   => $txnTime, //Should be format 'YmdHis'
-                'orderDesc' => $orderDesc, //Order Title
-                'txnAmt'    => $txnAmt, //Order Total Fee
-                'merId' => $merId,//merId
-                'transType' => $transType// transtype
-        ];
+            $gateway = $this->getGateway();
 
-        $gateway = $this->gateway();
+            $response = $gateway->purchase($order)->send();
 
-        $response = $gateway->purchase($order)->send();
+            $response->getRedirectHtml(); //For PC/Wap
+    }
 
-        $response->getRedirectHtml(); //For PC/Wap
-}
+    public function webNotify()
+    {
+            $gateway = $this->getGateway();
 
-public function webNotify()
-{
-        $gateway    = Omnipay::create('UnionPay_Express');
+            $gateway->setMerId($this->settings->get('union.merId'));
 
-        $this->getConfig();
-        
-        $gateway->setMerId($config['merId']);
-        
-        $gateway->setCertDir($config['certDir']); //The directory contain *.cer files
-        
-        $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
-        
-        if ($response->isPaid()) {
-            //exit('支付成功！');
-        }else{
-            //exit('支付失败！');
-        }
-}
-/**
-  *  查询接口
-  */ 
-public function query($merId, $transType, $orderId, $orderTime)
-{
-        $order = [
-                'merId' => $merId,//merId
-                'transType' => $transType// transtype
-                'orderId'   => $orderId, //Your order ID
-                'orderTime'   => $orderTime, //Should be format 'YmdHis'
-        ];
+            $gateway->setCertDir($this->settings->get('union.certDir')); //The directory contain *.cer files
 
-        $gateway = $this->gateway();
+            $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
 
-        $response = $gateway->query($order)->send();
-}
+            if ($response->isPaid()) {
+                //exit('支付成功！');
+            }else{
+                //exit('支付失败！');
+            }
+    }
+    /**
+      *  查询接口
+      */
+    public function query($merId, $transType, $orderId, $orderTime)
+    {
+            $order = [
+                    'merId' => $merId,//merId
+                    'transType' => $transType// transtype
+                    'orderId'   => $orderId, //Your order ID
+                    'orderTime'   => $orderTime, //Should be format 'YmdHis'
+            ];
 
-/**
-*
-*退款接口
-*/
+            $gateway = $this->gateway();
 
-public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
-{
-        $gateway = $this->gateway();
+            $response = $gateway->query($order)->send();
+    }
 
-        $order = [
-                'merId'  => $merId,
-                'transType' => $transType,
-                'orderId' => $orderId, //Your site trade no, not union tn.
-                'orderTime' => $orderTime, //Order trade time
-                'txnAmt'  => $totalFee, //Order total fee
-        ];
+    /**
+    *
+    *退款接口
+    */
 
-        $response = $gateway->refund($order)->send();
+    public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
+    {
+            $gateway = $this->gateway();
 
-        var_dump($response->isSuccessful());
-        
-        var_dump($response->getData());
-}
+            $order = [
+                    'merId'  => $merId,
+                    'transType' => $transType,
+                    'orderId' => $orderId, //Your site trade no, not union tn.
+                    'orderTime' => $orderTime, //Order trade time
+                    'txnAmt'  => $totalFee, //Order total fee
+            ];
+
+            $response = $gateway->refund($order)->send();
+
+            var_dump($response->isSuccessful());
+
+            var_dump($response->getData());
+    }
 
 }
