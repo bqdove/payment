@@ -36,7 +36,7 @@ class Pay
         $this->app = $app;
     }
     private function driver($name=null){
-        $name=$name ?:$this->getDefaultDriver($name);
+        $name=$name ?:$this->getDefaultDriver();
         return isset($this->drivers[$name])
             ? $this->drivers[$name]
             : $this->drivers[$name] = $this->getDriver($name);
@@ -54,12 +54,10 @@ class Pay
         }
     }
 
-
-    private function getDefaultDriver($name){
-        return new Alipay($name);
+    private function getDefaultDriver(){
+        return new AliPay();
     }
     /**
-     *
      *
      *
      *
@@ -68,8 +66,4 @@ class Pay
         $this->driver = $this->getDriver($driver)->getGateWay($way)->pay($para);
 
     }
-
-
-
-
 }

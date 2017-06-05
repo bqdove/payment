@@ -14,6 +14,7 @@ use Omnipay\Omnipay;
 class Alipay
 {
     protected $settings;
+    protected $gateway;
 
     public function __construct()
     {
@@ -29,19 +30,19 @@ class Alipay
         $data = $this->settings;
         $gateway = Omnipay::create( $gatewayName );
         $gateway->setPartner($data ['partner_id']); //支付宝 PID
-        $gateway->setKey( $data['']);  //支付宝 Key
-        $gateway->setSellerEmail( $data['seller_email']); //收款账户 email
-        $gateway->setReturnUrl( $data['return_url']);
-        $gateway->setNotifyUrl( $data['notify_url'] );
-
-        return $gateway;
+        $gateway->setKey($data['']);  //支付宝 Key
+        $gateway->setSellerEmail($data['seller_email']); //收款账户 email
+        $gateway->setReturnUrl($data['return_url']);
+        $gateway->setNotifyUrl($data['notify_url']);
+        $this->gateway = $gateway;
+        return $this;
      }
 
     /**
      *申请支付
      */
 
-    public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
+    public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $tn, $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
     {
         $partner_id = $this->settings->get('partner_id');//partner_id
 
@@ -49,20 +50,19 @@ class Alipay
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = {};
+        $biz_content = [];
 
         $options = [
-        'partner_id' => $partner_id,
-        'merchant_private_key' => $merchant_private_key
-        // 'out_trade_no' => $tn, //生成唯一订单号
-       // 'subject' => '', //订单标题
-      // 'total_fee' => , //订单总金额
+            'partner_id' => $partner_id,
+            'merchant_private_key' => $merchant_private_key,
+            'out_trade_no' => $tn, //生成唯一订单号
+            'subject' => '', //订单标题
+            'total_fee' => '', //订单总金额
         ];
 
         // 获取支付网关
-        $gateway = $this->get_gate_way();
 
-        $response = $gateway->purchase($options)->send();
+        $response = $this->gateway->purchase($options)->send();
 
         $response->redirect();
     }
@@ -72,7 +72,7 @@ class Alipay
    */
     public function webNotify()
     {
-        $gateway = $this->get_gate_way();
+        $gateway = $this->getGateWay();
         $request = $gateway->completePurchase();
         $request->setParams(array_merge($_POST, $_GET)); //Don't use $_REQUEST for may contain $_COOKIE
 
@@ -113,8 +113,7 @@ class Alipay
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = {
-        };
+        $biz_content = [];
 
         $options = [
               'partner_id' => $partner_id,
@@ -124,7 +123,7 @@ class Alipay
               // 'total_fee' => , //订单总金额
           ];
 
-        $gateway = $this->get_gate_way();
+        $gateway = $this->getGateWay();
 
         $response = $gateway->query($options)->send();
 
@@ -142,7 +141,7 @@ class Alipay
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = {};
+        $biz_content = [];
 
 	$options = [
         'partner_id' => $partner_id,
@@ -150,11 +149,11 @@ class Alipay
         // 'out_trade_no' => $tn, //生成唯一订单号
         // 'subject' => '', //订单标题
         // 'total_fee' => , //订单总金额
-        'biz_content' => {};
+        'biz_content' => []
 	];
 
 	// 获取支付网关
-	$gateway = $this->get_gate_way();
+	$gateway = $this->getGateWay();
 
 	$response = $gateway->refund($options)->send();
 

@@ -128,7 +128,7 @@ class WechatPay
         $gateway->setApiKey($this->settings->get('wechat.key'));
     }
 
-    
+
     public function pay(){
         $params = [
             'sign' => $this->getData($data['sign']),
@@ -150,7 +150,7 @@ class WechatPay
     }
 
     //回调通知
-    public function nativenotify(){
+    public function notify(){
         $gateway = $this->getGateWay();
         $request = $gateway->completePurchase();
         if ( $request->isPaid()) {
@@ -161,7 +161,7 @@ class WechatPay
         }
     }
     //退款
-    public function nativerefund(){
+    public function refund(){
         $gateway = $this->getGateWay();
         $gateway->setCertPath($this->settings->get('wechat.certpath'));
         $gateway->setKeyPath($this->settings->get('wechat.keypath'));

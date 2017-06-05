@@ -11,19 +11,18 @@ namespace Notadd\Multipay;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
-use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 
 class UnionPay
 {
     protected $settings;
-    //获取配置
+
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    public function getGateway()
+    public function getGateWay($gatewayname)
     {
-            $gateway = Omnipay::create('UnionPay_Express');
+            $gateway = Omnipay::create($gatewayname);
             $gateway->setMerId($this->settings->get('union.merId'));
             $gateway->setCertPath($this->settings->get('union.certPath'));
             $gateway->setCertPassword($this->settings->get('union.certPassword'));
@@ -45,7 +44,7 @@ class UnionPay
                     'transType' => $transType// transtype
             ];
 
-            $gateway = $this->getGateway();
+            $gateway = $this->getGateWay();
 
             $response = $gateway->purchase($order)->send();
 
@@ -54,7 +53,7 @@ class UnionPay
 
     public function webNotify()
     {
-            $gateway = $this->getGateway();
+            $gateway = $this->getGateWay();
 
             $gateway->setMerId($this->settings->get('union.merId'));
 
@@ -75,12 +74,12 @@ class UnionPay
     {
             $order = [
                     'merId' => $merId,//merId
-                    'transType' => $transType// transtype
+                    'transType' => $transType,// transtype
                     'orderId'   => $orderId, //Your order ID
                     'orderTime'   => $orderTime, //Should be format 'YmdHis'
             ];
 
-            $gateway = $this->gateway();
+            $gateway = $this->getGateWay();
 
             $response = $gateway->query($order)->send();
     }
@@ -92,7 +91,7 @@ class UnionPay
 
     public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
     {
-            $gateway = $this->gateway();
+            $gateway = $this->getGateWay();
 
             $order = [
                     'merId'  => $merId,
