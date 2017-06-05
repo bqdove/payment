@@ -14,6 +14,7 @@ use Omnipay\Omnipay;
 class Alipay
 {
     protected $settings;
+
     protected $gateway;
 
     public function __construct()

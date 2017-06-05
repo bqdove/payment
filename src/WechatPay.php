@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Omnipay\WechatPay\Helper;
 use Omnipay\WechatPay\Message\CreateOrderRequest;
 use Omnipay\WechatPay\Message\RefundOrderRequest;
+
 class WechatPay
 {
     protected $settings;
