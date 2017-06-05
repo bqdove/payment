@@ -14,6 +14,7 @@ use Omnipay\Omnipay;
 class Alipay
 {
     protected $settings;
+
     protected $gateway;
 
     public function __construct()
@@ -25,10 +26,10 @@ class Alipay
         return $this->settings->get($config);
     }
 
-    public function getGateWay(gatewayName)
+    public function getGateWay($gatewayName)
     {
         $data = $this->settings;
-        $this->gateway = Omnipay::create(gatewayName );
+        $this->gateway = Omnipay::create($gatewayName );
         $this->gateway->setPartner($data ['partner_id']); //支付宝 PID
         $this->gateway->setKey($data['']);  //支付宝 Key
         $this->gateway->setSellerEmail($data['seller_email']); //收款账户 email

@@ -11,27 +11,29 @@ namespace Notadd\Multipay;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
-use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
+
 
 class UnionPay
 {
     protected $settings;
+
+    protected $gateway;
     //获取配置
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    public function getGateway()
+    public function getGateway($gateway)
     {
-            $gateway = Omnipay::create('UnionPay_Express');
-            $gateway->setMerId($this->settings->get('union.merId'));
-            $gateway->setCertPath($this->settings->get('union.certPath'));
-            $gateway->setCertPassword($this->settings->get('union.certPassword'));
-            $gateway->setCertDir($this->settings->get('union.certDir'));
-            $gateway->setReturnUrl($this->settings->get('union.returnUrl'));
-            $gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
+            $this->gateway = Omnipay::create($gateway);
+            $this->gateway->setMerId($this->settings->get('union.merId'));
+            $this->gateway->setCertPath($this->settings->get('union.certPath'));
+            $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
+            $this->gateway->setCertDir($this->settings->get('union.certDir'));
+            $this->gateway->setReturnUrl($this->settings->get('union.returnUrl'));
+            $this->gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
 
-            return $gateway;
+            return $this;
     }
 
     public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
@@ -45,22 +47,18 @@ class UnionPay
                     'transType' => $transType// transtype
             ];
 
-            $gateway = $this->getGateway();
-
-            $response = $gateway->purchase($order)->send();
+            $response = $this->gateway->purchase($order)->send();
 
             $response->getRedirectHtml(); //For PC/Wap
     }
 
     public function webNotify()
     {
-            $gateway = $this->getGateway();
+            $this->gateway->setMerId($this->settings->get('union.merId'));
 
-            $gateway->setMerId($this->settings->get('union.merId'));
+            $this->gateway->setCertDir($this->settings->get('union.certDir')); //The directory contain *.cer files
 
-            $gateway->setCertDir($this->settings->get('union.certDir')); //The directory contain *.cer files
-
-            $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
+            $response = $this->gateway->completePurchase(['request_params'=>$_REQUEST])->send();
 
             if ($response->isPaid()) {
                 //exit('支付成功！');
@@ -75,14 +73,12 @@ class UnionPay
     {
             $order = [
                     'merId' => $merId,//merId
-                    'transType' => $transType// transtype
+                    'transType' => $transType,// transtype
                     'orderId'   => $orderId, //Your order ID
                     'orderTime'   => $orderTime, //Should be format 'YmdHis'
             ];
 
-            $gateway = $this->gateway();
-
-            $response = $gateway->query($order)->send();
+            $response = $this->gateway->query($order)->send();
     }
 
     /**
@@ -102,7 +98,7 @@ class UnionPay
                     'txnAmt'  => $totalFee, //Order total fee
             ];
 
-            $response = $gateway->refund($order)->send();
+            $response = $this->gateway->refund($order)->send();
 
             var_dump($response->isSuccessful());
 

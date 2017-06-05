@@ -10,7 +10,7 @@ namespace Notadd\Multipay;
 
 use Illuminate\Contracts\Foundation\Application;
 
-class Pay
+class Multipay
 {
     /**
      * The application instance.
@@ -69,7 +69,7 @@ class Pay
      *
      */
     public function pay($driver, $way, $para){
-        $this->url = $this->getDriver($driver)->getGateWay($way)->pay($para);
+        $this->getDriver($driver)->getGateWay($way)->pay($para);
 
     }
 }
