@@ -45,7 +45,7 @@ class Pay
         }
     }
 
-    public function getDefaultDriver($name){
-        return new Alipay($name);
+    public function getDefaultDriver(){
+        return new Alipay();
     }
 }

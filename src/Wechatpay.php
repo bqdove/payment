@@ -24,13 +24,13 @@ class WechatPay
     }
     public function register(){
         $this->app->singleton('pay_native',function($app){
-            return new Wechatpay($app->pay_native);
+            return new WechatPay($app->pay_native);
         });
         $this->app->singleton('pay_jsapi',function($app){
-            return new Wechatpay($app->pay_jsapi);
+            return new WechatPay($app->pay_jsapi);
         });
         $this->app->singleton('pay_pos',function($app){
-            return new Wechatpay($app->pay_pos);
+            return new WechatPay($app->pay_pos);
         });
     }
 
@@ -117,7 +117,6 @@ class WechatPay
 
         return $data;
     }
-
 
     /*
      * 扫码支付
