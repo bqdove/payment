@@ -119,17 +119,17 @@ class WechatPay
     }
 
     /*
-     * 扫码支付
+     * 获取支付网关
      */
-    public function get_wechat_Nativegateway(){
-        $gateway = Omnipay::create('WechatPay_Native');
+    public function getGateWay($gatewayname){
+        $gateway = Omnipay::create($gatewayname);
         $gateway->setAppId($this->settings->get('wechat.app_id'));
         $gateway->setMchId($this->settings->get('wechat.mch_id'));
         $gateway->setApiKey($this->settings->get('wechat.key'));
-
-        return $gateway;
     }
-    public function pay_native(){
+
+    
+    public function pay(){
         $params = [
             'sign' => $this->getData($data['sign']),
             'body' => $this->getData($data['body']),
@@ -141,16 +141,17 @@ class WechatPay
             'trade_type'=>$this->getData($data['trade_type'])
         ];
 
-        // 获取支付网关
-        $gateway = $this->get_wechat_Nativegateway();
+        $gateway = $this->getGateWay();
 
         $response = $gateway->purchase($params)->send();
 
         $response->isSuccessful();
+
     }
+
     //回调通知
     public function nativenotify(){
-        $gateway = $this->get_wechat_Nativegateway();
+        $gateway = $this->getGateWay();
         $request = $gateway->completePurchase();
         if ( $request->isPaid()) {
 
@@ -161,7 +162,7 @@ class WechatPay
     }
     //退款
     public function nativerefund(){
-        $gateway = $this->get_wechat_Nativegateway();
+        $gateway = $this->getGateWay();
         $gateway->setCertPath($this->settings->get('wechat.certpath'));
         $gateway->setKeyPath($this->settings->get('wechat.keypath'));
         $response = $gateway->refund([
@@ -175,119 +176,4 @@ class WechatPay
         $response->isSuccessful();
     }
 
-    /*
-     * 公众号支付
-     */
-    public function get_wechat_Jsgateway(){
-
-        $gateway = Omnipay::create('WechatPay_Js');
-        $gateway->setAppId($this->settings->get('wechat.app_id'));
-        $gateway->setMchId($this->settings->get('wechat.mch_id'));
-        $gateway->setApiKey($this->settings->get('wechat.key'));
-    }
-    public function pay_jsapi(){
-        $params = [
-            'sign' => $this->getData($data['sign']),
-            'body' => $this->getData($data['body']),
-            'openid'=>$this->getData($data['openid']),
-            'nonce_type'=> $this->getData($data['nonce_type']),
-            'out_trade_no' => $this->getData($data['out_trade_no']),
-            'total_fee' => $this->getData($data['total_fee']),
-            'spbill_create_ip' => $this->getData($data['spbill_create_ip']),
-            'notify_url' =>$this->getData($data['notify_url']),
-            'trade_type'=>$this->getData($data['trade_type'])
-        ];
-
-        // 获取支付网关
-        $gateway = $this->get_wechat_Jsgateway();
-
-        $response = $gateway->purchase($params)->send();
-
-        $response->isSuccessful();
-
-    }
-    //回调通知
-    public function jsnotify()
-    {
-        $gateway = $this->get_wechat_Jsgateway();
-        $request = $gateway->completePurchase();
-        if ($request->isPaid()) {
-
-            echo "支付成功";
-        } else {
-            echo "支付失败";
-        }
-    }
-    //退款
-    public function jsrefund(){
-        $gateway = $this->get_wechat_Jsgateway();
-        $gateway->setCertPath($this->settings->get('wechat.certpath'));
-        $gateway->setKeyPath($this->settings->get('wechat.keypath'));
-        $response = $gateway->refund([
-            'nonce_str'=>$this->getrefundData($data['nonce_str']),
-            'transaction_id'=>$this->getrefundData($data['transaction_id']),
-            'sign'=>$this->getrefundData($data['sign']),
-            'out_refund_no'=>$this->getrefundData($data['out_refund_no']),
-            'total_fee'=>$this->getrefundData($data['total_fee']),
-            'refund_fee'=>$this->getrefundData($data['refund_fee'])
-        ])->send();
-        $response->isSuccessful();
-    }
-
-     /*
-      * 刷卡支付
-      */
-    public function get_wechat_Posgateway(){
-
-        $gateway = Omnipay::create('WechatPay_Pos');
-        $gateway->setAppId($this->settings->get('wechat.app_id'));
-        $gateway->setMchId($this->settings->get('wechat.mch_id'));
-        $gateway->setApiKey($this->settings->get('wechat.key'));
-    }
-    public function pay_pos(){
-        $params = [
-            'sign' => $this->getData($data['sign']),
-            'body' => $this->getData($data['body']),
-            'nonce_type'=> $this->getData($data['nonce_type']),
-            'out_trade_no' => $this->getData($data['out_trade_no']),
-            'total_fee' => $this->getData($data['total_fee']),
-            'spbill_create_ip' => $this->getData($data['spbill_create_ip']),
-            'notify_url' =>$this->getData($data['notify_url']),
-            'trade_type'=>$this->getData($data['trade_type'])
-        ];
-
-        // 获取支付网关
-        $gateway = $this->get_wechat_Posgateway();
-
-        $response = $gateway->purchase($params)->send();
-
-        $response->isSuccessful();
-
-    }
-    //回调通知
-    public function posnotify(){
-        $gateway = $this->get_wechat_Posgateway();
-        $request = $gateway->completePurchase();
-        if ( $request->isPaid()) {
-
-            echo "支付成功";
-        } else {
-            echo "支付失败";
-        }
-    }
-    //退款
-    public function posrefund(){
-        $gateway = $this->get_wechat_Posgateway();
-        $gateway->setCertPath($this->settings->get('wechat.certpath'));
-        $gateway->setKeyPath($this->settings->get('wechat.keypath'));
-        $response = $gateway->refund([
-            'nonce_str'=>$this->getrefundData($data['nonce_str']),
-            'transaction_id'=>$this->getrefundData($data['transaction_id']),
-            'sign'=>$this->getrefundData($data['sign']),
-            'out_refund_no'=>$this->getrefundData($data['out_refund_no']),
-            'total_fee'=>$this->getrefundData($data['total_fee']),
-            'refund_fee'=>$this->getrefundData($data['refund_fee'])
-        ])->send();
-        $response->isSuccessful();
-    }
 }

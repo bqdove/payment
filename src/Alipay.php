@@ -22,7 +22,7 @@ class Alipay
 
     public function getConfig($config){
         return $this->settings->get($config);
-}
+    }
 
     public function getGateWay($gatewayName)
     {
@@ -38,8 +38,8 @@ class Alipay
      }
 
     /**
-  *申请支付
-  */
+     *申请支付
+     */
 
     public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
     {
@@ -49,8 +49,7 @@ class Alipay
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = {
-        };
+        $biz_content = {};
 
         $options = [
         'partner_id' => $partner_id,

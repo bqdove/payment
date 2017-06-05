@@ -25,16 +25,23 @@ class Pay
      */
     protected $drivers = [];
 
+    /**
+     *
+     * The driver is the selected pay-driver;
+     *
+     */
+    protected $driver;
+
     public function __construct($app){
         $this->app = $app;
     }
-    public function driver($name=null){
+    private function driver($name=null){
         $name=$name ?:$this->getDefaultDriver($name);
         return isset($this->drivers[$name])
             ? $this->drivers[$name]
             : $this->drivers[$name] = $this->getDriver($name);
     }
-    public function getDriver($name){
+    private function getDriver($name){
         switch($name){
             case 'alipay':
                 return new AliPay();
@@ -42,10 +49,27 @@ class Pay
                 return new WechatPay();
             case 'unionpay':
                 return new UnionPay();
+            default:
+                return $this->driver();
         }
     }
 
-    public function getDefaultDriver(){
-        return new Alipay();
+
+    private function getDefaultDriver($name){
+        return new Alipay($name);
     }
+    /**
+     *
+     *
+     *
+     *
+     */
+    public function pay($driver, $way, $para){
+        $this->driver = $this->getDriver($driver)->getGateWay($way)->pay($para);
+
+    }
+
+
+
+
 }
