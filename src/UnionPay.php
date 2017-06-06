@@ -35,8 +35,7 @@ class UnionPay
         $this->gateway->setReturnUrl($this->settings->get('union.returnUrl'));
         $this->gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
 
-
-            return $this;
+        return $this;
     }
     /**
      *上传证书
@@ -79,9 +78,15 @@ class UnionPay
             $response = $this->gateway->completePurchase(['request_params'=>$_REQUEST])->send();
 
             if ($response->isPaid()) {
-                //exit('支付成功！');
-            }else{
-                //exit('支付失败！');
+                /**
+                 * Payment is successful
+                 */
+                die('success'); //The notify response should be 'success' only
+            } else {
+                /**
+                 * Payment is not successful
+                 */
+                die('你已经支付失败, 请稍候重试'); //The notify response
             }
     }
     /**
@@ -106,19 +111,40 @@ class UnionPay
 
     public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
     {
-            $order = [
-                    'merId'  => $merId,
-                    'transType' => $transType,
-                    'orderId' => $orderId, //Your site trade no, not union tn.
-                    'orderTime' => $orderTime, //Order trade time
-                    'txnAmt'  => $totalFee, //Order total fee
-            ];
+        $order = [
+                'merId'  => $merId,
+                'transType' => $transType,
+                'orderId' => $orderId, //Your site trade no, not union tn.
+                'orderTime' => $orderTime, //Order trade time
+                'txnAmt'  => $totalFee, //Order total fee
+        ];
 
-            $response = $this->gateway->refund($order)->send();
+        $response = $this->gateway->refund($order)->send();
 
-            var_dump($response->isSuccessful());
+        var_dump($response->isSuccessful());
 
-            var_dump($response->getData());
+        var_dump($response->getData());
+    }
+
+    /**
+     * 取消接口
+     */
+
+    public function cancel($merId, $transType, $orderId, $orderTime, $totalFee)
+    {
+        $order = [
+            'merId'  => $merId,
+            'transType' => $transType,
+            'orderId' => $orderId, //Your site trade no, not union tn.
+            'orderTime' => $orderTime, //Order trade time
+            'txnAmt'  => $totalFee, //Order total fee
+        ];
+
+        $response = $this->gateway->consumeUndo($order)->send();
+
+        var_dump($response->isSuccessful());
+
+        var_dump($response->getData());
     }
 
 }

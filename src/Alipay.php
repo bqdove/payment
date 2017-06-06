@@ -130,7 +130,7 @@ class Alipay
     /**
     *退款接口
     */
-    public function refund($app_id, $method = "alipay.trade.refund", $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null)
+    public function refund($method = "alipay.trade.refund", $charset = 'UTF-8', $sign_type = 'RSA2', $version = 1.0)
     {
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
@@ -157,7 +157,7 @@ class Alipay
      *交易撤销接口
      *
      */
-    public function cancel()
+    public function cancel($method = "alipay.trade.refund", $charset = 'UTF-8', $sign_type = 'RSA2', $version = 1.0)
     {
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
