@@ -24,13 +24,14 @@ class RouteRegister extends AbstractRouteRegister
      */
     public function handle()
     {
-            $this->router->group(['middleware' => ['auth:api', 'cross', 'web'], 'prefix' => 'api/baidu'], function () {
+            $this->router->group(['middleware' => ['cross', 'web']], function () {
                 $this->router->post('get',AlipayController::class . '@get');
                 $this->router->post('set', AlipayController::class . '@set');
                 $this->router->post('get',WechatController::class . '@get');
                 $this->router->post('set',WechatController::class . '@set');
                 $this->router->post('get',UnionController::class . '@get');
                 $this->router->post('set',UnionController::class . '@set');
+                $this->router->post('upload',UploadController::class .'@handle');
             });
 
             $this->router->get('test',WechatController::class.'@pay');

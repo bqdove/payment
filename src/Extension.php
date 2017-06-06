@@ -25,10 +25,10 @@ class Extension extends AbstractExtension
     {
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
-        $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'pay');
-        $this->loadViewsFrom(realpath(__DIR__ . '/../resources/views'), 'pay');
+        $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'multipay');
+        $this->loadViewsFrom(realpath(__DIR__ . '/../resources/views'), 'multipay');
         $this->publishes([
-            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/multipay') => public_path('assets/extensions/multipay'),
+            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/pay') => public_path('assets/extensions/pay'),
         ], 'public');
     }
     /**

@@ -9,7 +9,7 @@
         },
         data() {
             return {
-                action: `${window.api}/mall/admin/upload`,
+                action: `${window.api}/pay/upload`,
                 alipayForm: {
                     enabled: true,
                     key: '',
