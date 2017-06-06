@@ -16,11 +16,15 @@ class UnionPay
 {
     protected $settings;
     protected $gateway;
+
     //获取配置
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
+        $this->getGateWay();
     }
-
+    /**
+     * 获取网关接口
+     */
     public function getGateWay($gatewayname)
     {
         $this->gateway = Omnipay::create($gatewayname);
@@ -34,7 +38,23 @@ class UnionPay
 
             return $this;
     }
-
+    /**
+     *上传证书
+     */
+    public function uploadcert(Request $request){
+        $path ='../storage/cert/'.date('Ymd');
+        $filename = $_FILES['cert']['name'];
+        $request->file('cert')->move($path,$filename);
+    }
+    /**
+     * 支付接口
+     * @param $merId
+     * @param $transType
+     * @param $orderId
+     * @param $txnTime
+     * @param $orderDesc
+     * @param $txnAmt
+     */
     public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
     {
             $order = [
@@ -50,7 +70,9 @@ class UnionPay
 
             $response->getRedirectHtml(); //For PC/Wap
     }
-
+    /**
+     * 回调方法接口
+     */
     public function webNotify($orderDesc,$orderId,$txnTime)
     {
 
@@ -63,8 +85,8 @@ class UnionPay
             }
     }
     /**
-      *  查询接口
-      */
+     *查询接口
+     */
     public function query($merId, $transType, $orderId, $orderTime)
     {
         $order = [
@@ -76,10 +98,11 @@ class UnionPay
         $response = $this->gateway->query($order)->send();
         $response->isSuccessful();
     }
+
     /**
-    *
-    *退款接口
-    */
+     *
+     * 退款接口
+     */
 
     public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
     {

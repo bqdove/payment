@@ -22,7 +22,7 @@ class WechatPay
     protected $gatewayName;
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
-
+        $this->getGateWay();
     }
 
      /*
@@ -30,10 +30,11 @@ class WechatPay
      */
 
     public function uploadcert(Request $request){
-        $path ='./cert/'.date('Ymd');
+        $path ='../storage/cert/'.date('Ymd');
         $filename = $_FILES['cert']['name'];
         $request->file('cert')->move($path,$filename);
     }
+
     public function getData()
     {
         $order = new CreateOrderRequest();
