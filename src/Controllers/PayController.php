@@ -21,7 +21,7 @@ class PayController extends Controller{
     /**
      * @var
      */
-    protected $pay;
+    protected $multipay;
 
     public function __construct()
     {
@@ -31,7 +31,7 @@ class PayController extends Controller{
     }
 
     public function pay(){
-        return $this->driver()->pay();
+        return $this->multipay->driver()->pay();
     }
     public function execute()
     {

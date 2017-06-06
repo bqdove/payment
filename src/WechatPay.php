@@ -25,15 +25,7 @@ class WechatPay
 
     }
 
-     /*
-     * 上传证书
-     */
 
-    public function uploadcert(Request $request){
-        $path ='./cert/'.date('Ymd');
-        $filename = $_FILES['cert']['name'];
-        $request->file('cert')->move($path,$filename);
-    }
     public function getData()
     {
         $order = new CreateOrderRequest();
