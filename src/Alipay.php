@@ -43,7 +43,7 @@ class Alipay
      *申请支付
      */
 
-    public function pay($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $tn, $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
+    public function pay($merchant_private_key = null, $method = 'alipay.trade.page.pay', $charset = 'UTF-8', $sign_type = 'RSA2', $tn, $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
     {
         $partner_id = $this->settings->get('partner_id');//partner_id
 

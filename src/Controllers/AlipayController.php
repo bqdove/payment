@@ -17,6 +17,7 @@ use Notadd\Multipay\Handlers\SetAlipayconfHandler;
  */
 class AlipayController extends Controller
 {
+
     /**
      * Get handler.
      *
