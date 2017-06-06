@@ -9,7 +9,6 @@
 namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Illuminate\Http\Request;
 use Illuminate\Container\Container;
 
 class PayController extends Controller{
@@ -32,7 +31,7 @@ class PayController extends Controller{
     }
 
     public function pay(){
-        return ;
+        return $this->driver()->pay();
     }
     public function execute()
     {

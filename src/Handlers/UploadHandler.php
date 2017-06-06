@@ -8,12 +8,12 @@
 
 namespace Notadd\Multipay\Handlers;
 
+use Guzzle\Http\Message\Request;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Notadd\Foundation\Passport\Abstracts\Handler;
-
+use Notadd\Foundation\Routing\Abstracts\Handler;
 /**
  * Class UploadHandler.
  */
