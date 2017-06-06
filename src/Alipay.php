@@ -20,6 +20,7 @@ class Alipay
     public function __construct()
     {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
+        $this->getGateWay();
     }
 
     public function getConfig($config){

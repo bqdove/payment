@@ -38,12 +38,7 @@ class Multipay
     public function __construct($app){
         $this->app = $app;
     }
-    private function driver($name=null){
-        $name=$name ?:$this->getDefaultDriver();
-        return isset($this->drivers[$name])
-            ? $this->drivers[$name]
-            : $this->drivers[$name] = $this->getDriver($name);
-    }
+
     private function getDriver($name){
         switch($name){
             case 'alipay':
@@ -53,7 +48,7 @@ class Multipay
             case 'unionpay':
                 return new UnionPay();
             default:
-                return $this->driver();
+                return $this->getDefaultDriver();
         }
     }
 
