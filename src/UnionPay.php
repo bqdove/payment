@@ -12,26 +12,25 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
 
-
 class UnionPay
 {
     protected $settings;
-
     protected $gateway;
     //获取配置
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    public function getGateway($gateway)
+    public function getGateWay($gatewayname)
     {
-            $this->gateway = Omnipay::create($gateway);
-            $this->gateway->setMerId($this->settings->get('union.merId'));
-            $this->gateway->setCertPath($this->settings->get('union.certPath'));
-            $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
-            $this->gateway->setCertDir($this->settings->get('union.certDir'));
-            $this->gateway->setReturnUrl($this->settings->get('union.returnUrl'));
-            $this->gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
+            $gateway = Omnipay::create($gatewayname);
+            $gateway->setMerId($this->settings->get('union.merId'));
+            $gateway->setCertPath($this->settings->get('union.certPath'));
+            $gateway->setCertPassword($this->settings->get('union.certPassword'));
+            $gateway->setCertDir($this->settings->get('union.certDir'));
+            $gateway->setReturnUrl($this->settings->get('union.returnUrl'));
+            $gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
+
 
             return $this;
     }
@@ -52,11 +51,8 @@ class UnionPay
             $response->getRedirectHtml(); //For PC/Wap
     }
 
-    public function webNotify()
+    public function webNotify($orderDesc,$orderId,$txnTime)
     {
-            $this->gateway->setMerId($this->settings->get('union.merId'));
-
-            $this->gateway->setCertDir($this->settings->get('union.certDir')); //The directory contain *.cer files
 
             $response = $this->gateway->completePurchase(['request_params'=>$_REQUEST])->send();
 
@@ -71,16 +67,15 @@ class UnionPay
       */
     public function query($merId, $transType, $orderId, $orderTime)
     {
-            $order = [
-                    'merId' => $merId,//merId
-                    'transType' => $transType,// transtype
-                    'orderId'   => $orderId, //Your order ID
-                    'orderTime'   => $orderTime, //Should be format 'YmdHis'
-            ];
-
-            $response = $this->gateway->query($order)->send();
+        $order = [
+            'merId' => $merId,//merId
+            'transType' => $transType,// transtype
+            'orderId' => $orderId, //Your order ID
+            'orderTime' => $orderTime, //Should be format 'YmdHis'
+        ];
+        $response = $gateway->query($order)->send();
+        $response->isSuccessful();
     }
-
     /**
     *
     *退款接口
@@ -88,8 +83,6 @@ class UnionPay
 
     public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
     {
-            $gateway = $this->gateway();
-
             $order = [
                     'merId'  => $merId,
                     'transType' => $transType,
