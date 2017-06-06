@@ -41,6 +41,8 @@ class UploadHandler extends Handler
     public function execute()
     {
         $this->validate($this->request, [
+            'file' => 'required|image',
+        ], [
             'file.required' => '必须上传一个文件！',
         ]);
         $avatar = $this->request->file('file');

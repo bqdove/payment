@@ -64,6 +64,8 @@ class SetWechatconfHandler extends AbstractSetHandler
             $this->settings->set('wechat.certpath',$this->request->input('certpath')),
             $this->settings->set('wechat.keypath',$this->request->input('keypath')),
             $this->settings->set('wechat.key',$this->request->input('key')),
+            $this->settings->set('wechat.returnUrl',$this->request->input('returnUrl')),
+            $this->settings->set('wechat.notifyUrl',$this->request->input('notifyUrl'))
         );
 
         return true ;
