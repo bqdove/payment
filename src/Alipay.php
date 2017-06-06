@@ -31,10 +31,12 @@ class Alipay
     {
         $data = $this->settings;
         $this->gateway = Omnipay::create($gatewayName );
-        $this->gateway->setPartner($data ['partner_id']); //支付宝 PID
-        $this->gateway->setKey($data['']);  //支付宝 Key
-        $this->gateway->setSellerEmail($data['seller_email']); //收款账户 email
-        $this->gateway->setReturnUrl($data['return_url']);
+        $this->gateway->setSignType('RSA2'); // RSA/RSA2/MD5
+        $this->gateway->setAppId($data ['app_id']); //支付宝应用ID
+        $this->gateway->setPrivateKey($data['private_key']);//支付宝应用私钥
+        $this->gateway->setAlipayPublicKey($data['public_key']);//支付宝应用公钥
+        $this->gateway->setSellerEmail($data['seller_email']); //收款账户 email地址
+        $this->gateway->setReturnUrl($data['return_url']);//
         $this->gateway->setNotifyUrl($data['notify_url']);
 
         return $this;
@@ -44,34 +46,32 @@ class Alipay
      *申请支付
      */
 
-    public function pay($merchant_private_key = null, $method = 'alipay.trade.page.pay', $charset = 'UTF-8', $sign_type = 'RSA2', $tn, $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
+    public function pay($method = 'alipay.trade.page.pay', $charset = 'UTF-8', $sign_type = 'RSA2', $version = 1.0)
     {
-        $partner_id = $this->settings->get('partner_id');//partner_id
-
-        $merchant_private_key = $this->settings->get('merchant_private_key');//private_key
-
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = [];
+        $request = $this->gateway->purchase();
 
-        $options = [
-            'partner_id' => $partner_id,
-            'merchant_private_key' => $merchant_private_key,
-            'out_trade_no' => $tn, //生成唯一订单号
-            'subject' => '', //订单标题
-            'total_fee' => '', //订单总金额
-        ];
+        $request->setBizContent([
+            'version'      => $version,
+            'charset'      => $charset,
+            'sign_type'    => $sign_type,
+            'method'       => $method,
+            'timestamp'    => $timestamp,
+            'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
+            'total_amount' => 0.01,
+            'subject'      => 'test',
+            'product_code' => 'FAST_INSTANT_TRADE_PAY',
+        ]);
 
-        // 获取支付网关
-
-        $response = $this->gateway->purchase($options)->send();
+        $response = $request->send();
 
         $response->redirect();
     }
 
-  /**
-   * 异步&&同步通知
-   */
+    /**
+     * 异步&&同步通知
+     */
     public function webNotify()
     {
         $request = $this->gateway->completePurchase();
@@ -106,25 +106,23 @@ class Alipay
       *  查询接口
       */
 
-    public function query($merchant_private_key = null, $method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null, $out_trade_no = 0)
+    public function query($method = 'alipay.trade.query', $charset = 'UTF-8', $sign_type = 'RSA2', $version = 1.0)
     {
-        $partner_id = $this->settings->get('partner_id');//partner_id
-
-        $merchant_private_key = $this->settings->get('merchant_private_key');//private_key
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = [];
+        $request = $this->gateway->query();
 
-        $options = [
-              'partner_id' => $partner_id,
-              'merchant_private_key' => $merchant_private_key
-              // 'out_trade_no' => $tn, //生成唯一订单号
-              // 'subject' => '', //订单标题
-              // 'total_fee' => , //订单总金额
-          ];
+        $request->setBizContent([
+            'version'      => $version,
+            'charset'      => $charset,
+            'sign_type'    => $sign_type,
+            'method'       => $method,
+            'timestamp'    => $timestamp,
+            'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
+        ]);
 
-        $response = $this->gateway->query($options)->send();
+        $response = $request->send();
 
         $response->redirect();
     }
@@ -134,25 +132,49 @@ class Alipay
     */
     public function refund($app_id, $method = "alipay.trade.refund", $charset = 'UTF-8', $sign_type = 'RSA2', $sign, $timestamp, $version = 1.0, $biz_content = null)
     {
-        $partner_id = $this->settings->get('partner_id');
-
-        $merchant_private_key = $this->settings->get('merchant_private_key');
 
         $timestamp = new date("Y-m-d G-i-s", time());//format order time
 
-        $biz_content = [];
+        $request = $this->gateway->refund();
 
-	$options = [
-        'partner_id' => $partner_id,
-        'merchant_private_key' => $merchant_private_key,
-        // 'out_trade_no' => $tn, //生成唯一订单号
-        // 'subject' => '', //订单标题
-        // 'total_fee' => , //订单总金额
-        'biz_content' => []
-	];
+        $request->setBizContent([
+            'version'      => $version,
+            'charset'      => $charset,
+            'sign_type'    => $sign_type,
+            'method'       => $method,
+            'timestamp'    => $timestamp,
+            'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
+            'refund_amount'=> 200,
+            'refund_reason'=> 'something why refund',
+        ]);
 
-	$response = $this->gateway->refund($options)->send();
+        $response = $request->send();
 
-	$response->redirect();
+        $response->redirect();
     }
+
+    /**
+     *交易撤销接口
+     *
+     */
+    public function cancel()
+    {
+        $timestamp = new date("Y-m-d G-i-s", time());//format order time
+
+        $request = $this->gateway->cancel();
+
+        $request->setBizContent([
+            'version'      => $version,
+            'charset'      => $charset,
+            'sign_type'    => $sign_type,
+            'method'       => $method,
+            'timestamp'    => $timestamp,
+            'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
+        ]);
+
+        $response = $request->send();
+
+        $response->redirect();
+    }
+
 }
