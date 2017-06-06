@@ -72,4 +72,33 @@ class Multipay
         $this->getDriver($driver)->getGateWay($way)->pay($para);
 
     }
+
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+
+    public function query($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->query($para);
+    }
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function refund($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->refund($para);
+    }
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function webNotify($driver, $way){
+        $this->getDriver($driver)->getGateWay($way)->webNotify();
+    }
 }

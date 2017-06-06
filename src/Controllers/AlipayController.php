@@ -7,6 +7,7 @@
  * @datetime 2017-05-22 16:26
  */
 namespace Notadd\Multipay\Controllers;
+
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Notadd\Multipay\Handlers\SetAlipayconfHandler;
