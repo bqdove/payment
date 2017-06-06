@@ -91,7 +91,7 @@ class UnionPay
                     'txnAmt'  => $totalFee, //Order total fee
             ];
 
-            $response = $this->gateway->refund($order)->send();
+            $response = $gateway->refund($order)->send();
 
             var_dump($response->isSuccessful());
 

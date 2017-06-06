@@ -45,4 +45,6 @@ class WechatController extends Controller
     public function upload(UploadHandler $handler){
         return $handler->toResponse()->generateHttpResponse();
     }
+
+
 }
