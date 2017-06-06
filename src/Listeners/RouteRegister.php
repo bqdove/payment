@@ -34,6 +34,8 @@ class RouteRegister extends AbstractRouteRegister
                 $this->router->post('upload',UploadController::class .'@handle');
             });
 
+            $this->router->get('test',WechatController::class.'@pay');
+
 
     }
 }

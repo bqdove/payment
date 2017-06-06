@@ -21,7 +21,7 @@ class UnionController extends Controller
     /**
      * Get handler.
      *
-     * @param \Notadd\Alipay\Handlers\GetHandler $handler
+     * @param \Notadd\Multipay\Handlers\GetUnionpayconfHandler $handler
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
@@ -34,7 +34,7 @@ class UnionController extends Controller
     /**
      * Set handler.
      *
-     * @param \Notadd\Alipay\Handlers\SetHandler $handler
+     * @param \Notadd\Multipay\Handlers\SetUnionpayconfHandler $handler
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception

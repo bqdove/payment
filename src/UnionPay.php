@@ -23,13 +23,13 @@ class UnionPay
 
     public function getGateWay($gatewayname)
     {
-            $gateway = Omnipay::create($gatewayname);
-            $gateway->setMerId($this->settings->get('union.merId'));
-            $gateway->setCertPath($this->settings->get('union.certPath'));
-            $gateway->setCertPassword($this->settings->get('union.certPassword'));
-            $gateway->setCertDir($this->settings->get('union.certDir'));
-            $gateway->setReturnUrl($this->settings->get('union.returnUrl'));
-            $gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
+        $this->gateway = Omnipay::create($gatewayname);
+        $this->gateway->setMerId($this->settings->get('union.merId'));
+        $this->gateway->setCertPath($this->settings->get('union.certPath'));
+        $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
+        $this->gateway->setCertDir($this->settings->get('union.certDir'));
+        $this->gateway->setReturnUrl($this->settings->get('union.returnUrl'));
+        $this->gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
 
 
             return $this;
@@ -73,7 +73,7 @@ class UnionPay
             'orderId' => $orderId, //Your order ID
             'orderTime' => $orderTime, //Should be format 'YmdHis'
         ];
-        $response = $gateway->query($order)->send();
+        $response = $this->gateway->query($order)->send();
         $response->isSuccessful();
     }
     /**
@@ -91,7 +91,7 @@ class UnionPay
                     'txnAmt'  => $totalFee, //Order total fee
             ];
 
-            $response = $gateway->refund($order)->send();
+            $response = $this->gateway->refund($order)->send();
 
             var_dump($response->isSuccessful());
 

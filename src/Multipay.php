@@ -101,4 +101,14 @@ class Multipay
     public function webNotify($driver, $way, $para){
         $this->getDriver($driver)->getGateWay($way)->webNotify($para);
     }
+
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function cancel($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->cancel($para);
+    }
 }

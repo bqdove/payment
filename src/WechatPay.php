@@ -115,10 +115,10 @@ class WechatPay
             'total_fee' => $this->getData($data['total_fee']),
             'spbill_create_ip' => $this->getData($data['spbill_create_ip']),
             'notify_url' =>$this->getData($data['notify_url']),
-            'trade_type'=>$this->getData($data['trade_type']),
+            'trade_type'=>$this->getData($data['trade_type'])
         ];
         $para1 = [
-            'open_id'=>$this->getData($data['open_id'])
+            'open_id' => $this->getData($data['open_id'])
         ];
         $para2 = [
             'product_id'=>$this->getData($data['product_id'])
