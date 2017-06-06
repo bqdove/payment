@@ -33,6 +33,6 @@ class RouteRegister extends AbstractRouteRegister
                 $this->router->post('set',UnionController::class . '@set');
             });
 
-            $this->router->get('upload', UploadController::class . '@upload');
+
     }
 }
