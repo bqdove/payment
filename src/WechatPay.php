@@ -25,16 +25,16 @@ class WechatPay
         $this->getGateWay();
     }
 
-     /*
-     * 上传证书
-     */
 
+<<<<<<< HEAD
+=======
     public function uploadcert(Request $request){
         $path ='../storage/cert/'.date('Ymd');
         $filename = $_FILES['cert']['name'];
         $request->file('cert')->move($path,$filename);
     }
 
+>>>>>>> c13e2707bafe70d2745da748b75341604e52f95d
     public function getData()
     {
         $order = new CreateOrderRequest();
