@@ -74,7 +74,7 @@ class Multipay
      * @param  Array $para
      *
      */
-zhi
+
     public function query($driver, $way, $para){
         $this->getDriver($driver)->getGateWay($way)->query($para);
     }

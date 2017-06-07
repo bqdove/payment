@@ -19,7 +19,7 @@ class AlipayController extends Controller
 {
 
     /**
-     * Get handler.
+     * Pay handler.
      *
      * @param \Notadd\Multipay\Handlers\GetAlipayconfHandler $handler
      *
@@ -27,7 +27,6 @@ class AlipayController extends Controller
      */
     public function get(GetAlipayconfHandler $handler)
     {
-
         return $handler->toResponse()->generateHttpResponse();
     }
 

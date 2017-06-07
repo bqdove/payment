@@ -29,15 +29,14 @@ class Alipay
 
     public function getGateWay($gatewayName)
     {
-        $data = $this->settings;
         $this->gateway = Omnipay::create($gatewayName );
         $this->gateway->setSignType('RSA2'); // RSA/RSA2/MD5
-        $this->gateway->setAppId($data ['app_id']); //支付宝应用ID
-        $this->gateway->setPrivateKey($data['private_key']);//支付宝应用私钥
-        $this->gateway->setAlipayPublicKey($data['public_key']);//支付宝应用公钥
-        $this->gateway->setSellerEmail($data['seller_email']); //收款账户 email地址
-        $this->gateway->setReturnUrl($data['return_url']);//
-        $this->gateway->setNotifyUrl($data['notify_url']);
+        $this->gateway->setAppId($this->settings['app_id']); //支付宝应用ID
+        $this->gateway->setPrivateKey($this->settings['private_key']);//支付宝应用私钥
+        $this->gateway->setAlipayPublicKey($this->settings['public_key']);//支付宝应用公钥
+        $this->gateway->setSellerEmail($this->settings['seller_email']); //收款账户 email地址
+        $this->gateway->setReturnUrl($this->settings['return_url']);
+        $this->gateway->setNotifyUrl($this->settings['notify_url']);
 
         return $this;
      }
