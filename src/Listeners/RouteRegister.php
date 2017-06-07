@@ -13,7 +13,7 @@ use Notadd\Foundation\Routing\Abstracts\RouteRegister as AbstractRouteRegister;
 use Notadd\Multipay\Controllers\UnionController;
 use Notadd\Multipay\Controllers\WechatController;
 use Notadd\Multipay\Controllers\UploadController;
-
+use Notadd\Multipay\Controllers\PayController;
 /**
  * Class RouteRegister.
  */
@@ -34,8 +34,15 @@ class RouteRegister extends AbstractRouteRegister
                 $this->router->post('upload',UploadController::class .'@handle');
             });
 
-            $this->router->get('test',WechatController::class.'@pay');
+            //http://pay.ibenchu.xyz:8080/pay?gate_way=wechat&way=Alipay_Express&money=100&sign=RSA2
 
-
+        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay'], function () {
+            $this->router->get('pay', PayController::class. '@pay');
+            $this->router->get('query', PayController::class. '@query');
+            $this->router->get('refund', PayController::class. '@refund');
+            $this->router->get('cancel', PayController::class. '@cancel');
+            $this->router->get('webnotice', PayController::class. '@webNotice');
+            $this->router->get('upload', UploadController::class. '@upload');
+        });
     }
 }
