@@ -25,27 +25,85 @@ class Multipay
      */
     protected $drivers = [];
 
+    /**
+      *  The url
+      */
+    protected $url = '';
+
+    /**
+     *
+     * The driver is the selected pay-driver;
+     *
+     */
     public function __construct($app){
         $this->app = $app;
     }
-    public function driver($name=null){
-        $name=$name ?:$this->getDefaultDriver($name);
-        return isset($this->drivers[$name])
-            ? $this->drivers[$name]
-            : $this->drivers[$name] = $this->getDriver($name);
-    }
-    public function getDriver($name){
+
+    private function getDriver($name){
         switch($name){
             case 'alipay':
-                return new Alipay();
+                return new AliPay();
             case 'wechat':
-                return new Wechatpay();
+                return new WechatPay();
             case 'unionpay':
-                return new Unionpay();
+                return new UnionPay();
+            default:
+                return $this->getDefaultDriver();
         }
     }
 
-    public function getDefaultDriver($name){
-        return new Alipay($name);
+    private function getDefaultDriver(){
+        return new AliPay();
+    }
+
+    
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function pay($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->pay($para);
+
+    }
+
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+
+    public function query($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->query($para);
+    }
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function refund($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->refund($para);
+    }
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function webNotify($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->webNotify($para);
+    }
+
+    /**
+     * @param  String $driver
+     * @param  String $way
+     * @param  Array $para
+     *
+     */
+    public function cancel($driver, $way, $para){
+        $this->getDriver($driver)->getGateWay($way)->cancel($para);
     }
 }

@@ -45,11 +45,11 @@ class GetUnionpayconfHandler extends DataHandler
             $config=array(
                 'unionpay.enabled'=>$this->settings->get('unionpay.enabled', false),
                 'merId'=>$this->settings->get('unionpay.merId',''),
-                'certPath'=>$this->settings->get('Unionpay.certPath',''),
-                'certPassword'=>$this->settings->get('Unionpay.certPassword',''),
-                'certDir'=>$this->settings->get('Unionpay.certDir',''),
-                'returnUrl'=>$this->settings->get('Unionpay.returnUrl',''),
-                'notifyUrl'=>$this->settings->get('Unionpay.notifyUrl',''),
+                'certPath'=>$this->settings->get('unionpay.certPath',''),
+                'certPassword'=>$this->settings->get('unionpay.certPassword',''),
+                'certDir'=>$this->settings->get('unionpay.certDir',''),
+                'returnUrl'=>$this->settings->get('unionpay.returnUrl',''),
+                'notifyUrl'=>$this->settings->get('unionpay.notifyUrl',''),
             )
         ] ;
     }

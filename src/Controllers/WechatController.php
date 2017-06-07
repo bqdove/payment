@@ -9,6 +9,7 @@
 namespace Notadd\Multipay\Controllers;
 use Notadd\Multipay\Handlers\GetWechatconfHandler;
 use Notadd\Multipay\Handlers\SetWechatconfHandler;
+use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 
 /**
@@ -40,4 +41,10 @@ class WechatController extends Controller
     {
         return $handler->toResponse()->generateHttpResponse();
     }
+
+    public function upload(UploadHandler $handler){
+        return $handler->toResponse()->generateHttpResponse();
+    }
+
+
 }

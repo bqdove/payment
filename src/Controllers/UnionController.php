@@ -8,8 +8,9 @@
  */
 namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Multipay\Handlers\GetHandler;
-use Notadd\Multipay\Handlers\SetHandler;
+use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
+use Notadd\Multipay\Handlers\SetUnionpayconfHandler;
+
 
 /**
  * Class MultipayController.
@@ -19,11 +20,11 @@ class UnionController extends Controller
     /**
      * Get handler.
      *
-     * @param \Notadd\Alipay\Handlers\GetHandler $handler
+     * @param \Notadd\Multipay\Handlers\GetUnionpayconfHandler $handler
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function get(GetUnionconfHandler $handler)
+    public function get(GetUnionpayconfHandler $handler)
     {
 
         return $handler->toResponse()->generateHttpResponse();
@@ -32,13 +33,15 @@ class UnionController extends Controller
     /**
      * Set handler.
      *
-     * @param \Notadd\Alipay\Handlers\SetHandler $handler
+     * @param \Notadd\Multipay\Handlers\SetUnionpayconfHandler $handler
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetUnionconfHandler $handler)
+    public function set(SetUnionpayconfHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
+
+
 }

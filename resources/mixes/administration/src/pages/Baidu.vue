@@ -1,4 +1,4 @@
-<script>
+``<script>
     import injection from '../helpers/injection';
 
     export default {
