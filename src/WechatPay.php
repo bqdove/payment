@@ -149,7 +149,7 @@ class WechatPay
         $request = $this->gateway->completePurchase($options);
         if ( $request->isPaid()) {
 
-            echo "支付成功";
+            echo "success";
         } else {
             echo "支付失败";
         }
@@ -177,6 +177,18 @@ class WechatPay
             'refund_fee'=>$this->getrefundData($data['refund_fee'])
         ])->send();
         $response->isSuccessful();
+    }
+
+    //取消
+
+    public function cancel($out_trade_no)
+    {
+        $response = $this->gateway->close([
+            'out_trade_no' => $out_trade_no, //The merchant trade no
+        ])->send();
+
+        var_dump($response->isSuccessful());
+        var_dump($response->getData());
     }
 
 }
