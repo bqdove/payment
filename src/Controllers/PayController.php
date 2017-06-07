@@ -31,7 +31,7 @@ class PayController extends Controller{
     }
 
     public function pay(){
-        return $this->multipay->driver()->pay();
+        return $this->multipay->driver($this->settings->get('paymethod'))->pay();
     }
     public function execute()
     {
