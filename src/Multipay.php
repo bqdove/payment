@@ -42,18 +42,18 @@ class Multipay
     private function getDriver($name){
         switch($name){
             case 'alipay':
-                return new AliPay();
+                return new Alipay();
             case 'wechat':
-                return new WechatPay();
+                return new Wechatpay();
             case 'unionpay':
-                return new UnionPay();
+                return new Unionpay();
             default:
                 return $this->getDefaultDriver();
         }
     }
 
     private function getDefaultDriver(){
-        return new AliPay();
+        return new Alipay();
     }
 
     

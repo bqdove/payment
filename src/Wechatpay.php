@@ -7,6 +7,7 @@
  */
 
 namespace Notadd\Multipay;
+
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
@@ -15,18 +16,17 @@ use Omnipay\WechatPay\Helper;
 use Omnipay\WechatPay\Message\CreateOrderRequest;
 use Omnipay\WechatPay\Message\RefundOrderRequest;
 
-class WechatPay
+class Wechatpay
 {
     protected $settings;
     protected $gateway;
     protected $gatewayName;
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
-        $this->getGateWay();
     }
 
 
-
+/*
     public function getData()
     {
         $order = new CreateOrderRequest();
@@ -84,32 +84,33 @@ class WechatPay
 
         return $data;
     }
-
+*/
     /*
      * 获取支付网关
      */
     public function getGateWay($gatewayname){
         $this->gatewayName = $gatewayname;
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setAppId($this->settings->get('wechat.app_id'));
-        $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
-        $this->gateway->setApiKey($this->settings->get('wechat.key'));
+        $this->gateway->setAppId('wx2dd40b5b1c24a960');
+        $this->gateway->setMchId(1235851702);
+        $this->gateway->setApiKey('q6RTZzUHu855UXOBKjl5YKOkVRu0oFb1UqEta3U5Cu0');
+
 
         return $this;
     }
 
-
     public function pay(){
         $params = [
-            'sign' => $this->getData($data['sign']),
-            'body' => $this->getData($data['body']),
-            'nonce_type'=> $this->getData($data['nonce_type']),
-            'out_trade_no' => $this->getData($data['out_trade_no']),
-            'total_fee' => $this->getData($data['total_fee']),
-            'spbill_create_ip' => $this->getData($data['spbill_create_ip']),
-            'notify_url' =>$this->getData($data['notify_url']),
-            'trade_type'=>$this->getData($data['trade_type'])
+            'sign' => '6F7E51B5C0324D66776127EFDC2F506F',
+            'body' =>'Iphone8',
+            'nonce_type'=>  md5(uniqid()),
+            'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
+            'total_fee' => 10,
+            'spbill_create_ip' => '172.19.0.1',
+            'notify_url' =>'http://lxnotadd.com/api/multipay/pay',
+            'trade_type'=>'NATIVE'
         ];
+        /*
         $para1 = [
             'open_id' => $this->getData($data['open_id'])
         ];
@@ -118,10 +119,11 @@ class WechatPay
         ];
         $options1 = $params + $para1;
         $options2 = $params + $para2;
+        */
         if($this->gatewayName == 'JSAPI'){
             $response = $this->gateway->purchase($options1)->send();
         }elseif($this->gatewayName == 'NATIVE'){
-            $response = $this->gateway->purchase($options2)->send();
+            $response = $this->gateway->purchase($params)->send();
         }else{
             $response = $this->gateway->purchase($params)->send();
         }
@@ -149,7 +151,7 @@ class WechatPay
         $request = $this->gateway->completePurchase($options);
         if ( $request->isPaid()) {
 
-            echo "支付成功";
+            echo "success";
         } else {
             echo "支付失败";
         }
@@ -177,6 +179,18 @@ class WechatPay
             'refund_fee'=>$this->getrefundData($data['refund_fee'])
         ])->send();
         $response->isSuccessful();
+    }
+
+    //取消
+
+    public function cancel($out_trade_no)
+    {
+        $response = $this->gateway->close([
+            'out_trade_no' => $out_trade_no, //The merchant trade no
+        ])->send();
+
+        var_dump($response->isSuccessful());
+        var_dump($response->getData());
     }
 
 }
