@@ -15,14 +15,14 @@ use Omnipay\WechatPay\Helper;
 use Omnipay\WechatPay\Message\CreateOrderRequest;
 use Omnipay\WechatPay\Message\RefundOrderRequest;
 
-class WechatPay
+class Wechatpay
 {
     protected $settings;
     protected $gateway;
     protected $gatewayName;
+    
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
-        $this->getGateWay();
     }
 
 
