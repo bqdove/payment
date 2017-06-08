@@ -42,9 +42,6 @@ class WechatController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> e4204a8fe0e4c61d7c2c3f80104aa80ce9b16339
 
 }
