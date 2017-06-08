@@ -102,15 +102,18 @@ class Wechatpay
 
     public function pay(){
         $params = [
-            'sign' => '6F7E51B5C0324D66776127EFDC2F506F',
+            'sign' => md5('appid=wx2dd40b5b1c24a960&'),
             'body' =>'Iphone8',
             'nonce_type'=>  md5(uniqid()),
             'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
             'total_fee' => 10,
-            'spbill_create_ip' => '172.19.0.1',
+            'spbill_create_ip' => $_SERVER['REMOTE_ADDR'],
             'notify_url' =>'http://lxnotadd.com/api/multipay/pay',
-            'trade_type'=>'NATIVE'
+            'trade_type'=>'NATIVE',
+            'product_id'=> 12235413214070356458058,
+
         ];
+
         /*
         $para1 = [
             'open_id' => $this->getData($data['open_id'])
@@ -121,14 +124,10 @@ class Wechatpay
         $options1 = $params + $para1;
         $options2 = $params + $para2;
         */
-        if($this->gatewayName == 'JSAPI'){
-            $response = $this->gateway->purchase($options1)->send();
-        }elseif($this->gatewayName == 'NATIVE'){
+
             $response = $this->gateway->purchase($params)->send();
-        }else{
-            $response = $this->gateway->purchase($params)->send();
-        }
-        $response->isSuccessful();
+
+
 
     }
 
