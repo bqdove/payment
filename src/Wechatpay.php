@@ -21,6 +21,7 @@ class Wechatpay
     protected $settings;
     protected $gateway;
     protected $gatewayName;
+    
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }

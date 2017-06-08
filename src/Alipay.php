@@ -44,23 +44,11 @@ class Alipay
      *申请支付
      */
 
-    public function pay($method = 'alipay.trade.page.pay', $charset = 'UTF-8', $sign_type = 'RSA2', $version = 1.0)
+    public function pay(Array $para)
     {
-        $timestamp = date("Y-m-d G-i-s", time());//format order time
-
         $request = $this->gateway->purchase();
 
-        $request->setBizContent([
-            'version'      => $version,
-            'charset'      => $charset,
-            'sign_type'    => $sign_type,
-            'method'       => $method,
-            'timestamp'    => $timestamp,
-            'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
-            'total_amount' => 100000,
-            'subject'      => 'test',
-            'product_code' => 'FAST_INSTANT_TRADE_PAY',
-        ]);
+        $request->setBizContent($para);
 
         $response = $request->send();
 

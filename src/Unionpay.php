@@ -12,7 +12,7 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
 
-class UnionPay
+class Unionpay
 {
     protected $settings;
     protected $gateway;
