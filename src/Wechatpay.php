@@ -20,137 +20,130 @@ class Wechatpay
 {
     protected $settings;
     protected $gateway;
-    protected $gatewayName;
-    
+
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-<<<<<<< HEAD
-=======
 
-/*
-    public function getData()
-    {
-        $order = new CreateOrderRequest();
-        //创建订单配置
-        $data = array(
-            'appid'            => $order->getAppId(),
-            'mch_id'           => $order->getMchId(),
-            'device_info'      => $order->getDeviceInfo(),
-            'body'             => $order->getBody(),
-            'detail'           => $order->getDetail(),
-            'attach'           => $order->getAttach(),
-            'out_trade_no'     => $order->getOutTradeNo(),
-            'fee_type'         => $order->getFeeType(),
-            'total_fee'        => $order->getTotalFee(),
-            'spbill_create_ip' => $order->getSpbillCreateIp(),
-            'time_start'       => $order->getTimeStart(),
-            'time_expire'      => $order->getTimeExpire(),
-            'goods_tag'        => $order->getGoodsTag(),
-            'notify_url'       => $order->getNotifyUrl(),
-            'trade_type'       => $order->getTradeType(),
-            'limit_pay'        => $order->getLimitPay(),
-            'openid'           => $order->getOpenId(),
-            'nonce_str'        => md5(uniqid()),
-        );
-        $data = array_filter($data);
-
-        $data['sign'] = Helper::sign($data, $order->getApiKey());
-
-        return $data;
-    }
-
-    //退款订单配置
-    public function getrefundData()
-    {
-
-        $refund = new RefundOrderRequest();
-
-        $data = array (
-            'appid'           => $refund->getAppId(),
-            'mch_id'          => $refund->getMchId(),
-            'device_info'     => $refund->getDeviceInfo(),
-            'transaction_id'  => $refund->getTransactionId(),
-            'out_trade_no'    => $refund->getOutTradeNo(),
-            'out_refund_no'   => $refund->getOutRefundNo(),
-            'total_fee'       => $refund->getTotalFee(),
-            'refund_fee'      => $refund->getRefundFee(),
-            'refund_fee_type' => $refund->getRefundType(),
-            'op_user_id'      => $refund->getOpUserId() ?: $refund->getMchId(),
-            'nonce_str'       => md5(uniqid()),
-        );
-
-        $data = array_filter($data);
-
-        $data['sign'] = Helper::sign($data, $refund->getApiKey());
-
-        return $data;
-    }
-*/
->>>>>>> 8ec6934fbd9ced8354d22d9351c01b745a18d85e
     /*
-    * 获取支付网关
+        public function getData()
+        {
+            $order = new CreateOrderRequest();
+            //创建订单配置
+            $data = array(
+                'appid'            => $order->getAppId(),
+                'mch_id'           => $order->getMchId(),
+                'device_info'      => $order->getDeviceInfo(),
+                'body'             => $order->getBody(),
+                'detail'           => $order->getDetail(),
+                'attach'           => $order->getAttach(),
+                'out_trade_no'     => $order->getOutTradeNo(),
+                'fee_type'         => $order->getFeeType(),
+                'total_fee'        => $order->getTotalFee(),
+                'spbill_create_ip' => $order->getSpbillCreateIp(),
+                'time_start'       => $order->getTimeStart(),
+                'time_expire'      => $order->getTimeExpire(),
+                'goods_tag'        => $order->getGoodsTag(),
+                'notify_url'       => $order->getNotifyUrl(),
+                'trade_type'       => $order->getTradeType(),
+                'limit_pay'        => $order->getLimitPay(),
+                'openid'           => $order->getOpenId(),
+                'nonce_str'        => md5(uniqid()),
+            );
+            $data = array_filter($data);
+
+            $data['sign'] = Helper::sign($data, $order->getApiKey());
+
+            return $data;
+        }
+
+        //退款订单配置
+        public function getrefundData()
+        {
+
+            $refund = new RefundOrderRequest();
+
+            $data = array (
+                'appid'           => $refund->getAppId(),
+                'mch_id'          => $refund->getMchId(),
+                'device_info'     => $refund->getDeviceInfo(),
+                'transaction_id'  => $refund->getTransactionId(),
+                'out_trade_no'    => $refund->getOutTradeNo(),
+                'out_refund_no'   => $refund->getOutRefundNo(),
+                'total_fee'       => $refund->getTotalFee(),
+                'refund_fee'      => $refund->getRefundFee(),
+                'refund_fee_type' => $refund->getRefundType(),
+                'op_user_id'      => $refund->getOpUserId() ?: $refund->getMchId(),
+                'nonce_str'       => md5(uniqid()),
+            );
+
+            $data = array_filter($data);
+
+            $data['sign'] = Helper::sign($data, $refund->getApiKey());
+
+            return $data;
+        }
     */
+    /*
+     * 获取支付网关
+     */
     public function getGateWay($gatewayname){
-        $this->gatewayName = $gatewayname;
         $this->gateway = Omnipay::create($gatewayname);
         $this->gateway->setAppId('wx2dd40b5b1c24a960');
         $this->gateway->setMchId(1235851702);
-<<<<<<< HEAD
+        $this->gateway->setApiKey('q6RTZzUHu855UXOBKjl5YKOkVRu0oFb1UqEta3U5Cu0');
+        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/');
+        $this->gateway->setTradeType('NATIVE');
+
         return $this;
     }
 
-    public function pay(Array $para){
+    public function pay(Array $para)
+    {
+        $originPara = $para;
 
-//        $params = [
-//            'sign' => '6F7E51B5C0324D66776127EFDC2F506F',
+        ksort($para);
+
+        $newParaArray = [];
+        $stringSignTemp = '';
+
+        foreach($para as $key => $value)
+        {
+            array_push($newParaArray,$key."=".$value);
+        }
+
+        foreach($newParaArray as $key => $para)
+        {
+            if ($key == 0)
+            {
+                $stringSignTemp .= $para;
+            }else{
+                $stringSignTemp .= '&'. $para;
+            }
+        }
+        $stringSignTemp .= "&key=q6RTZzUHu855UXOBKjl5YKOkVRu0oFb1UqEta3U5Cu0";
+        $sign=strtoupper(MD5($stringSignTemp));
+
+        $para2 = [
+            'nonce_str'=>  'c3b570e1c8441c0ae1f435c3c4de8464',
+            'sign' => $sign
 //            'body' =>'Iphone8',
-//            'nonce_type'=> md5(uniqid()),
 //            'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
 //            'total_fee' => 10,
-//            'spbill_create_ip' => '172.19.0.1',
-//            'notify_url' =>'http://lxnotadd.com/api/multipay/pay',
-//            'trade_type'=>'NATIVE',
+//            'spbill_create_ip' => '36.45.171.167',
 //            'product_id'=> 12235413214070356458058
-//        ];
-        $response = $this->gateway->purchase($para)->send();
-=======
-        $this->gateway->setApiKey('q6RTZzUHu855UXOBKjl5YKOkVRu0oFb1UqEta3U5Cu0');
-
-
-        return $this;
-    }
-
-    public function pay(){
-        $params = [
-            'sign' => md5('appid=wx2dd40b5b1c24a960&'),
-            'body' =>'Iphone8',
-            'nonce_type'=>  md5(uniqid()),
-            'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
-            'total_fee' => 10,
-            'spbill_create_ip' => $_SERVER['REMOTE_ADDR'],
-            'notify_url' =>'http://lxnotadd.com/api/multipay/pay',
-            'trade_type'=>'NATIVE',
-            'product_id'=> 12235413214070356458058,
-
         ];
+        $originPara = $originPara + $para2;
+        $response = $this->gateway->purchase($originPara)->send();
 
-        /*
-        $para1 = [
-            'open_id' => $this->getData($data['open_id'])
-        ];
-        $para2 = [
-            'product_id'=>$this->getData($data['product_id'])
-        ];
-        $options1 = $params + $para1;
-        $options2 = $params + $para2;
-        */
+        //available methods
+//        $response->isSuccessful();
+        $response->getData(); //For debug
+//        $response->getAppOrderData(); //For WechatPay_App
+//        $response->getJsOrderData(); //For WechatPay_Js
+        $response->getCodeUrl(); //For Native Trade Type
 
-            $response = $this->gateway->purchase($params)->send();
-
-
->>>>>>> 8ec6934fbd9ced8354d22d9351c01b745a18d85e
 
     }
 

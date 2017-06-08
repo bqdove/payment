@@ -30,9 +30,6 @@ class PayController extends Controller{
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-
-
-
     public function pay()
     {
         $driver = $this->request->query('driver');
