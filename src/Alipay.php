@@ -92,6 +92,7 @@ class Alipay
      */
     public function query(Array $para)
     {
+
         $request = $this->gateway->query();
 
         $request->setBizContent($para);
