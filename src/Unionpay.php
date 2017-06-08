@@ -20,7 +20,6 @@ class Unionpay
     //获取配置
     public function __construct(){
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
-        $this->getGateWay();
     }
     /**
      * 获取网关接口
@@ -45,6 +44,7 @@ class Unionpay
         $filename = $_FILES['cert']['name'];
         $request->file('cert')->move($path,$filename);
     }
+
     /**
      * 支付接口
      * @param $merId
@@ -54,25 +54,25 @@ class Unionpay
      * @param $orderDesc
      * @param $txnAmt
      */
-    public function pay($merId, $transType, $orderId, $txnTime, $orderDesc, $txnAmt)
+    public function pay(Array $para)
     {
-            $order = [
-                    'orderId'   => $orderId, //Your order ID
-                    'txnTime'   => $txnTime, //Should be format 'YmdHis'
-                    'orderDesc' => $orderDesc, //Order Title
-                    'txnAmt'    => $txnAmt, //Order Total Fee
-                    'merId' => $merId,//merId
-                    'transType' => $transType// transtype
-            ];
+//            $order = [
+//                    'orderId'   => $orderId, //Your order ID
+//                    'txnTime'   => $txnTime, //Should be format 'YmdHis'
+//                    'orderDesc' => $orderDesc, //Order Title
+//                    'txnAmt'    => $txnAmt, //Order Total Fee
+//                    'merId' => $merId,//merId
+//                    'transType' => $transType// transtype
+//            ];
 
-            $response = $this->gateway->purchase($order)->send();
+            $response = $this->gateway->purchase($para)->send();
 
             $response->getRedirectHtml(); //For PC/Wap
     }
     /**
      * 回调方法接口
      */
-    public function webNotify($orderDesc,$orderId,$txnTime)
+    public function webNotify()
     {
 
             $response = $this->gateway->completePurchase(['request_params'=>$_REQUEST])->send();
