@@ -39,8 +39,6 @@ class UploadHandler extends Handler
      */
     public function execute()
     {
-        dd($this->request);
-
         $this->validate($this->request, [
             'file' => 'required|file',
         ], [
