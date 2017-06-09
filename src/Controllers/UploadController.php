@@ -9,7 +9,8 @@
 namespace Notadd\Multipay\Controllers;
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-
+use Illuminate\Http\Request;
+use Notadd\Foundation\Routing\Abstracts\Handler;
 
 class UploadController extends Controller
 {
@@ -21,8 +22,21 @@ class UploadController extends Controller
      * @throws \Exception
      */
 
-    public function handle(UploadHandler $handler){
 
+    public function upload(){
+        return view('upload::upload');
+    }
+    /*
+    public function uploadpost(Request $request){
+        $path ='../storage/cert'.date('Ymd');
+
+        $filename ='aa';
+
+        $request->file('image')->move($path,$filename);
+
+    }
+    */
+    public function uploadpost(UploadHandler $handler){
         return $handler->toResponse()->generateHttpResponse();
     }
 }

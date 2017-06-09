@@ -101,10 +101,10 @@ class Wechatpay
 
     public function pay(Array $para)
     {
+
         $originPara = $para;
 
         ksort($para);
-
         $newParaArray = [];
         $stringSignTemp = '';
 
@@ -127,16 +127,12 @@ class Wechatpay
 
         $para2 = [
             'nonce_str'=>  'c3b570e1c8441c0ae1f435c3c4de8464',
-            'sign' => $sign
-//            'body' =>'Iphone8',
-//            'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
-//            'total_fee' => 10,
-//            'spbill_create_ip' => '36.45.171.167',
-//            'product_id'=> 12235413214070356458058
+            'sign' => $sign,
+
         ];
         $originPara = $originPara + $para2;
         $response = $this->gateway->purchase($originPara)->send();
-
+        dd($response);
         //available methods
 //        $response->isSuccessful();
         $response->getData(); //For debug
