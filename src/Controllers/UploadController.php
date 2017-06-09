@@ -35,7 +35,6 @@ class UploadController extends Controller
         if ($result){
             return 'success';
         }
-
     }
 
 }

@@ -39,13 +39,14 @@ class UploadHandler extends Handler
      */
     public function execute()
     {
+        dd($this->request);
+
         $this->validate($this->request, [
             'file' => 'required|file',
         ], [
             'file.file'    => '上传文件格式必须为文件格式！',
             'file.required' => '必须上传一个文件！',
         ]);
-        dd(1);
         $avatar = $this->request->file('file');
         $hash = hash_file('md5', $avatar->getPathname(), false);
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
