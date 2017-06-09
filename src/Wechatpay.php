@@ -132,7 +132,7 @@ class Wechatpay
         ];
         $originPara = $originPara + $para2;
         $response = $this->gateway->purchase($originPara)->send();
-        dd($response);
+        dd($response->getData());
         //available methods
 //        $response->isSuccessful();
         $response->getData(); //For debug
