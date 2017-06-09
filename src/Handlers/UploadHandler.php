@@ -7,8 +7,6 @@
  */
 
 namespace Notadd\Multipay\Handlers;
-
-use Guzzle\Http\Message\Request;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
@@ -32,7 +30,7 @@ class UploadHandler extends Handler
     public function __construct(Container $container, Filesystem $filesystem)
     {
         parent::__construct($container);
-        $this->messages->push($this->translator->trans('上传证书成功！'));
+        $this->messages->push($this->translator->trans('上传图片成功！'));
         $this->files = $filesystem;
     }
     /**
@@ -41,19 +39,21 @@ class UploadHandler extends Handler
     public function execute()
     {
         $this->validate($this->request, [
+            'file' => 'required',
+        ], [
             'file.required' => '必须上传一个文件！',
         ]);
         $avatar = $this->request->file('file');
         $hash = hash_file('md5', $avatar->getPathname(), false);
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
-            '../storage/cert/',
+            '../storage/uploads',
         ]))->implode(DIRECTORY_SEPARATOR);
         $file = Str::substr($hash, 12, 20) . '.' . $avatar->getClientOriginalExtension();
         if (!$this->files->exists($dictionary . DIRECTORY_SEPARATOR . $file)) {
             $avatar->move($dictionary, $file);
         }
         $this->data['path'] = $this->pathSplit($hash, '12,20', Collection::make([
-                '../storage/cert/',
+                '../storage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
         return true;
     }

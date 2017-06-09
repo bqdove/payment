@@ -7,6 +7,7 @@
  */
 
 namespace Notadd\Multipay\Controllers;
+
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Http\Request;
@@ -31,17 +32,22 @@ class UploadController extends Controller
 
     public function uploadcert(Request $request){
 
-        $this->validate($request, [
-            'cert' => 'required',
-        ],[
-            'cert'=>'文件上传不能为空'
-        ]);
-        $path ='../storage/cert';
 
-        $filename =$_FILES['cert']['name'];
+       // $this->validate($request, [
+        //    'cert' => 'required',
+        //],[
+         //   'cert'=>'文件上传不能为空'
+       // ]);
+        //$path ='../storage/cert';
 
-        $request->file('cert')->move($path,$filename);
-        dd(pathinfo($_FILES['cert']['name']));
+        //$filename =$_FILES['cert']['name'];
+
+       // $request->file('cert')->move($path,$filename);
+       // dd(pathinfo($_FILES['cert']['name']));
+        $filesystem=new Filesystem();
+        $unhandler = new UploadHandler($this->container,$filesystem);
+        $unhandler->execute();
+        dd(1);
 
     }
 

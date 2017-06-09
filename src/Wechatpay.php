@@ -92,7 +92,7 @@ class Wechatpay
         $this->gateway = Omnipay::create($gatewayname);
         $this->gateway->setAppId('wx2dd40b5b1c24a960');
         $this->gateway->setMchId(1235851702);
-        $this->gateway->setApiKey('q6RTZzUHu855UXOBKjl5YKOkVRu0oFb1UqEta3U5Cu0');
+        $this->gateway->setApiKey('XM7gre777oHMbHOneNlopEhJCGbuPGYC');
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/');
         $this->gateway->setTradeType('NATIVE');
 
@@ -101,14 +101,12 @@ class Wechatpay
 
     public function pay(Array $para)
     {
-
-        $originPara = $para;
-
         ksort($para);
+        $originPara = $para;
         $newParaArray = [];
         $stringSignTemp = '';
 
-        foreach($para as $key => $value)
+        foreach($originPara as $key => $value)
         {
             array_push($newParaArray,$key."=".$value);
         }
@@ -122,15 +120,15 @@ class Wechatpay
                 $stringSignTemp .= '&'. $para;
             }
         }
-        $stringSignTemp .= "&key=q6RTZzUHu855UXOBKjl5YKOkVRu0oFb1UqEta3U5Cu0";
-        $sign=strtoupper(MD5($stringSignTemp));
-
+        $stringSignTemp .= "&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+        //$sign=strtoupper(MD5($stringSignTemp));
         $para2 = [
             'nonce_str'=>  'c3b570e1c8441c0ae1f435c3c4de8464',
-            'sign' => $sign,
+            'sign' => 'C68F4E7BF61BE0029A9344E1AB7100E9',
 
         ];
         $originPara = $originPara + $para2;
+        //dd($originPara);
         $response = $this->gateway->purchase($originPara)->send();
         dd($response->getData());
         //available methods
@@ -169,13 +167,9 @@ class Wechatpay
         }
     }
     //查询
-    public function query($transaction_id,$nonce_str,$sign){
-        $options = [
-            'transaction_id'=>$transaction_id,
-            '$nonce_str'=>$nonce_str,
-            'sign'=>$sign
-        ];
-        $response = $this->gateway->query($options)->send();
+    public function query(Array $para){
+
+        $response = $this->gateway->query($para->send());
         $response->isSuccessful();
     }
     //退款
