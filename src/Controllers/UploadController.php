@@ -7,9 +7,10 @@
  */
 
 namespace Notadd\Multipay\Controllers;
+
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-
+use Illuminate\Filesystem\Filesystem;
 
 class UploadController extends Controller
 {
@@ -21,8 +22,20 @@ class UploadController extends Controller
      * @throws \Exception
      */
 
-    public function handle(UploadHandler $handler){
-
-        return $handler->toResponse()->generateHttpResponse();
+    public function upload()
+    {
+        return view('multipay::upload');
     }
+
+    public function execute()
+    {
+        $filesystem = new Filesystem();
+        $uphandler = new UploadHandler($this->container, $filesystem);
+        $result = $uphandler->execute();
+        if ($result){
+            return 'success';
+        }
+
+    }
+
 }
