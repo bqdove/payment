@@ -92,16 +92,17 @@ class Unionpay
     /**
      *查询接口
      */
-    public function query($merId, $transType, $orderId, $orderTime)
+    public function query(Array $para)
     {
-        $order = [
-            'merId' => $merId,//merId
-            'transType' => $transType,// transtype
-            'orderId' => $orderId, //Your order ID
-            'orderTime' => $orderTime, //Should be format 'YmdHis'
-        ];
-        $response = $this->gateway->query($order)->send();
-        $response->isSuccessful();
+//        $order = [
+//            'merId' => $merId,//merId
+//            'transType' => $transType,// transtype
+//            'orderId' => $orderId, //Your order ID
+//            'orderTime' => $orderTime, //Should be format 'YmdHis'
+//        ];
+        $response = $this->gateway->query($para)->send();
+
+        var_dump($response->getData());
     }
 
     /**
@@ -109,19 +110,17 @@ class Unionpay
      * 退款接口
      */
 
-    public function refund($merId, $transType, $orderId, $orderTime, $totalFee)
+    public function refund(Array $para)
     {
-        $order = [
-                'merId'  => $merId,
-                'transType' => $transType,
-                'orderId' => $orderId, //Your site trade no, not union tn.
-                'orderTime' => $orderTime, //Order trade time
-                'txnAmt'  => $totalFee, //Order total fee
-        ];
+//        $order = [
+//                'merId'  => $merId,
+//                'transType' => $transType,
+//                'orderId' => $orderId, //Your site trade no, not union tn.
+//                'orderTime' => $orderTime, //Order trade time
+//                'txnAmt'  => $totalFee, //Order total fee
+//        ];
 
-        $response = $this->gateway->refund($order)->send();
-
-        var_dump($response->isSuccessful());
+        $response = $this->gateway->refund($para)->send();
 
         var_dump($response->getData());
     }
@@ -130,19 +129,19 @@ class Unionpay
      * 取消接口
      */
 
-    public function cancel($merId, $transType, $orderId, $orderTime, $totalFee)
+    public function cancel(Array $para)
     {
-        $order = [
-            'merId'  => $merId,
-            'transType' => $transType,
-            'orderId' => $orderId, //Your site trade no, not union tn.
-            'orderTime' => $orderTime, //Order trade time
-            'txnAmt'  => $totalFee, //Order total fee
-        ];
+//        $order = [
+//            'merId'  => $merId,
+//            'transType' => $transType,
+//            'orderId' => $orderId, //Your site trade no, not union tn.
+//            'orderTime' => $orderTime, //Order trade time
+//            'txnAmt'  => $totalFee, //Order total fee
+//        ];
 
-        $response = $this->gateway->consumeUndo($order)->send();
+        $response = $this->gateway->consumeUndo($para)->send();
 
-        var_dump($response->isSuccessful());
+//        var_dump($response->isSuccessful());
 
         var_dump($response->getData());
     }
