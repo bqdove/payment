@@ -101,14 +101,14 @@ class Wechatpay
 
         //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
 
-        ksort($para);
+        ksort($para);//把参数按照首字母ASCII码从小到大排序
 
         $originPara = $para;
 
         $newParaArray = [];
 
         $stringSignTemp = '';
-
+        //以下两个foreach循环的目的是把参数序列化为a=1&b=2&c=3的格式
         foreach($para as $key => $value)
         {
             array_push($newParaArray,$key."=".$value);
@@ -123,9 +123,10 @@ class Wechatpay
                 $stringSignTemp .= '&'. $newPara;
             }
         }
-
+        //格式化好后链接商户平台的key值
         $stringSignTemp .= "&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
 
+        //最后MD5加密并转化为大写,$sign 存储签名
         $sign=strtoupper(MD5($stringSignTemp));
 
         $para2 = [
@@ -137,7 +138,7 @@ class Wechatpay
 
         dd($response);
         //available methods
-        $response->getData(); //For debug
+ //       $response->getData(); //For debug
 //        $response->getAppOrderData(); //For WechatPay_App
 //        $response->getJsOrderData(); //For WechatPay_Js
         $response->getCodeUrl(); //For Native Trade Type
