@@ -121,36 +121,37 @@ class Wechatpay
  //       $response->getData(); //For debug
 //        $response->getAppOrderData(); //For WechatPay_App
 //        $response->getJsOrderData(); //For WechatPay_Js
-        $response->getCodeUrl(); //For Native Trade Type
+        dd($response->getCodeUrl()); //For Native Trade Type
 
     }
 
     //回调通知
-    public function webNotify($nonce_str,$sign,$result_code,$openid,$trade_type,$bank_type,$total_fee,$cash_fee_type,$transaction_id,$out_trade_no,$time_end){
-        if('return_code'=='SUCCESS'){
-            $options=[
-                'nonce_str'=>$nonce_str,
-                'sign'=>$sign,
-                'result_code'=>$result_code,
-                'openid'=>$openid,
-                'trade_type'=>$trade_type,
-                'bank_type'=>$bank_type,
-                'total_fee'=>$total_fee,
-                'cash_fee_type'=>$cash_fee_type,
-                'transaction_id'=>$transaction_id,
-                'out_trade_no'=>$out_trade_no,
-                'time_end'=>$time_end
-            ];
+    public function webNotify(Array $para){
+
+        ksort($para);//把参数按照首字母ASCII码从小到大排序
+        //生成签名
+        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+
+        $sign = strtoupper(md5($str));
+
+        $originPara = $para;
+
+        $para2 = [
+            'sign' => $sign
+        ];
+        $options = $originPara + $para2;
+        if('return_code'=='SUCCESS' && $sign === $data['sign']){
+
         }
-        $request = $this->gateway->completePurchase($options);
-        if ( $request->isPaid()) {
-            echo "success";
+        $response = $this->gateway->completePurchase($options)->send();
+        if ( $response->isPaid()) {
+            var_dump($response->getData());
         } else {
             echo "支付失败";
         }
     }
     //查询
-    public function query($para){
+    public function query(Array $para){
         ksort($para);//把参数按照首字母ASCII码从小到大排序
         //生成签名
         $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
@@ -168,7 +169,7 @@ class Wechatpay
     }
 
     //退款
-    public function refund($para){
+    public function refund(Array $para){
         $certpath = $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
         $keypath = $this->gateway->setKeyPath($this->settings->get('wechat.keypath'));
         ksort($para);//把参数按照首字母ASCII码从小到大排序
@@ -191,7 +192,7 @@ class Wechatpay
 
     //取消
 
-    public function cancel($para)
+    public function cancel(Array $para)
     {
         ksort($para);//把参数按照首字母ASCII码从小到大排序
         //生成签名
