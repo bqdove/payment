@@ -25,7 +25,6 @@ class Wechatpay
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-
     /*
         public function getData()
         {
@@ -89,55 +88,59 @@ class Wechatpay
      * 获取支付网关
      */
     public function getGateWay($gatewayname){
+
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setAppId('wx2dd40b5b1c24a960');
-        $this->gateway->setMchId(1235851702);
-        $this->gateway->setApiKey('XM7gre777oHMbHOneNlopEhJCGbuPGYC');
-        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/');
-        $this->gateway->setTradeType('NATIVE');
 
         return $this;
     }
 
     public function pay(Array $para)
     {
+        //1.如果为空不参与签名
+        //2.参数名按照ASCII从小到大排序，区分大小写
+
+        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
+
         ksort($para);
+
         $originPara = $para;
+
         $newParaArray = [];
+
         $stringSignTemp = '';
 
-        foreach($originPara as $key => $value)
+        foreach($para as $key => $value)
         {
             array_push($newParaArray,$key."=".$value);
         }
 
-        foreach($newParaArray as $key => $para)
+        foreach($newParaArray as $key => $newPara)
         {
             if ($key == 0)
             {
-                $stringSignTemp .= $para;
+                $stringSignTemp .= $newPara;
             }else{
-                $stringSignTemp .= '&'. $para;
+                $stringSignTemp .= '&'. $newPara;
             }
         }
-        $stringSignTemp .= "&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
-        //$sign=strtoupper(MD5($stringSignTemp));
-        $para2 = [
-            'nonce_str'=>  'c3b570e1c8441c0ae1f435c3c4de8464',
-            'sign' => 'C68F4E7BF61BE0029A9344E1AB7100E9',
 
+        $stringSignTemp .= "&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+
+        $sign=strtoupper(MD5($stringSignTemp));
+
+        $para2 = [
+            'sign' => $sign
         ];
         $originPara = $originPara + $para2;
-        //dd($originPara);
+
         $response = $this->gateway->purchase($originPara)->send();
-        dd($response->getData());
+
+        dd($response);
         //available methods
-//        $response->isSuccessful();
         $response->getData(); //For debug
 //        $response->getAppOrderData(); //For WechatPay_App
 //        $response->getJsOrderData(); //For WechatPay_Js
         $response->getCodeUrl(); //For Native Trade Type
-
 
     }
 
@@ -160,18 +163,22 @@ class Wechatpay
         }
         $request = $this->gateway->completePurchase($options);
         if ( $request->isPaid()) {
-
             echo "success";
         } else {
             echo "支付失败";
         }
     }
     //查询
-    public function query(Array $para){
-
-        $response = $this->gateway->query($para->send());
+    public function query($transaction_id,$nonce_str,$sign){
+        $options = [
+            'transaction_id'=>$transaction_id,
+            '$nonce_str'=>$nonce_str,
+            'sign'=>$sign
+        ];
+        $response = $this->gateway->query($options)->send();
         $response->isSuccessful();
     }
+
     //退款
     public function refund(){
         $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
@@ -194,7 +201,6 @@ class Wechatpay
         $response = $this->gateway->close([
             'out_trade_no' => $out_trade_no, //The merchant trade no
         ])->send();
-
         var_dump($response->isSuccessful());
         var_dump($response->getData());
     }

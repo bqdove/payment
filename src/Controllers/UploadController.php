@@ -13,6 +13,7 @@ use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Http\Request;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
+
 use Illuminate\Filesystem\Filesystem;
 
 class UploadController extends Controller
@@ -26,29 +27,19 @@ class UploadController extends Controller
      */
 
 
-    public function upload(){
-        return view('upload::upload');
+    public function upload()
+    {
+        return view('multipay::upload');
     }
 
-    public function uploadcert(Request $request){
-
-
-       // $this->validate($request, [
-        //    'cert' => 'required',
-        //],[
-         //   'cert'=>'文件上传不能为空'
-       // ]);
-        //$path ='../storage/cert';
-
-        //$filename =$_FILES['cert']['name'];
-
-       // $request->file('cert')->move($path,$filename);
-       // dd(pathinfo($_FILES['cert']['name']));
-        $filesystem=new Filesystem();
-        $unhandler = new UploadHandler($this->container,$filesystem);
-        $unhandler->execute();
-        dd(1);
-
+    public function execute()
+    {
+        $filesystem = new Filesystem();
+        $uphandler = new UploadHandler($this->container, $filesystem);
+        $result = $uphandler->execute();
+        if ($result){
+            return 'success';
+        }
     }
 
 }

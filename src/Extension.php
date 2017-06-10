@@ -31,6 +31,8 @@ class Extension extends AbstractExtension
             realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/multipay') => public_path('assets/extensions/multipay'),
         ], 'public');
     }
+
+
     /**
      * Description of extension
      *
@@ -117,4 +119,5 @@ class Extension extends AbstractExtension
             return new Multipay($app);
         });
     }
+
 }
