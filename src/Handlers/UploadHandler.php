@@ -31,7 +31,7 @@ class UploadHandler extends Handler
     public function __construct(Container $container, Filesystem $filesystem)
     {
         parent::__construct($container);
-        $this->messages->push($this->translator->trans('上传图片成功！'));
+        $this->messages->push($this->translator->trans('上传文件成功！'));
         $this->files = $filesystem;
     }
     /**
@@ -56,7 +56,7 @@ class UploadHandler extends Handler
         }
         $this->data['path'] = $this->pathSplit($hash, '12,20', Collection::make([
 
-                'uploads',
+                '../stroage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
         return true;
     }

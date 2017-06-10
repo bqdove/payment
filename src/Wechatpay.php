@@ -102,39 +102,19 @@ class Wechatpay
         //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
 
         ksort($para);//把参数按照首字母ASCII码从小到大排序
+        //生成签名
+        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+
+        $sign = strtoupper(md5($str));
 
         $originPara = $para;
-
-        $newParaArray = [];
-
-        $stringSignTemp = '';
-        //以下两个foreach循环的目的是把参数序列化为a=1&b=2&c=3的格式
-        foreach($para as $key => $value)
-        {
-            array_push($newParaArray,$key."=".$value);
-        }
-
-        foreach($newParaArray as $key => $newPara)
-        {
-            if ($key == 0)
-            {
-                $stringSignTemp .= $newPara;
-            }else{
-                $stringSignTemp .= '&'. $newPara;
-            }
-        }
-        //格式化好后链接商户平台的key值
-        $stringSignTemp .= "&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
-
-        //最后MD5加密并转化为大写,$sign 存储签名
-        $sign=strtoupper(MD5($stringSignTemp));
 
         $para2 = [
             'sign' => $sign
         ];
-        $originPara = $originPara + $para2;
+        $options = $originPara + $para2;
 
-        $response = $this->gateway->purchase($originPara)->send();
+        $response = $this->gateway->purchase($options)->send();
 
         dd($response);
         //available methods
@@ -170,38 +150,62 @@ class Wechatpay
         }
     }
     //查询
-    public function query($transaction_id,$nonce_str,$sign){
-        $options = [
-            'transaction_id'=>$transaction_id,
-            '$nonce_str'=>$nonce_str,
-            'sign'=>$sign
+    public function query($para){
+        ksort($para);//把参数按照首字母ASCII码从小到大排序
+        //生成签名
+        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+
+        $sign = strtoupper(md5($str));
+
+        $originPara = $para;
+
+        $para2 = [
+            'sign' => $sign
         ];
+        $options = $originPara + $para2;
         $response = $this->gateway->query($options)->send();
         $response->isSuccessful();
     }
 
     //退款
-    public function refund(){
-        $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
-        $this->gateway->setKeyPath($this->settings->get('wechat.keypath'));
-        $response = $this->gateway->refund([
-            'nonce_str'=>$this->getrefundData($data['nonce_str']),
-            'transaction_id'=>$this->getrefundData($data['transaction_id']),
-            'sign'=>$this->getrefundData($data['sign']),
-            'out_refund_no'=>$this->getrefundData($data['out_refund_no']),
-            'total_fee'=>$this->getrefundData($data['total_fee']),
-            'refund_fee'=>$this->getrefundData($data['refund_fee'])
-        ])->send();
+    public function refund($para){
+        $certpath = $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
+        $keypath = $this->gateway->setKeyPath($this->settings->get('wechat.keypath'));
+        ksort($para);//把参数按照首字母ASCII码从小到大排序
+        //生成签名
+        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+
+        $sign = strtoupper(md5($str));
+
+        $originPara = $para;
+
+        $para2 = [
+            'certpath'=>$certpath,
+            'keypath'=>'$keypath',
+            'sign' => $sign
+        ];
+        $options = $originPara + $para2;
+        $response = $this->gateway->refund(options)->send();
         $response->isSuccessful();
     }
 
     //取消
 
-    public function cancel($out_trade_no)
+    public function cancel($para)
     {
-        $response = $this->gateway->close([
-            'out_trade_no' => $out_trade_no, //The merchant trade no
-        ])->send();
+        ksort($para);//把参数按照首字母ASCII码从小到大排序
+        //生成签名
+        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
+
+        $sign = strtoupper(md5($str));
+
+        $originPara = $para;
+
+        $para2 = [
+            'sign' => $sign
+        ];
+        $options = $originPara + $para2;
+        $response = $this->gateway->close($options)->send();
         var_dump($response->isSuccessful());
         var_dump($response->getData());
     }
