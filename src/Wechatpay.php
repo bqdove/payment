@@ -12,7 +12,7 @@ use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Http\Request;
-use Omnipay\WechatPay\Helper;
+use Notadd\Multipay\Helper as Helper;
 use Omnipay\WechatPay\Message\CreateOrderRequest;
 use Omnipay\WechatPay\Message\RefundOrderRequest;
 
@@ -96,10 +96,9 @@ class Wechatpay
 
     public function pay(Array $para)
     {
-        //1.如果为空不参与签名
-        //2.参数名按照ASCII从小到大排序，区分大小写
 
         //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
+
 
         ksort($para);//把参数按照首字母ASCII码从小到大排序
         //生成签名
@@ -112,6 +111,7 @@ class Wechatpay
         $para2 = [
             'sign' => $sign
         ];
+
         $options = $originPara + $para2;
 
         $response = $this->gateway->purchase($options)->send();
