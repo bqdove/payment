@@ -36,14 +36,7 @@ class Unionpay
 
         return $this;
     }
-    /**
-     *上传证书
-     */
-    public function uploadcert(Request $request){
-        $path ='../storage/cert/'.date('Ymd');
-        $filename = $_FILES['cert']['name'];
-        $request->file('cert')->move($path,$filename);
-    }
+
 
     /**
      * 支付接口

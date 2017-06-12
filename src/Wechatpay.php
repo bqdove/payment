@@ -100,21 +100,15 @@ class Wechatpay
         //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
 
 
-        ksort($para);//把参数按照首字母ASCII码从小到大排序
-        //生成签名
-        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
-
-        $sign = strtoupper(md5($str));
-
-        $originPara = $para;
+        $sign = Helper::getsign($para);
 
         $para2 = [
             'sign' => $sign
         ];
+        //ksort($para);
+        $originPara = $para+$para2;
 
-        $options = $originPara + $para2;
-
-        $response = $this->gateway->purchase($options)->send();
+        $response = $this->gateway->purchase($originPara)->send();
 
         dd($response);
         //available methods
@@ -128,22 +122,18 @@ class Wechatpay
     //回调通知
     public function webNotify(Array $para){
 
-        ksort($para);//把参数按照首字母ASCII码从小到大排序
-        //生成签名
-        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
 
-        $sign = strtoupper(md5($str));
-
-        $originPara = $para;
+        $sign = Helper::getsign($para);
 
         $para2 = [
             'sign' => $sign
         ];
-        $options = $originPara + $para2;
+
+        $originPara = $para + $para2;
         if('return_code'=='SUCCESS' && $sign === $data['sign']){
 
         }
-        $response = $this->gateway->completePurchase($options)->send();
+        $response = $this->gateway->completePurchase($originPara)->send();
         if ( $response->isPaid()) {
             var_dump($response->getData());
         } else {
@@ -152,19 +142,15 @@ class Wechatpay
     }
     //查询
     public function query(Array $para){
-        ksort($para);//把参数按照首字母ASCII码从小到大排序
-        //生成签名
-        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
 
-        $sign = strtoupper(md5($str));
-
-        $originPara = $para;
+        $sign = Helper::getsign($para);
 
         $para2 = [
             'sign' => $sign
         ];
-        $options = $originPara + $para2;
-        $response = $this->gateway->query($options)->send();
+
+        $originPara = $para + $para2;
+        $response = $this->gateway->query($originPara)->send();
         $response->isSuccessful();
     }
 
@@ -172,21 +158,19 @@ class Wechatpay
     public function refund(Array $para){
         $certpath = $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
         $keypath = $this->gateway->setKeyPath($this->settings->get('wechat.keypath'));
-        ksort($para);//把参数按照首字母ASCII码从小到大排序
-        //生成签名
-        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
 
-        $sign = strtoupper(md5($str));
-
-        $originPara = $para;
-
-        $para2 = [
+        $para1=[
             'certpath'=>$certpath,
-            'keypath'=>'$keypath',
+            'keypath'=>$keypath,
+        ];
+        $para = $para+$para1;
+        $sign = Helper::getsign($para);
+        $para2 = [
+
             'sign' => $sign
         ];
-        $options = $originPara + $para2;
-        $response = $this->gateway->refund(options)->send();
+        $originPara = $para + $para2;
+        $response = $this->gateway->refund($originPara)->send();
         $response->isSuccessful();
     }
 
@@ -194,19 +178,15 @@ class Wechatpay
 
     public function cancel(Array $para)
     {
-        ksort($para);//把参数按照首字母ASCII码从小到大排序
-        //生成签名
-        $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
 
-        $sign = strtoupper(md5($str));
-
-        $originPara = $para;
+        $sign = Helper::getsign($para);
 
         $para2 = [
             'sign' => $sign
         ];
-        $options = $originPara + $para2;
-        $response = $this->gateway->close($options)->send();
+
+        $originPara = $para + $para2;
+        $response = $this->gateway->close($originPara)->send();
         var_dump($response->isSuccessful());
         var_dump($response->getData());
     }

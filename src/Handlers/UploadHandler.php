@@ -44,11 +44,11 @@ class UploadHandler extends Handler
             'file.file'    => '上传文件格式必须为文件格式！',
             'file.required' => '必须上传一个文件！',
         ]);
-        $avatar = $this->request->file('file');
+        $avatar = $this->request->file('cert');
         $hash = hash_file('md5', $avatar->getPathname(), false);
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
 
-            'uploads',
+            '../storage/uploads',
         ]))->implode(DIRECTORY_SEPARATOR);
         $file = Str::substr($hash, 12, 20) . '.' . $avatar->getClientOriginalExtension();
         if (!$this->files->exists($dictionary . DIRECTORY_SEPARATOR . $file)) {

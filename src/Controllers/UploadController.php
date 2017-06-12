@@ -13,6 +13,7 @@ use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Http\Request;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
+use SplFileInfo;
 
 use Illuminate\Filesystem\Filesystem;
 
@@ -32,16 +33,16 @@ class UploadController extends Controller
         return view('multipay::upload');
     }
 
-    public function execute()
+    public function execute( )
     {
-
-        $filesystem = new Filesystem();
-        $uphandler = new UploadHandler($this->container, $filesystem);
+        $filesystem=new Filesystem();
+        $uphandler = new UploadHandler($this->container,$filesystem);
         $result = $uphandler->execute();
-
-        if ($result){
-            return 'success';
+        dd($this->request->all());
+        if($result){
+            return 'SUCCESS';
         }
     }
+
 
 }
