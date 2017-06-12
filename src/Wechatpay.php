@@ -140,7 +140,7 @@ class Wechatpay
             'sign' => $sign
         ];
         $options = $originPara + $para2;
-        if('return_code'=='SUCCESS' && $sign === $data['sign']){
+        if('return_code'=='SUCCESS' && $sign === $options['sign']){
 
         }
         $response = $this->gateway->completePurchase($options)->send();
