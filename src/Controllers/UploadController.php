@@ -34,9 +34,11 @@ class UploadController extends Controller
 
     public function execute()
     {
+
         $filesystem = new Filesystem();
         $uphandler = new UploadHandler($this->container, $filesystem);
         $result = $uphandler->execute();
+
         if ($result){
             return 'success';
         }
