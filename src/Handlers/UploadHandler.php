@@ -31,7 +31,7 @@ class UploadHandler extends Handler
     public function __construct(Container $container, Filesystem $filesystem)
     {
         parent::__construct($container);
-        $this->messages->push($this->translator->trans('上传图片成功！'));
+        $this->messages->push($this->translator->trans('上传文件成功！'));
         $this->files = $filesystem;
     }
     /**
@@ -40,14 +40,14 @@ class UploadHandler extends Handler
     public function execute()
     {
         $this->validate($this->request, [
-            'file' => 'required|file',
-        ], [
+
             'file.file'    => '上传文件格式必须为文件格式！',
             'file.required' => '必须上传一个文件！',
         ]);
         $avatar = $this->request->file('file');
         $hash = hash_file('md5', $avatar->getPathname(), false);
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
+
             'uploads',
         ]))->implode(DIRECTORY_SEPARATOR);
         $file = Str::substr($hash, 12, 20) . '.' . $avatar->getClientOriginalExtension();
@@ -55,7 +55,8 @@ class UploadHandler extends Handler
             $avatar->move($dictionary, $file);
         }
         $this->data['path'] = $this->pathSplit($hash, '12,20', Collection::make([
-                'uploads',
+
+                '../stroage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
         return true;
     }
