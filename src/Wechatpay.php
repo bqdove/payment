@@ -128,9 +128,14 @@ class Wechatpay
         $para2 = [
             'sign' => $sign
         ];
+<<<<<<< HEAD
 
         $originPara = $para + $para2;
         if('return_code'=='SUCCESS' && $sign === $data['sign']){
+=======
+        $options = $originPara + $para2;
+        if('return_code'=='SUCCESS' && $sign === $options['sign']){
+>>>>>>> c2a363cc532b92d3aaedc68047d81619b626c478
 
         }
         $response = $this->gateway->completePurchase($originPara)->send();
