@@ -6,7 +6,7 @@
  * Time: 下午3:08
  */
 
-namespace Notadd\Multipay;
+namespace Notadd\Payment;
 
 class Helper
 {

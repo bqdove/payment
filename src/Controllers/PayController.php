@@ -6,7 +6,7 @@
  * Time: 10:54
  */
 
-namespace Notadd\Multipay\Controllers;
+namespace Notadd\Payment\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;

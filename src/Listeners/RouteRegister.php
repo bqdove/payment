@@ -6,11 +6,11 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:24
  */
-namespace Notadd\Multipay\Listeners;
+namespace Notadd\Payment\Listeners;
 
 use Notadd\Foundation\Routing\Abstracts\RouteRegister as AbstractRouteRegister;
-use Notadd\Multipay\Controllers\PayController;
-use Notadd\Multipay\Controllers\UploadController;
+use Notadd\Payment\Controllers\PayController;
+use Notadd\Payment\Controllers\UploadController;
 /**
  * Class RouteRegister.
  */

@@ -6,10 +6,9 @@
  * Time: 11:48
  */
 
-namespace Notadd\Multipay\Controllers;
+namespace Notadd\Payment\Controllers;
 use Notadd\Multipay\Handlers\GetWechatconfHandler;
 use Notadd\Multipay\Handlers\SetWechatconfHandler;
-use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 
 /**

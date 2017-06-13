@@ -6,7 +6,7 @@
  * Time: 下午5:27
  */
 
-namespace Notadd\Multipay\Controllers;
+namespace Notadd\Payment\Controllers;
 
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;

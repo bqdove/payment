@@ -6,15 +6,12 @@
  * Time: 22:37
  */
 
-namespace Notadd\Multipay;
+namespace Notadd\Payment;
 
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Illuminate\Http\Request;
-use Notadd\Multipay\Helper as Helper;
-use Omnipay\WechatPay\Message\CreateOrderRequest;
-use Omnipay\WechatPay\Message\RefundOrderRequest;
+use Notadd\Payment\Helper as Helper;
 
 class Wechatpay
 {
@@ -25,65 +22,7 @@ class Wechatpay
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    /*
-        public function getData()
-        {
-            $order = new CreateOrderRequest();
-            //创建订单配置
-            $data = array(
-                'appid'            => $order->getAppId(),
-                'mch_id'           => $order->getMchId(),
-                'device_info'      => $order->getDeviceInfo(),
-                'body'             => $order->getBody(),
-                'detail'           => $order->getDetail(),
-                'attach'           => $order->getAttach(),
-                'out_trade_no'     => $order->getOutTradeNo(),
-                'fee_type'         => $order->getFeeType(),
-                'total_fee'        => $order->getTotalFee(),
-                'spbill_create_ip' => $order->getSpbillCreateIp(),
-                'time_start'       => $order->getTimeStart(),
-                'time_expire'      => $order->getTimeExpire(),
-                'goods_tag'        => $order->getGoodsTag(),
-                'notify_url'       => $order->getNotifyUrl(),
-                'trade_type'       => $order->getTradeType(),
-                'limit_pay'        => $order->getLimitPay(),
-                'openid'           => $order->getOpenId(),
-                'nonce_str'        => md5(uniqid()),
-            );
-            $data = array_filter($data);
 
-            $data['sign'] = Helper::sign($data, $order->getApiKey());
-
-            return $data;
-        }
-
-        //退款订单配置
-        public function getrefundData()
-        {
-
-            $refund = new RefundOrderRequest();
-
-            $data = array (
-                'appid'           => $refund->getAppId(),
-                'mch_id'          => $refund->getMchId(),
-                'device_info'     => $refund->getDeviceInfo(),
-                'transaction_id'  => $refund->getTransactionId(),
-                'out_trade_no'    => $refund->getOutTradeNo(),
-                'out_refund_no'   => $refund->getOutRefundNo(),
-                'total_fee'       => $refund->getTotalFee(),
-                'refund_fee'      => $refund->getRefundFee(),
-                'refund_fee_type' => $refund->getRefundType(),
-                'op_user_id'      => $refund->getOpUserId() ?: $refund->getMchId(),
-                'nonce_str'       => md5(uniqid()),
-            );
-
-            $data = array_filter($data);
-
-            $data['sign'] = Helper::sign($data, $refund->getApiKey());
-
-            return $data;
-        }
-    */
     /*
      * 获取支付网关
      */
