@@ -58,6 +58,7 @@ class UploadHandler extends Handler
 
                 '../stroage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
+
         return true;
     }
     /**

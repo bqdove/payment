@@ -97,7 +97,7 @@ class Wechatpay
     public function pay(Array $para)
     {
 
-        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
+        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&app_id=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464&trade_type=NATIVE
 
 
         $sign = Helper::getsign($para);
@@ -105,7 +105,7 @@ class Wechatpay
         $para2 = [
             'sign' => $sign
         ];
-        //ksort($para);
+
         $originPara = $para+$para2;
 
         $response = $this->gateway->purchase($originPara)->send();
@@ -128,17 +128,12 @@ class Wechatpay
         $para2 = [
             'sign' => $sign
         ];
-<<<<<<< HEAD
 
-        $originPara = $para + $para2;
-        if('return_code'=='SUCCESS' && $sign === $data['sign']){
-=======
         $options = $originPara + $para2;
         if('return_code'=='SUCCESS' && $sign === $options['sign']){
->>>>>>> c2a363cc532b92d3aaedc68047d81619b626c478
 
         }
-        $response = $this->gateway->completePurchase($originPara)->send();
+        $response = $this->gateway->completePurchase($options)->send();
         if ( $response->isPaid()) {
             var_dump($response->getData());
         } else {
@@ -156,13 +151,14 @@ class Wechatpay
 
         $originPara = $para + $para2;
         $response = $this->gateway->query($originPara)->send();
+
         $response->isSuccessful();
     }
 
     //退款
     public function refund(Array $para){
-        $certpath = $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
-        $keypath = $this->gateway->setKeyPath($this->settings->get('wechat.keypath'));
+        $certpath = '../strorage/uploads';
+        $keypath = '../strorage/uploads';
 
         $para1=[
             'certpath'=>$certpath,

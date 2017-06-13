@@ -38,9 +38,9 @@ class UploadController extends Controller
         $filesystem=new Filesystem();
         $uphandler = new UploadHandler($this->container,$filesystem);
         $result = $uphandler->execute();
-        dd($this->request->all());
+        //dd($this->request->all());
         if($result){
-            return 'SUCCESS';
+            return '证书上传成功！';
         }
     }
 

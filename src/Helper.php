@@ -17,10 +17,11 @@ class Helper
         //生成签名
 
         $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
-
+     
         $sign = strtoupper(md5($str));
-
+    
         return $sign;
+
     }
 
 }
