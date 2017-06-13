@@ -45,6 +45,7 @@ class UploadHandler extends Handler
             'file.required' => '必须上传一个文件！',
         ]);
         $avatar = $this->request->file('cert');
+        $realPath = $avatar->getPathname();
         $hash = hash_file('md5', $avatar->getPathname(), false);
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
 
@@ -56,9 +57,10 @@ class UploadHandler extends Handler
         }
         $this->data['path'] = $this->pathSplit($hash, '12,20', Collection::make([
 
-                '../stroage/uploads',
+                '../storage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
 
+        dd($this->data['path']);
         return true;
     }
     /**
