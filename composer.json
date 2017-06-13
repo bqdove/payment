@@ -1,5 +1,5 @@
 {
-    "name": "notadd/multipay",
+    "name": "notadd/payment",
     "description": "Notadd Extension for multipay.",
     "type": "notadd-extension",
     "keywords": ["notadd", "alipay", "extension", "wechat", "unionpay"],
