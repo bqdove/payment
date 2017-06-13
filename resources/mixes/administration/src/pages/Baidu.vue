@@ -59,7 +59,7 @@
     };
 </script>
 <template>
-    <card>
+    <card :bordered="false">
         <p slot="title">{{ trans('baidu.setting.title') }}</p>
         <i-form :label-width="200" :model="form" ref="form" :rules="rules">
             <row>
