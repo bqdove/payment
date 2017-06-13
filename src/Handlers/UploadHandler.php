@@ -6,7 +6,7 @@
  * @copyright (c) 2017, notadd.com
  * @datetime 2017-04-24 18:42
  */
-namespace Notadd\Payment\Handlers;
+namespace Notadd\Multipay\Handlers;
 
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;

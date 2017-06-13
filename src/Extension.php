@@ -6,7 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:19
  */
-namespace Notadd\Payment;
+namespace Notadd\Multipay;
 
 use Illuminate\Events\Dispatcher;
 use Notadd\Multipay\Listeners\CsrfTokenRegister;

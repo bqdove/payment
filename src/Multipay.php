@@ -6,7 +6,7 @@
  * Time: 10:40
  */
 
-namespace Notadd\Payment;
+namespace Notadd\Multipay;
 
 use Illuminate\Contracts\Foundation\Application;
 

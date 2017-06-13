@@ -5,7 +5,7 @@
  * Date: 2017/5/24
  * Time: 11:54
  */
-namespace Notadd\Payment\Handlers;
+namespace Notadd\Multipay\Handlers;
 
 use Illuminate\Container\Container;
 use Notadd\Foundation\Passport\Abstracts\DataHandler;

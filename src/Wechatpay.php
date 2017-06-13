@@ -6,12 +6,12 @@
  * Time: 22:37
  */
 
-namespace Notadd\Payment;
+namespace Notadd\Multipay;
 
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Notadd\Payment\Helper as Helper;
+use Notadd\Multipay\Helper as Helper;
 
 class Wechatpay
 {

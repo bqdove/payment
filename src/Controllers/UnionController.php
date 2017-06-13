@@ -6,7 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:26
  */
-namespace Notadd\Payment\Controllers;
+namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 use Notadd\Multipay\Handlers\SetUnionpayconfHandler;

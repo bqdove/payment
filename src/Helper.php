@@ -6,7 +6,7 @@
  * Time: 下午3:08
  */
 
-namespace Notadd\Payment;
+namespace Notadd\Multipay;
 
 class Helper
 {
@@ -14,7 +14,7 @@ class Helper
     {
         ksort($para);//把参数按照首字母ASCII码从小到大排序
 
-        //生成签名啦啦
+        //生成签名
 
         $str = urldecode(http_build_query($para))."&key=XM7gre777oHMbHOneNlopEhJCGbuPGYC";
      
