@@ -6,7 +6,7 @@
  * Time: 下午5:27
  */
 
-namespace Notadd\Multipay\Controllers;
+namespace Notadd\Payment\Controllers;
 
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
@@ -38,9 +38,9 @@ class UploadController extends Controller
         $filesystem=new Filesystem();
         $uphandler = new UploadHandler($this->container,$filesystem);
         $result = $uphandler->execute();
-        dd($this->request->all());
+        //dd($this->request->all());
         if($result){
-            return 'SUCCESS';
+            return '证书上传成功！';
         }
     }
 

@@ -6,7 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:27
  */
-namespace Notadd\Multipay\Listeners;
+namespace Notadd\Payment\Listeners;
 
 use Notadd\Foundation\Event\Abstracts\EventSubscriber;
 use Notadd\Foundation\Http\Events\CsrfTokenRegister as CsrfTokenRegisterEvent;

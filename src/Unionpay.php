@@ -6,7 +6,7 @@
  * Time: 18:18
  */
 
-namespace Notadd\Multipay;
+namespace Notadd\Payment;
 
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;

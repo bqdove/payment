@@ -6,7 +6,7 @@
  * @copyright (c) 2017, notadd.com
  * @datetime 2017-04-24 18:42
  */
-namespace Notadd\Multipay\Handlers;
+namespace Notadd\Payment\Handlers;
 
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
@@ -58,6 +58,7 @@ class UploadHandler extends Handler
 
                 '../stroage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
+
         return true;
     }
     /**

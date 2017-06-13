@@ -6,15 +6,12 @@
  * Time: 22:37
  */
 
-namespace Notadd\Multipay;
+namespace Notadd\Payment;
 
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Illuminate\Http\Request;
-use Notadd\Multipay\Helper as Helper;
-use Omnipay\WechatPay\Message\CreateOrderRequest;
-use Omnipay\WechatPay\Message\RefundOrderRequest;
+use Notadd\Payment\Helper as Helper;
 
 class Wechatpay
 {
@@ -25,65 +22,7 @@ class Wechatpay
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    /*
-        public function getData()
-        {
-            $order = new CreateOrderRequest();
-            //创建订单配置
-            $data = array(
-                'appid'            => $order->getAppId(),
-                'mch_id'           => $order->getMchId(),
-                'device_info'      => $order->getDeviceInfo(),
-                'body'             => $order->getBody(),
-                'detail'           => $order->getDetail(),
-                'attach'           => $order->getAttach(),
-                'out_trade_no'     => $order->getOutTradeNo(),
-                'fee_type'         => $order->getFeeType(),
-                'total_fee'        => $order->getTotalFee(),
-                'spbill_create_ip' => $order->getSpbillCreateIp(),
-                'time_start'       => $order->getTimeStart(),
-                'time_expire'      => $order->getTimeExpire(),
-                'goods_tag'        => $order->getGoodsTag(),
-                'notify_url'       => $order->getNotifyUrl(),
-                'trade_type'       => $order->getTradeType(),
-                'limit_pay'        => $order->getLimitPay(),
-                'openid'           => $order->getOpenId(),
-                'nonce_str'        => md5(uniqid()),
-            );
-            $data = array_filter($data);
 
-            $data['sign'] = Helper::sign($data, $order->getApiKey());
-
-            return $data;
-        }
-
-        //退款订单配置
-        public function getrefundData()
-        {
-
-            $refund = new RefundOrderRequest();
-
-            $data = array (
-                'appid'           => $refund->getAppId(),
-                'mch_id'          => $refund->getMchId(),
-                'device_info'     => $refund->getDeviceInfo(),
-                'transaction_id'  => $refund->getTransactionId(),
-                'out_trade_no'    => $refund->getOutTradeNo(),
-                'out_refund_no'   => $refund->getOutRefundNo(),
-                'total_fee'       => $refund->getTotalFee(),
-                'refund_fee'      => $refund->getRefundFee(),
-                'refund_fee_type' => $refund->getRefundType(),
-                'op_user_id'      => $refund->getOpUserId() ?: $refund->getMchId(),
-                'nonce_str'       => md5(uniqid()),
-            );
-
-            $data = array_filter($data);
-
-            $data['sign'] = Helper::sign($data, $refund->getApiKey());
-
-            return $data;
-        }
-    */
     /*
      * 获取支付网关
      */
@@ -97,7 +36,7 @@ class Wechatpay
     public function pay(Array $para)
     {
 
-        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&appid=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464
+        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&app_id=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464&trade_type=NATIVE
 
 
         $sign = Helper::getsign($para);
@@ -105,7 +44,7 @@ class Wechatpay
         $para2 = [
             'sign' => $sign
         ];
-        //ksort($para);
+
         $originPara = $para+$para2;
 
         $response = $this->gateway->purchase($originPara)->send();
@@ -128,17 +67,12 @@ class Wechatpay
         $para2 = [
             'sign' => $sign
         ];
-<<<<<<< HEAD
 
-        $originPara = $para + $para2;
-        if('return_code'=='SUCCESS' && $sign === $data['sign']){
-=======
         $options = $originPara + $para2;
         if('return_code'=='SUCCESS' && $sign === $options['sign']){
->>>>>>> c2a363cc532b92d3aaedc68047d81619b626c478
 
         }
-        $response = $this->gateway->completePurchase($originPara)->send();
+        $response = $this->gateway->completePurchase($options)->send();
         if ( $response->isPaid()) {
             var_dump($response->getData());
         } else {
@@ -156,13 +90,14 @@ class Wechatpay
 
         $originPara = $para + $para2;
         $response = $this->gateway->query($originPara)->send();
+
         $response->isSuccessful();
     }
 
     //退款
     public function refund(Array $para){
-        $certpath = $this->gateway->setCertPath($this->settings->get('wechat.certpath'));
-        $keypath = $this->gateway->setKeyPath($this->settings->get('wechat.keypath'));
+        $certpath = '../strorage/uploads';
+        $keypath = '../strorage/uploads';
 
         $para1=[
             'certpath'=>$certpath,
