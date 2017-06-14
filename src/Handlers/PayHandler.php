@@ -41,7 +41,7 @@ class PayHandler extends Handler
         $driver = $this->request->query('driver');
         $way = $this->request->query('way');
         $para = $this->request->except(['driver','way']);
-        $this->multipay->query($driver,$way,$para);
+        $this->multipay->pay($driver,$way,$para);
     }
 
 }
