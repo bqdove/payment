@@ -36,6 +36,7 @@ class RouteRegister extends AbstractRouteRegister
 
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay'], function () {
             $this->router->get('set',AlipayController::class.'@set');
+            $this->router->get('get',AlipayController::class.'@get');
         });
 
     }

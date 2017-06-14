@@ -38,10 +38,9 @@ class GetAlipayconfHandler extends DataHandler
      *
      * @return array
      */
-    public  function data()
+    public function data()
     {
         return [
-
             'alipay_enabled'=> $this->settings->get('alipay.alipay_enabled',false),
 
             'sign_type'=> $this->settings->get('alipay.sign_type'),
@@ -57,12 +56,11 @@ class GetAlipayconfHandler extends DataHandler
             'seller_email'=> $this->settings->get('alipay.seller_email'),
             
             'input_charset'=> $this->settings->get('alipay.input_charset'),
-            
         ];
     }
 
     public function execute()
     {
-
+        $this->data();
     }
 }
