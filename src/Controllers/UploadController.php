@@ -33,15 +33,10 @@ class UploadController extends Controller
         return view('multipay::upload');
     }
 
-    public function execute( )
+    public function execute(UploadHandler $handler)
     {
-        $filesystem=new Filesystem();
-        $uphandler = new UploadHandler($this->container,$filesystem);
-        $result = $uphandler->execute();
-        //dd($this->request->all());
-        if($result){
-            return '证书上传成功！';
-        }
+       
+        return $handler->toResponse()->generateHttpResponse();
     }
 
 
