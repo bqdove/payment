@@ -20,7 +20,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     output: {
         path: config.build.assetsRoot,
         filename: utils.assetsPath('js/extension.min.js'),
-        library: 'notadd/multipay',
+        library: 'notadd/payment',
         libraryTarget: "umd"
     },
     plugins: [
