@@ -12,6 +12,7 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Notadd\Multipay\Handlers\PayHandler;
 use Notadd\Multipay\Handlers\QueryHandler;
+use Notadd\Multipay\Handlers\RefundHandler;
 
 class PayController extends Controller{
 
@@ -42,12 +43,9 @@ class PayController extends Controller{
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function refund()
+    public function refund(RefundHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->refund($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
     }
 
     public function cancel()
