@@ -115,7 +115,7 @@ class Extension extends AbstractExtension
     }
 
     public function registerPay(){
-            $this->app->singleton('Pay', function($app){
+            $this->app->singleton('Multipay', function($app){
             return new Multipay($app);
         });
     }
