@@ -9,6 +9,7 @@
 namespace Notadd\Multipay\Listeners;
 
 use Notadd\Foundation\Routing\Abstracts\RouteRegister as AbstractRouteRegister;
+use Notadd\Multipay\Controllers\AlipayController;
 use Notadd\Multipay\Controllers\PayController;
 use Notadd\Multipay\Controllers\UploadController;
 /**
@@ -32,6 +33,10 @@ class RouteRegister extends AbstractRouteRegister
         $this->router->get('upload', UploadController::class. '@upload');
         $this->router->get('webnotify', PayController::class. '@webNotify');
         $this->router->post('execute', UploadController::class. '@execute');
+
+        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay'], function () {
+            $this->router->get('set',AlipayController::class.'@set');
+        });
 
     }
 }
