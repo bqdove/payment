@@ -28,7 +28,7 @@ class Extension extends AbstractExtension
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'multipay');
         $this->loadViewsFrom(realpath(__DIR__ . '/../resources/views'), 'multipay');
         $this->publishes([
-            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/multipay') => public_path('assets/extensions/multipay'),
+            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/payment') => public_path('assets/extensions/payment'),
         ], 'public');
     }
 
@@ -73,7 +73,7 @@ class Extension extends AbstractExtension
      */
     public static function script()
     {
-        return asset('assets/extensions/multipay/js/extension.min.js');
+        return asset('assets/extensions/payment/js/extension.min.js');
     }
 
     /**
@@ -84,7 +84,7 @@ class Extension extends AbstractExtension
     public static function stylesheet()
     {
         return [
-            asset('assets/extensions/multipay/css/extension.min.css'),
+            asset('assets/extensions/payment/css/extension.min.css'),
         ];
     }
 
