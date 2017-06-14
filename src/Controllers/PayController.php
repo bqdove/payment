@@ -26,7 +26,7 @@ class PayController extends Controller{
     public function __construct()
     {
         parent::__construct();
-        $this->multipay = $this->container->make('Pay');
+        $this->multipay = $this->container->make('Multipay');
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
