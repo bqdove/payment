@@ -21,7 +21,7 @@ class RouteRegister extends AbstractRouteRegister
      */
     public function handle()
     {
-            //http://pay.ibenchu.xyz:8080/pay?gate_way=wechat&way=Alipay_Express&money=100&sign=RSA2
+a
 
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay'], function () {
             $this->router->get('pay', PayController::class. '@pay');
