@@ -14,6 +14,7 @@ use Notadd\Multipay\Handlers\CancelHandler;
 use Notadd\Multipay\Handlers\PayHandler;
 use Notadd\Multipay\Handlers\QueryHandler;
 use Notadd\Multipay\Handlers\RefundHandler;
+use Notadd\Multipay\Handlers\WebNotifyHandler;
 
 class PayController extends Controller{
 
@@ -55,12 +56,10 @@ class PayController extends Controller{
 
     }
 
-    public function webNotify()
+    public function webNotify(WebNotifyHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->webNotify($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
+
     }
 
 }
