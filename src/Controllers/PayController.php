@@ -62,12 +62,12 @@ class PayController extends Controller{
         $this->multipay->cancel($driver, $way, $para);
     }
 
-    public function webNotice()
+    public function webNotify()
     {
         $driver = $this->request->query('driver');
         $way = $this->request->query('way');
         $para = $this->request->except(['driver', 'way']);
-        $this->multipay->webNotice($driver, $way, $para);
+        $this->multipay->webNotify($driver, $way, $para);
     }
 
 }
