@@ -10,6 +10,7 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
+use Notadd\Multipay\Handlers\CancelHandler;
 use Notadd\Multipay\Handlers\PayHandler;
 use Notadd\Multipay\Handlers\QueryHandler;
 use Notadd\Multipay\Handlers\RefundHandler;
@@ -48,12 +49,10 @@ class PayController extends Controller{
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function cancel()
+    public function cancel(CancelHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->cancel($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
+
     }
 
     public function webNotify()
