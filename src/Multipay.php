@@ -65,7 +65,6 @@ class Multipay
      */
     public function pay($driver, $way, $para){
         $this->getDriver($driver)->getGateWay($way)->pay($para);
-
     }
 
     /**

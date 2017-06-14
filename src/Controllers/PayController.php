@@ -35,17 +35,9 @@ class PayController extends Controller{
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-//    public function pay(PayHandler $handler)
-//    {
-//        return $handler->toResponse()->generateHttpResponse();
-//    }
-
-    public function pay()
+    public function pay(PayHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver','way']);
-        $this->multipay->pay($driver,$way,$para);
+        return $handler->toResponse()->generateHttpResponse();
     }
 
     public function query(QueryHandler $handler)
