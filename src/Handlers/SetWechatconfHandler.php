@@ -57,16 +57,14 @@ class SetWechatconfHandler extends AbstractSetHandler
      */
     public function execute()
     {
-        $config=array(
-            $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled')),
-            $this->settings->set('wechat.app_id',$this->request->input('app_id')),
-            $this->settings->set('wechat.mch_id',$this->request->input('mch_id')),
-            $this->settings->set('wechat.certpath',$this->request->input('certpath')),
-            $this->settings->set('wechat.keypath',$this->request->input('keypath')),
-            $this->settings->set('wechat.key',$this->request->input('key')),
-            $this->settings->set('wechat.returnUrl',$this->request->input('returnUrl')),
-            $this->settings->set('wechat.notifyUrl',$this->request->input('notifyUrl'))
-        );
+        $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));
+        $this->settings->set('wechat.app_id',$this->request->input('app_id'));
+        $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));
+        $this->settings->set('wechat.certpath',$this->request->input('certpath'));
+        $this->settings->set('wechat.keypath',$this->request->input('keypath'));
+        $this->settings->set('wechat.key',$this->request->input('key'));
+        $this->settings->set('wechat.returnUrl',$this->request->input('returnUrl'));
+        $this->settings->set('wechat.notifyUrl',$this->request->input('notifyUrl'));
 
         return true ;
     }

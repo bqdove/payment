@@ -10,6 +10,11 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
+use Notadd\Multipay\Handlers\CancelHandler;
+use Notadd\Multipay\Handlers\PayHandler;
+use Notadd\Multipay\Handlers\QueryHandler;
+use Notadd\Multipay\Handlers\RefundHandler;
+use Notadd\Multipay\Handlers\WebNotifyHandler;
 
 class PayController extends Controller{
 
@@ -30,44 +35,31 @@ class PayController extends Controller{
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    public function pay()
+    public function pay(PayHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->pay($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function query()
+    public function query(QueryHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->query($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function refund()
+    public function refund(RefundHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->refund($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function cancel()
+    public function cancel(CancelHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->cancel($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
+
     }
 
-    public function webNotify()
+    public function webNotify(WebNotifyHandler $handler)
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->webNotify($driver, $way, $para);
+        return $handler->toResponse()->generateHttpResponse();
+
     }
 
 }

@@ -42,7 +42,7 @@ class GetWechatconfHandler extends DataHandler
     public function data()
     {
         return [
-            $config=array(
+
                 'wechat_enabled'=>$this->settings->get('wechat.wechat_enabled',false),
                 'app_id'=>$this->settings->get('wechat.app_id',''),
                 'mch_id'=>$this->settings->get('wechat.mch_id',''),
@@ -51,7 +51,6 @@ class GetWechatconfHandler extends DataHandler
                 'notifyUrl'=>$this->settings->get('wechat.notifyUrl',''),
                 'certpath'=>$this->settings->get('wechat.certpath',''),
                 'keypath'=>$this->settings->get('wechat.keypath',''),
-            )
         ] ;
     }
 }
