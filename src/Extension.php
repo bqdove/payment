@@ -30,6 +30,7 @@ class Extension extends AbstractExtension
         $this->publishes([
             realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/payment') => public_path('assets/extensions/payment'),
         ], 'public');
+        $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
     }
 
 

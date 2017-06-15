@@ -68,7 +68,7 @@ class Wechatpay
             'sign' => $sign
         ];
 
-        $options = $originPara + $para2;
+        $options = $para + $para2;
         if('return_code'=='SUCCESS' && $sign === $options['sign']){
 
         }

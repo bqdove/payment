@@ -15,6 +15,7 @@ use Notadd\Multipay\Handlers\PayHandler;
 use Notadd\Multipay\Handlers\QueryHandler;
 use Notadd\Multipay\Handlers\RefundHandler;
 use Notadd\Multipay\Handlers\WebNotifyHandler;
+use Notadd\Multipay\Models\Order;
 
 class PayController extends Controller{
 
@@ -60,6 +61,12 @@ class PayController extends Controller{
     {
         return $handler->toResponse()->generateHttpResponse();
 
+    }
+
+    public function test()
+    {
+        $order = new Order();
+        dd($order);
     }
 
 }
