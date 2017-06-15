@@ -29,10 +29,10 @@ class Wechatpay
     public function getGateWay($gatewayname){
 
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setAppId($this->settings->get('wechat.app_id'));
-        $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
-        $this->gateway->setApiKey($this->settings->get('wechat.key'));
-        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080');
+        //$this->gateway->setAppId($this->settings->get('wechat.app_id'));
+        //$this->gateway->setMchId($this->settings->get('wechat.mch_id'));
+        //$this->gateway->setApiKey($this->settings->get('wechat.key'));
+        //$this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080');
         return $this;
     }
 
@@ -42,6 +42,20 @@ class Wechatpay
         //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&app_id=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464&trade_type=NATIVE
 
 
+
+        $para = [
+            'app_id'=>'wx2dd40b5b1c24a960',
+            'body'=>'Iphone8',
+            'mch_id'=>'1235851702',
+            'nonce_str'=>md5(uniqid()),
+            'notify_url'=>'http://lxnotadd.com',
+            'out_trade_no'=>date('YmdHis').mt_rand(1000,9999),
+            'product_id'=>'12235413214070356458058',
+            'spbill_create_ip'=>'36.45.175.53',
+            'total_fee'=>10,
+            'trade_type'=>'NATIVE',
+        ];
+
         $sign = Helper::getsign($para);
 
         $para2 = [
@@ -49,10 +63,11 @@ class Wechatpay
         ];
 
         $originPara = $para+$para2;
+        dd($originPara);
 
         $response = $this->gateway->purchase($originPara)->send();
 
-        dd($response);
+        //dd($response);
         //available methods
  //       $response->getData(); //For debug
 //        $response->getAppOrderData(); //For WechatPay_App
