@@ -32,7 +32,6 @@ class Wechatpay
         $this->gateway->setAppId($this->settings->get('wechat.app_id'));
         $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
         $this->gateway->setApiKey($this->settings->get('wechat.key'));
-        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080');
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080');
         return $this;
     }
