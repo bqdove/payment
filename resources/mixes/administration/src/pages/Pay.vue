@@ -12,20 +12,28 @@
                 action: `${window.api}/mall/admin/upload`,
                 alipayForm: {
                     enabled: true,
-                    key: '',
-                    number: '',
+                    private_key: '',
+                    app_id: '',
+                    public_key: '',
                 },
                 alipayRules: {
                     number: [
                         {
-                            message: '商户号不能为空',
+                            message: 'APP_ID不能为空',
                             required: true,
                             trigger: 'blur',
                         },
                     ],
                     key: [
                         {
-                            message: '秘钥不能为空',
+                            message: '私钥不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    openKey: [
+                        {
+                            message: '公钥不能为空',
                             required: true,
                             trigger: 'blur',
                         },
@@ -78,14 +86,30 @@
                 self.loading = true;
                 self.$refs.alipayForm.validate(valid => {
                     if (valid) {
-                        self.$Message.success('提交成功!');
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/alipay/set', self.alipayForm).then(() => {
+                            self.$notice.open({
+                                title: injection.trans('alipay.setting.success'),
+                            });
+                        }).finally(() => {
+                            self.loading = false;
+                        });
                     } else {
                         self.loading = false;
                         self.$notice.error({
-                            title: '请正确填写设置信息！',
+                            title: injection.trans('alipay.setting.fail'),
                         });
                     }
                 });
+//                self.$refs.alipayForm.validate(valid => {
+//                    if (valid) {
+//                        self.$Message.success('提交成功!');
+//                    } else {
+//                        self.loading = false;
+//                        self.$notice.error({
+//                            title: '请正确填写设置信息！',
+//                        });
+//                    }
+//                });
             },
             unionPaySubmit() {
                 const self = this;
@@ -132,16 +156,24 @@
                         <i-form :label-width="200" :model="alipayForm" ref="alipayForm" :rules="alipayRules">
                             <row>
                                 <i-col span="12">
-                                    <form-item label="商户号" prop="number">
-                                        <i-input v-model="alipayForm.number"></i-input>
+                                    <form-item label="APP_ID" prop="app_id">
+                                        <i-input v-model="alipayForm.app_id"></i-input>
                                         <a href="">点击此处获取</a>
                                     </form-item>
                                 </i-col>
                             </row>
                             <row>
                                 <i-col span="12">
-                                    <form-item label="密钥" prop="key">
-                                        <i-input v-model="alipayForm.key"></i-input>
+                                    <form-item label="公钥" prop="public_key">
+                                        <i-input v-model="alipayForm.public_key"></i-input>
+                                        <a href="">点击此处获取</a>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                            <row>
+                                <i-col span="12">
+                                    <form-item label="私钥" prop="private_key">
+                                        <i-input v-model="alipayForm.private_key"></i-input>
                                         <a href="">点击此处获取</a>
                                     </form-item>
                                 </i-col>
