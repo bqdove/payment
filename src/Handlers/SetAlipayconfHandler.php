@@ -74,8 +74,6 @@ class SetAlipayconfHandler extends AbstractSetHandler
 
         $this->settings->set('alipay.public_key', $this->request->input('public_key'));
 
-        $this->settings->set('alipay.seller_email',  $this->request->input('seller_email'));
-
         return true ;
     }
 
