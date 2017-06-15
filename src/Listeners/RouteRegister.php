@@ -12,6 +12,8 @@ use Notadd\Foundation\Routing\Abstracts\RouteRegister as AbstractRouteRegister;
 use Notadd\Multipay\Controllers\AlipayController;
 use Notadd\Multipay\Controllers\PayController;
 use Notadd\Multipay\Controllers\UploadController;
+use Notadd\Multipay\Controllers\WechatController;
+
 /**
  * Class RouteRegister.
  */
@@ -37,6 +39,7 @@ class RouteRegister extends AbstractRouteRegister
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay/alipay'], function () {
             $this->router->post('set',AlipayController::class.'@set');
             $this->router->get('get',AlipayController::class.'@get');
+
             $this->router->get('order',AlipayController::class.'@order');
         });
 
@@ -44,6 +47,8 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->get('set',WechatController::class.'@set');
             $this->router->get('get',WechatController::class.'@get');
             $this->router->get('order',WechatController::class.'@order');
+
+
         });
 
     }

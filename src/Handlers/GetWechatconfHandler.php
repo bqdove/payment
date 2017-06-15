@@ -47,10 +47,13 @@ class GetWechatconfHandler extends DataHandler
                 'app_id'=>$this->settings->get('wechat.app_id',''),
                 'mch_id'=>$this->settings->get('wechat.mch_id',''),
                 'key'=>$this->settings->get('wechat.key',''),
-                'returnUrl'=>$this->settings->get('wechat.returnUrl',''),
                 'notifyUrl'=>$this->settings->get('wechat.notifyUrl',''),
                 'certpath'=>$this->settings->get('wechat.certpath',''),
                 'keypath'=>$this->settings->get('wechat.keypath',''),
         ] ;
+    }
+    public function execute()
+    {
+        $this->data();
     }
 }

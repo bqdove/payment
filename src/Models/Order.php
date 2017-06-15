@@ -2,7 +2,7 @@
 
 namespace Notadd\Multipay\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Notadd\Foundation\Database\Model;
 
 class Order extends Model
 {
