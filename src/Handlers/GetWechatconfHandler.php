@@ -52,4 +52,8 @@ class GetWechatconfHandler extends DataHandler
                 'keypath'=>$this->settings->get('wechat.keypath',''),
         ] ;
     }
+    public function execute()
+    {
+        $this->data();
+    }
 }
