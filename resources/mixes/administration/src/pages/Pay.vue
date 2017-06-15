@@ -11,7 +11,7 @@
             return {
                 action: `${window.api}/mall/admin/upload`,
                 alipayForm: {
-                    enabled: true,
+                    alipay_enabled: true,
                     private_key: '',
                     app_id: '',
                     public_key: '',
@@ -181,7 +181,7 @@
                             <row>
                                 <i-col span="12">
                                     <form-item label="是否开启">
-                                        <i-switch size="large" v-model="alipayForm.enabled">
+                                        <i-switch size="large" v-model="alipayForm.alipay_enabled">
                                             <span slot="open">开启</span>
                                             <span slot="close">关闭</span>
                                         </i-switch>
