@@ -21,6 +21,8 @@
         "notadd/installers": "0.1.*",
         "lokielse/omnipay-unionpay": "dev-master",
         "lokielse/omnipay-alipay": "^2.0",
-        "lokielse/omnipay-wechatpay": "^1.0"
+        "lokielse/omnipay-wechatpay": "^1.0",
+        "endroid/qrcode":"^2.2"
     }
+
 }
