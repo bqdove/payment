@@ -35,7 +35,7 @@ class Wechatpay
         $this->gateway->setMchId('1268498801');
         $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
 //        $this->gateway->setApiKey('a9afd80709f76892dd541f9c6aa6365a');//沙箱api秘钥
-        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080');
+        $this->gateway->setNotifyUrl('http://lxnotadd.com');
 
         return $this;
     }
@@ -43,11 +43,12 @@ class Wechatpay
     public function pay(Array $para)
     {
 
-        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&app_id=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464&trade_type=NATIVE
+       // http://lxnotadd.com/webnotify?driver=wechat&way=WechatPay_Native&app_id=wx081bfce94ce71bfb&mch_id=1268498801&body=test&total_fee=1&out_trade_no=201706091212121004&spbill_create_ip=36.45.175.53&notify_url=http://lxnotadd.com&trade_type=NATIVE
 
 
         $para = [
             'body' => 'test',
+            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
             'notify_url' => 'http://lxnotadd.com',
             'out_trade_no' => '201706091212121007',
             'spbill_create_ip' => '36.45.175.53',
@@ -82,17 +83,9 @@ class Wechatpay
     public function webNotify(Array $para){
 
 
-        $sign = Helper::getsign($para);
 
-        $para2 = [
-            'sign' => $sign
-        ];
+        $response = $this->gateway->completePurchase()->send();
 
-        $options = $para + $para2;
-        if('return_code'=='SUCCESS' && $sign === $options['sign']){
-
-        }
-        $response = $this->gateway->completePurchase($options)->send();
         if ( $response->isPaid()) {
             var_dump($response->getData());
         } else {
@@ -118,8 +111,7 @@ class Wechatpay
 
     //退款
     public function refund(Array $para){
-        $certpath = '../strorage/uploads';
-        $keypath = '../strorage/uploads';
+
 
         $para = [
             'body' => 'test',
@@ -128,11 +120,14 @@ class Wechatpay
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
             'trade_type' => 'NATIVE',
-            'certpath'=>$certpath,
-            'keypath'=>$keypath
+            'out_refund_no'=>'126849880120170616161813' ,
+            'refund_fee'=>1,
+            'cert_path'=>'/weixin/cert',
+            'key_path'=>'/weixin/cert'
         ];
+
         $response = $this->gateway->refund($para)->send();
-        dd($response);
+
         $response->isSuccessful();
     }
 
@@ -144,10 +139,11 @@ class Wechatpay
         $para = [
             'body' => 'test',
             'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121005',
+            'out_trade_no' => '201706091212121004',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
             'trade_type' => 'NATIVE',
+
         ];
 
 

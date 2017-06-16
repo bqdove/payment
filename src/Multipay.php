@@ -93,6 +93,7 @@ class Multipay
      *
      */
     public function webNotify($driver, $way, $para){
+
         $this->getDriver($driver)->getGateWay($way)->webNotify($para);
     }
 
