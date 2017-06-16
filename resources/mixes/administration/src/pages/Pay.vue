@@ -1,11 +1,15 @@
 <script>
     import injection from '../helpers/injection';
+    import expandRow from './TableExpand.vue';
 
     export default {
         beforeRouteEnter(to, from, next) {
             next(() => {
                 injection.sidebar.active('setting');
             });
+        },
+        components: {
+            expandRow,
         },
         data() {
             return {
@@ -40,6 +44,86 @@
                     ],
                 },
                 loading: false,
+                managementSearch: '',
+                orderColumns: [
+                    {
+                        type: 'expand',
+                        render: (h, params) => {
+                            return h(expandRow, {
+                                props: {
+                                    row: params.row,
+                                },
+                            });
+                        },
+                        width: 50,
+                    },
+                    {
+                        align: 'center',
+                        key: 'num',
+                        title: '支付订单号',
+                        width: 200,
+                    },
+                    {
+                        align: 'center',
+                        key: 'count',
+                        title: '金额(元)',
+                        width: 200,
+                    },
+                    {
+                        align: 'center',
+                        key: 'status',
+                        title: '状态',
+                        width: 200,
+                    },
+                    {
+                        key: 'createTime',
+                        title: '时间',
+                    },
+                ],
+                orderData: [
+                    {
+                        count: '99.00',
+                        createTime: '2017-6-16 16:12:25',
+                        num: 22222222,
+                        payStyle: '微信支付',
+                        status: '代付款',
+                        transactionCtx: '长安通充值长安通充值',
+                        transactionNum: 78654342367878,
+                    },
+                    {
+                        count: '99.00',
+                        createTime: '2017-6-16 16:12:25',
+                        num: 22222222,
+                        payStyle: '微信支付',
+                        status: '代付款',
+                        transactionCtx: '长安通充值长安通充值',
+                        transactionNum: 78654342367878,
+                    },
+                    {
+                        count: '99.00',
+                        createTime: '2017-6-16 16:12:25',
+                        num: 22222222,
+                        payStyle: '微信支付',
+                        status: '代付款',
+                        transactionCtx: '长安通充值长安通充值',
+                        transactionNum: 78654342367878,
+                    },
+                ],
+                searchList: [
+                    {
+                        label: '店铺名称',
+                        value: '店铺名称',
+                    },
+                    {
+                        label: '商品名称',
+                        value: '商品名称',
+                    },
+                    {
+                        label: '商品分类',
+                        value: '商品分类',
+                    },
+                ],
+                self: this,
                 unionPay: {
                     certificate: '',
                     enabled: true,
@@ -325,7 +409,42 @@
                     </card>
                 </tab-pane>
                 <tab-pane label="支付订单" name="name2">
-                    <card :bordered="false"></card>
+                    <card :bordered="false">
+                        <div class="order-search-module clearfix">
+                            <div class="order-money-content">
+                                <div class="select-content">
+                                    <ul class="clearfix">
+                                        <li>
+                                            成交时间
+                                            <date-picker type="date" placeholder="选择日期"
+                                                         style="width: 124px"></date-picker>
+                                            -
+                                            <date-picker type="date" placeholder="选择日期"
+                                                         style="width: 124px"></date-picker>
+                                        </li>
+                                        <li class="store-body-header-right">
+                                            <i-input v-model="applicationWord" placeholder="请输入关键词进行搜索">
+                                                <i-select v-model="managementSearch" slot="prepend" style="width: 100px;">
+                                                    <i-option v-for="item in searchList"
+                                                              :value="item.value">{{ item.label }}</i-option>
+                                                </i-select>
+                                                <i-button slot="append" type="primary">搜索</i-button>
+                                            </i-input>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- <div class="page">
+                                     <page :total="100" show-elevator></page>
+                                 </div>-->
+                            </div>
+                        </div>
+                        <i-table class="order-table"
+                                 :columns="orderColumns"
+                                 :context="self"
+                                 :data="orderData"
+                                 ref="orderList">
+                        </i-table>
+                    </card>
                 </tab-pane>
             </tabs>
         </div>

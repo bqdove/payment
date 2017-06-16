@@ -12,11 +12,53 @@
                 .ivu-tabs-nav-scroll {
                     background-color: inherit;
                     padding: 0;
+                    .ivu-tabs-tab {
+                        margin-right: 10px;
+                    }
                 }
             }
         }
         .ivu-card {
             min-height: 894px;
+            .order-search-module {
+                height: 40px;
+                .order-money-content {
+                    float: right;
+                    padding-bottom: 10px;
+                    .select-content {
+                        > ul {
+                            > li {
+                                float: left;
+                                margin-right: 10px;
+                                .ivu-date-picker {
+                                    display: inline-block;
+                                }
+                                &.store-body-header-right {
+                                    .ivu-input-group-append .ivu-btn, .ivu-input-group-prepend .ivu-btn {
+                                        background-color: #39f;
+                                        color: #ffffff;
+                                        border-top-left-radius: 0;
+                                        border-bottom-left-radius: 0;
+                                    }
+                                    .ivu-input-group {
+                                        top: 0;
+                                        .ivu-input {
+                                            width: 150px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .ivu-table-wrapper {
+                border: 0 none;
+                .ivu-table:after,
+                .ivu-table:before {
+                    background-color: inherit;
+                }
+            }
         }
         .tip {
             color: rgba(101, 113, 128, 0.5);
