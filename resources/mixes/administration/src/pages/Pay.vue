@@ -1,6 +1,6 @@
 <script>
-    import injection from '../helpers/injection';
     import expandRow from './TableExpand.vue';
+    import injection from '../helpers/injection';
 
     export default {
         beforeRouteEnter(to, from, next) {
@@ -48,7 +48,7 @@
                 orderColumns: [
                     {
                         type: 'expand',
-                        render: (h, params) => {
+                        render(h, params) {
                             return h(expandRow, {
                                 props: {
                                     row: params.row,
@@ -84,7 +84,7 @@
                     {
                         count: '99.00',
                         createTime: '2017-6-16 16:12:25',
-                        num: 22222222,
+                        num: 222222224566,
                         payStyle: '微信支付',
                         status: '代付款',
                         transactionCtx: '长安通充值长安通充值',
@@ -93,7 +93,7 @@
                     {
                         count: '99.00',
                         createTime: '2017-6-16 16:12:25',
-                        num: 22222222,
+                        num: 222222226466,
                         payStyle: '微信支付',
                         status: '代付款',
                         transactionCtx: '长安通充值长安通充值',
