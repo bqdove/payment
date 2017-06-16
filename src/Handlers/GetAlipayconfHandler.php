@@ -53,8 +53,6 @@ class GetAlipayconfHandler extends DataHandler
 
             'public_key'=> $this->settings->get('alipay.public_key'),
             
-            'seller_email'=> $this->settings->get('alipay.seller_email'),
-            
             'input_charset'=> $this->settings->get('alipay.input_charset'),
         ];
     }
