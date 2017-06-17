@@ -53,11 +53,14 @@ class UploadHandler extends Handler
             'file.file'    => '上传文件格式必须为文件格式！',
             'file.required' => '必须上传一个文件！',
         ]);
-        $gateway = $this->request->query('gateway');//网关:微信 or 银联
-
-        $certType = $this->request->query('certname');//证书类型 证书1, 证书2
 
         $avatar = $this->request->file('cert');
+
+        $driver = $this->request->query('driver');//网关:微信 or 银联
+
+        $certName = $this->request->query('certname');//证书类型 证书1, 证书2
+
+        $keyInSetting = $driver . "." . $certName;
 
         $hash = hash_file('md5', $avatar->getPathname(), false);
 
@@ -77,7 +80,7 @@ class UploadHandler extends Handler
                 '../storage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
 
-        $this->settings->set($gateway.$certType,  $this->data['path']);
+        $this->settings->set($keyInSetting,  $this->data['path']);
 
         return true;
     }
