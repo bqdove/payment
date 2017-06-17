@@ -28,7 +28,7 @@ class ListHandler extends Handler
 
         if ($startTime || $endTime || $keyword)
         {
-            
+
         }else{
             $allOrders = Order::all();
 
