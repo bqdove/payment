@@ -57,11 +57,12 @@ class SetWechatconfHandler extends AbstractSetHandler
      */
     public function execute()
     {
-        $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));
-        $this->settings->set('wechat.app_id',$this->request->input('app_id'));
-        $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));
-        $this->settings->set('wechat.key',$this->request->input('key'));
-        $this->settings->set('wechat.notify_url',$this->request->input('notify_url'));
+        $this->settings->set('wechat.enabled', $this->request->input('enabled'));
+        $this->settings->set('wechat.app_id',$this->request->input('app_id'));//APP_ID
+        $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));//商户Id
+        $this->settings->set('wechat.key',$this->request->input('key'));//APP_KEY
+        $this->settings->set('wechat.app_secret',$this->request->input('app_secret'));//商户密钥
+        $this->settings->set('wechat.cert_path', $this->request->file('cert'));//长传文件
 
         return true ;
     }
