@@ -13,6 +13,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Notadd\Foundation\Routing\Abstracts\Handler;
+use Notadd\Foundation\Setting\Contracts\SettingsRepository;
+
 /**
  * Class UploadHandler.
  */
@@ -27,12 +29,19 @@ class UploadHandler extends Handler
      *
      * @param \Illuminate\Container\Container   $container
      * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Notadd\Foundation\Setting\Contracts\SettingsRepository $settings
+
      */
-    public function __construct(Container $container, Filesystem $filesystem)
+
+    protected $settings;
+
+
+    public function __construct(Container $container, Filesystem $filesystem, SettingsRepository $settings)
     {
         parent::__construct($container);
         $this->messages->push($this->translator->trans('上传文件成功！'));
         $this->files = $filesystem;
+        $this->settings = $settings;
     }
     /**
      * Execute Handler.
@@ -44,22 +53,32 @@ class UploadHandler extends Handler
             'file.file'    => '上传文件格式必须为文件格式！',
             'file.required' => '必须上传一个文件！',
         ]);
+        $gateway = $this->request->query('gateway');//网关:微信 or 银联
+
+        $certType = $this->request->query('certname');//证书类型 证书1, 证书2
+
         $avatar = $this->request->file('cert');
+
         $hash = hash_file('md5', $avatar->getPathname(), false);
+
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
 
-            '../storage/uploads',
+            'public/uploads',
         ]))->implode(DIRECTORY_SEPARATOR);
+
         $file = Str::substr($hash, 12, 20) . '.' . $avatar->getClientOriginalExtension();
+
         if (!$this->files->exists($dictionary . DIRECTORY_SEPARATOR . $file)) {
             $avatar->move($dictionary, $file);
         }
+
         $this->data['path'] = $this->pathSplit($hash, '12,20', Collection::make([
 
-                '../storage/uploads',
+                'public/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
 
-        //dd($this->data['path']);
+        $this->settings->set($gateway.$certType,  $this->data['path']);
+
         return true;
     }
     /**
