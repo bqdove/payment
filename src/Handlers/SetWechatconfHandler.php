@@ -60,6 +60,7 @@ class SetWechatconfHandler extends AbstractSetHandler
         $this->settings->set('wechat.wechat_enabled', $this->request->input('wechat_enabled'));
         $this->settings->set('wechat.app_id',$this->request->input('app_id'));
         $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));
+        $this->settings->set('wechat.appsecret',$this->request->input('appsecret'));
         $this->settings->set('wechat.key',$this->request->input('key'));
         $this->settings->set('wechat.notify_url',$this->request->input('notify_url'));
 
