@@ -34,7 +34,6 @@ class Wechatpay
         $this->gateway->setAppId('wx081bfce94ce71bfb');
         $this->gateway->setMchId('1268498801');
         $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
-//        $this->gateway->setApiKey('a9afd80709f76892dd541f9c6aa6365a');//沙箱api秘钥
         $this->gateway->setNotifyUrl('http://lxnotadd.com');
 
         return $this;
@@ -73,16 +72,11 @@ class Wechatpay
         header('Content-Type: '.$qrCode->getContentType());
         echo $qrCode->writeString();
 
-        $qrCode->writeFile(__DIR__.'/qrcode.png');
-
-
     }
 
 
     //回调通知
     public function webNotify(Array $para){
-
-
 
         $response = $this->gateway->completePurchase()->send();
 
@@ -98,9 +92,9 @@ class Wechatpay
         $para = [
             'body' => 'test',
             'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121004',
+            'out_trade_no' => '201706091212121007',
             'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 1,
+            'total_fee' => 3,
             'trade_type' => 'NATIVE',
         ];
 
@@ -111,8 +105,6 @@ class Wechatpay
 
     //退款
     public function refund(Array $para){
-
-
         $para = [
             'body' => 'test',
             'notify_url' => 'http://lxnotadd.com',
@@ -122,12 +114,12 @@ class Wechatpay
             'trade_type' => 'NATIVE',
             'out_refund_no'=>'126849880120170616161813' ,
             'refund_fee'=>1,
-            'cert_path'=>'/weixin/cert',
-            'key_path'=>'/weixin/cert'
+            'cert_path'=>public_path('weixin/cert/apiclient_cert.pem'),
+            'key_path'=>public_path('weixin/cert/apiclient_key.pem')
         ];
 
         $response = $this->gateway->refund($para)->send();
-
+        dd($response);
         $response->isSuccessful();
     }
 
@@ -139,7 +131,7 @@ class Wechatpay
         $para = [
             'body' => 'test',
             'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121004',
+            'out_trade_no' => '201706091212121006',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
             'trade_type' => 'NATIVE',

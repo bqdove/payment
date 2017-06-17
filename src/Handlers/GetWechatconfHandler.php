@@ -43,20 +43,19 @@ class GetWechatconfHandler extends DataHandler
     {
         return [
 
-                'wechat_enabled'=>$this->settings->get('wechat.wechat_enabled',false),
+            'wechat_enabled'=>$this->settings->get('wechat.enabled',false),
 
-                'app_id'=>$this->settings->get('wechat.app_id',''),
+            'app_id'=>$this->settings->get('wechat.app_id',''),
 
-                'mch_id'=>$this->settings->get('wechat.mch_id',''),
+            'mch_id'=>$this->settings->get('wechat.mch_id',''),
 
-                'key'=>$this->settings->get('wechat.key',''),
+            'app_secret'=>$this->settings->get('wechat.app_secret',''),
 
-                'notifyUrl'=>$this->settings->get('wechat.notifyUrl',''),
+            'key'=>$this->settings->get('wechat.key',''),
 
-                'certpath'=>$this->settings->get('wechat.certpath',''),
+            'cert_path'=>$this->settings->get('wechat.cert_path','')
 
-                'keypath'=>$this->settings->get('wechat.keypath',''),
-        ] ;
+        ];
     }
     public function execute()
     {
