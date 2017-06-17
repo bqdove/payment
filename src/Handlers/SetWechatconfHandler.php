@@ -62,7 +62,6 @@ class SetWechatconfHandler extends AbstractSetHandler
         $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));//商户Id
         $this->settings->set('wechat.key',$this->request->input('key'));//APP_KEY
         $this->settings->set('wechat.app_secret',$this->request->input('app_secret'));//商户密钥
-        $this->settings->set('wechat.cert_path', $this->request->file('cert'));//上传文件
 
 
         return true ;
