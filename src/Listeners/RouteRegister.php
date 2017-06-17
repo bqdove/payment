@@ -11,6 +11,7 @@ namespace Notadd\Multipay\Listeners;
 use Notadd\Foundation\Routing\Abstracts\RouteRegister as AbstractRouteRegister;
 use Notadd\Multipay\Controllers\AlipayController;
 use Notadd\Multipay\Controllers\PayController;
+use Notadd\Multipay\Controllers\QueryController;
 use Notadd\Multipay\Controllers\UploadController;
 use Notadd\Multipay\Controllers\WechatController;
 
@@ -31,6 +32,7 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->get('refund', PayController::class. '@refund');
             $this->router->get('cancel', PayController::class. '@cancel');
             $this->router->get('test', PayController::class. '@test');
+            $this->router->get('order', QueryController::class.'@list');
         });
         $this->router->get('upload', UploadController::class. '@upload');
         $this->router->get('webnotify', PayController::class. '@webNotify');
