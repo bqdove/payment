@@ -24,4 +24,5 @@
         "lokielse/omnipay-wechatpay": "^1.0",
         "endroid/qrcode":"^2.2"
     }
+
 }

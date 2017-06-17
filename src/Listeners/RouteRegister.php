@@ -34,9 +34,10 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->get('test', PayController::class. '@test');
             $this->router->get('order', QueryController::class.'@list');
         });
-        $this->router->get('upload', UploadController::class. '@upload');
+        $this->router->get('test', UploadController::class. '@upload');
+        $this->router->post('upload', UploadController::class. '@execute');
         $this->router->get('webnotify', PayController::class. '@webNotify');
-        $this->router->post('execute', UploadController::class. '@execute');
+
 
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay/alipay'], function () {
             $this->router->post('set',AlipayController::class.'@set');

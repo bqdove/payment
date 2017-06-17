@@ -11,14 +11,15 @@ namespace Notadd\Multipay;
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Notadd\Multipay\Helper as Helper;
-
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\ErrorCorrectionLevel;
 class Wechatpay
 {
     protected $settings;
     protected $gateway;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
@@ -26,56 +27,65 @@ class Wechatpay
     /*
      * 获取支付网关
      */
-    public function getGateWay($gatewayname){
+    public function getGateWay($gatewayname)
+    {
 
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setAppId($this->settings->get('wechat.app_id'));
-        $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
-        $this->gateway->setApiKey($this->settings->get('wechat.key'));
-        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080');
+        $this->gateway->setAppId('wx081bfce94ce71bfb');
+        $this->gateway->setMchId('1268498801');
+        $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
+//        $this->gateway->setApiKey('a9afd80709f76892dd541f9c6aa6365a');//沙箱api秘钥
+        $this->gateway->setNotifyUrl('http://lxnotadd.com');
+
         return $this;
     }
 
     public function pay(Array $para)
     {
 
-        //http://pay.ibenchu.xyz:8080/api/multipay/pay?driver=wechat&way=WechatPay_Native&app_id=wx2dd40b5b1c24a960&mch_id=1235851702&body=Iphone8&total_fee=10&out_trade_no=201706091212121000&spbill_create_ip=36.45.175.53&notify_url=http://pay.ibenchu.xyz:8080&nonce_str=c3b570e1c8441c0ae1f435c3c4de8464&trade_type=NATIVE
+       // http://lxnotadd.com/webnotify?driver=wechat&way=WechatPay_Native&app_id=wx081bfce94ce71bfb&mch_id=1268498801&body=test&total_fee=1&out_trade_no=201706091212121004&spbill_create_ip=36.45.175.53&notify_url=http://lxnotadd.com&trade_type=NATIVE
 
 
-        $sign = Helper::getsign($para);
-
-        $para2 = [
-            'sign' => $sign
+        $para = [
+            'body' => 'test',
+            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
+            'notify_url' => 'http://lxnotadd.com',
+            'out_trade_no' => '201706091212121007',
+            'spbill_create_ip' => '36.45.175.53',
+            'total_fee' => 3,
+            'trade_type' => 'NATIVE',
         ];
 
-        $originPara = $para+$para2;
 
-        $response = $this->gateway->purchase($originPara)->send();
+        $response = $this->gateway->purchase($para)->send();
 
-        dd($response);
-        //available methods
- //       $response->getData(); //For debug
-//        $response->getAppOrderData(); //For WechatPay_App
-//        $response->getJsOrderData(); //For WechatPay_Js
-        dd($response->getCodeUrl()); //For Native Trade Type
+        $code_url = $response->getCodeUrl();
+
+        $qrCode = new QrCode();
+        $qrCode->setText( $code_url )
+            ->setWriterByName('png')
+            ->setMargin(10)
+            ->setEncoding('UTF-8')
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::LOW)
+            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
+            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
+            ->setValidateResult(false);
+        header('Content-Type: '.$qrCode->getContentType());
+        echo $qrCode->writeString();
+
+        $qrCode->writeFile(__DIR__.'/qrcode.png');
+
 
     }
+
 
     //回调通知
     public function webNotify(Array $para){
 
 
-        $sign = Helper::getsign($para);
 
-        $para2 = [
-            'sign' => $sign
-        ];
+        $response = $this->gateway->completePurchase()->send();
 
-        $options = $para + $para2;
-        if('return_code'=='SUCCESS' && $sign === $options['sign']){
-
-        }
-        $response = $this->gateway->completePurchase($options)->send();
         if ( $response->isPaid()) {
             var_dump($response->getData());
         } else {
@@ -85,35 +95,39 @@ class Wechatpay
     //查询
     public function query(Array $para){
 
-        $sign = Helper::getsign($para);
-
-        $para2 = [
-            'sign' => $sign
+        $para = [
+            'body' => 'test',
+            'notify_url' => 'http://lxnotadd.com',
+            'out_trade_no' => '201706091212121004',
+            'spbill_create_ip' => '36.45.175.53',
+            'total_fee' => 1,
+            'trade_type' => 'NATIVE',
         ];
 
-        $originPara = $para + $para2;
-        $response = $this->gateway->query($originPara)->send();
-
+        $response = $this->gateway->query($para)->send();
+        dd($response);
         $response->isSuccessful();
     }
 
     //退款
     public function refund(Array $para){
-        $certpath = '../strorage/uploads';
-        $keypath = '../strorage/uploads';
 
-        $para1=[
-            'certpath'=>$certpath,
-            'keypath'=>$keypath,
-        ];
-        $para = $para+$para1;
-        $sign = Helper::getsign($para);
-        $para2 = [
 
-            'sign' => $sign
+        $para = [
+            'body' => 'test',
+            'notify_url' => 'http://lxnotadd.com',
+            'out_trade_no' => '201706091212121004',
+            'spbill_create_ip' => '36.45.175.53',
+            'total_fee' => 1,
+            'trade_type' => 'NATIVE',
+            'out_refund_no'=>'126849880120170616161813' ,
+            'refund_fee'=>1,
+            'cert_path'=>'/weixin/cert',
+            'key_path'=>'/weixin/cert'
         ];
-        $originPara = $para + $para2;
-        $response = $this->gateway->refund($originPara)->send();
+
+        $response = $this->gateway->refund($para)->send();
+
         $response->isSuccessful();
     }
 
@@ -122,16 +136,22 @@ class Wechatpay
     public function cancel(Array $para)
     {
 
-        $sign = Helper::getsign($para);
+        $para = [
+            'body' => 'test',
+            'notify_url' => 'http://lxnotadd.com',
+            'out_trade_no' => '201706091212121004',
+            'spbill_create_ip' => '36.45.175.53',
+            'total_fee' => 1,
+            'trade_type' => 'NATIVE',
 
-        $para2 = [
-            'sign' => $sign
         ];
 
-        $originPara = $para + $para2;
-        $response = $this->gateway->close($originPara)->send();
-        var_dump($response->isSuccessful());
-        var_dump($response->getData());
+
+        $response = $this->gateway->close($para)->send();
+        dd($response);
+//        var_dump($response->isSuccessful());
+//        var_dump($response->getData());
     }
 
 }
+
