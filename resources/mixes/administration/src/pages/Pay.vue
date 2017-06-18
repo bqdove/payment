@@ -13,7 +13,7 @@
         },
         data() {
             return {
-                action: `${window.api}/mall/admin/upload`,
+                action: 'http://pay.ibenchu.xyz:8080/upload',
                 alipayForm: {
                     alipay_enabled: true,
                     private_key: '',
@@ -21,21 +21,21 @@
                     public_key: '',
                 },
                 alipayRules: {
-                    number: [
+                    app_id: [
                         {
                             message: 'APP_ID不能为空',
                             required: true,
                             trigger: 'blur',
                         },
                     ],
-                    key: [
+                    private_key: [
                         {
                             message: '私钥不能为空',
                             required: true,
                             trigger: 'blur',
                         },
                     ],
-                    openKey: [
+                    public_key: [
                         {
                             message: '公钥不能为空',
                             required: true,
@@ -125,13 +125,12 @@
                 ],
                 self: this,
                 unionPay: {
-                    certificate: '',
                     enabled: true,
-                    id: '',
                     key: '',
+                    mer_id: '',
                 },
                 unionPayRules: {
-                    id: [
+                    mer_id: [
                         {
                             message: 'ID不能为空',
                             required: true,
@@ -140,23 +139,24 @@
                     ],
                 },
                 weChatForm: {
-                    apply: '',
+                    app_id: '',
+                    app_secret: '',
+                    cert_path: '',
                     enabled: true,
                     key: '',
-                    merchantId: '',
-                    merchantKey: '',
+                    mch_id: '',
                 },
                 weChatRules: {
-                    apply: [
+                    app_id: [
                         {
                             message: 'APP_ID不能为空',
                             required: true,
                             trigger: 'blur',
                         },
                     ],
-                    key: [
+                    app_secret: [
                         {
-                            message: 'APP_KEY不能为空',
+                            message: 'APPSECRET不能为空',
                             required: true,
                             trigger: 'blur',
                         },
@@ -184,27 +184,23 @@
                         });
                     }
                 });
-//                self.$refs.alipayForm.validate(valid => {
-//                    if (valid) {
-//                        self.$Message.success('提交成功!');
-//                    } else {
-//                        self.loading = false;
-//                        self.$notice.error({
-//                            title: '请正确填写设置信息！',
-//                        });
-//                    }
-//                });
             },
             unionPaySubmit() {
                 const self = this;
                 self.loading = true;
                 self.$refs.unionPay.validate(valid => {
                     if (valid) {
-                        self.$Message.success('提交成功!');
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/union/set', self.unionPay).then(() => {
+                            self.$notice.open({
+                                title: injection.trans('union.setting.success'),
+                            });
+                        }).finally(() => {
+                            self.loading = false;
+                        });
                     } else {
                         self.loading = false;
                         self.$notice.error({
-                            title: '请正确填写设置信息！',
+                            title: injection.trans('union.setting.fail'),
                         });
                     }
                 });
@@ -214,11 +210,17 @@
                 self.loading = true;
                 self.$refs.weChatForm.validate(valid => {
                     if (valid) {
-                        self.$Message.success('提交成功!');
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
+                            self.$notice.open({
+                                title: injection.trans('weChat.setting.success'),
+                            });
+                        }).finally(() => {
+                            self.loading = false;
+                        });
                     } else {
                         self.loading = false;
                         self.$notice.error({
-                            title: '请正确填写设置信息！',
+                            title: injection.trans('weChat.setting.fail'),
                         });
                     }
                 });
@@ -286,8 +288,8 @@
                                 <i-form :label-width="200" :model="weChatForm" ref="weChatForm" :rules="weChatRules">
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="APP_ID" prop="apply">
-                                                <i-input v-model="weChatForm.apply"></i-input>
+                                            <form-item label="APP_ID" prop="app_id">
+                                                <i-input v-model="weChatForm.app_id"></i-input>
                                                 <p class="tip">
                                                     应用ID ，在微信给公众平台“开发者中心”栏目可以查看到
                                                 </p>
@@ -296,8 +298,8 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="APP_KEY" prop="key">
-                                                <i-input v-model="weChatForm.key"></i-input>
+                                            <form-item label="APPSECRET" prop="app_secret">
+                                                <i-input v-model="weChatForm.app_secret"></i-input>
                                                 <p class="tip">
                                                     在微信公众平台中“开发者中心”栏目可以产看到
                                                 </p>
@@ -307,7 +309,7 @@
                                     <row>
                                         <i-col span="12">
                                             <form-item label="商户ID">
-                                                <i-input v-model="weChatForm.merchantId"></i-input>
+                                                <i-input v-model="weChatForm.mch_id"></i-input>
                                                 <p class="tip">
                                                     请输入商户账号，如果没有
                                                     <a href="">点击此处获取</a>
@@ -318,7 +320,7 @@
                                     <row>
                                         <i-col span="12">
                                             <form-item label="商户密钥">
-                                                <i-input v-model="weChatForm.merchantKey"></i-input>
+                                                <i-input v-model="weChatForm.key"></i-input>
                                                 <p class="tip">
                                                     API密钥，在微信商户平台中“账户设置”-“账户安全”-“设置API密钥”
                                                 </p>
@@ -361,8 +363,8 @@
                                 <i-form :label-width="200" :model="unionPay" ref="unionPay" :rules="unionPayRules">
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="ID" prop="id">
-                                                <i-input v-model="unionPay.id"></i-input>
+                                            <form-item label="ID" prop="mer_id">
+                                                <i-input v-model="unionPay.mer_id"></i-input>
                                             </form-item>
                                         </i-col>
                                     </row>
