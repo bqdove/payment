@@ -170,7 +170,7 @@
                 self.loading = true;
                 self.$refs.alipayForm.validate(valid => {
                     if (valid) {
-                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/alipay/set', self.alipayForm).then(() => {
+                        self.$http.post(`${window.api}/multipay/alipay/set`, self.alipayForm).then(() => {
                             self.$notice.open({
                                 title: injection.trans('alipay.setting.success'),
                             });
@@ -190,7 +190,7 @@
                 self.loading = true;
                 self.$refs.unionPay.validate(valid => {
                     if (valid) {
-                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/union/set', self.unionPay).then(() => {
+                        self.$http.post(`${window.api}/multipay/union/set`, self.unionPay).then(() => {
                             self.$notice.open({
                                 title: injection.trans('union.setting.success'),
                             });
@@ -210,7 +210,7 @@
                 self.loading = true;
                 self.$refs.weChatForm.validate(valid => {
                     if (valid) {
-                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
+                        self.$http.post(`${window.api}/multipay/wechat/set`, self.weChatForm).then(() => {
                             self.$notice.open({
                                 title: injection.trans('weChat.setting.success'),
                             });
