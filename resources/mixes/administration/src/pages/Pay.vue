@@ -44,8 +44,12 @@
                         },
                     ],
                 },
+                filterSearch: {
+                    end: '',
+                    search: '',
+                    start: '',
+                },
                 loading: false,
-                managementSearch: '',
                 orderColumns: [
                     {
                         type: 'expand',
@@ -184,6 +188,14 @@
                             title: injection.trans('alipay.setting.fail'),
                         });
                     }
+                });
+            },
+            search() {
+                const self = this;
+                self.$http.post(`${window.api}/multipay/orde`, self.filterSearch).then(response => {
+                    console.log(response);
+                }).finally(error => {
+                    console.log(error);
                 });
             },
             unionPaySubmit() {
@@ -459,19 +471,16 @@
                                     <ul class="clearfix">
                                         <li>
                                             成交时间
-                                            <date-picker type="date" placeholder="选择日期"
+                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.start"
                                                          style="width: 124px"></date-picker>
                                             -
-                                            <date-picker type="date" placeholder="选择日期"
+                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.end"
                                                          style="width: 124px"></date-picker>
                                         </li>
                                         <li class="store-body-header-right">
-                                            <i-input v-model="applicationWord" placeholder="请输入关键词进行搜索">
-                                                <i-select v-model="managementSearch" slot="prepend" style="width: 100px;">
-                                                    <i-option v-for="item in searchList"
-                                                              :value="item.value">{{ item.label }}</i-option>
-                                                </i-select>
-                                                <i-button slot="append" type="primary">搜索</i-button>
+                                            <i-input v-model="filterSearch.search" placeholder="请输入关键词进行搜索">
+                                                <span slot="prepend" style="width: 100px;">商户单号</span>
+                                                <i-button slot="append" type="primary" @click.native="search">搜索</i-button>
                                             </i-input>
                                         </li>
                                     </ul>
