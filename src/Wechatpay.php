@@ -13,6 +13,7 @@ use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\ErrorCorrectionLevel;
+use Notadd\Multipay\Models\Order;
 
 class Wechatpay
 {
@@ -35,7 +36,7 @@ class Wechatpay
         $this->gateway->setAppId('wx081bfce94ce71bfb');
         $this->gateway->setMchId('1268498801');
         $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
-        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/webnotify');
+        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify');
 
         return $this;
     }
@@ -48,19 +49,35 @@ class Wechatpay
 
         $para = [
             'body' => 'test',
-
-//          'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
-            'out_trade_no' => '201706091212121029',
-            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
-            'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121007',
+            'out_trade_no' => '201706091212121001789222',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 3,
+            'total_fee' => 1,
             'trade_type' => 'NATIVE',
         ];
 
+        $order = new Order();
+
+        $order->out_trade_no = $para['out_trade_no'];
+
+        $order->trade_status = 0;
+
+        $order->seller_id = $para['mch_id'];
+
+        $order->total_amount = $para['total_fee'];
+
+        $order->out_trade_no = $para['out_trade_no'];
+
+        $order->trade_no = '';
+
+        $order->created_at = time();
+
+        $order->payment = wechat;
+
+        $order->subject = '';
+
+        $order->save();
 
         $response = $this->gateway->purchase($para)->send();
 
@@ -78,36 +95,11 @@ class Wechatpay
         header('Content-Type: '.$qrCode->getContentType());
         echo $qrCode->writeString();
 
-        if ($response->isSuccessful())
-        {
-            return 1;
-        }
+
 
     }
 
-    //回调通知
 
-    public function webNotify(Array $para){
-        $para = [
-            'body' => 'test',
-            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
-            'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121007',
-            'time_start'=>date('YmdHis'),
-            'time_expire'=>date('YmdHis',time() + 600),
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 3,
-            'trade_type' => 'NATIVE',
-        ];
-
-        $response = $this->gateway->completePurchase($para)->send();
-
-        if ( $response->isPaid()) {
-            var_dump($response->getData());
-        } else {
-            echo "支付失败";
-        }
-    }
 
     //查询
     public function query(Array $para){
@@ -115,15 +107,20 @@ class Wechatpay
         $para = [
             'body' => 'test',
             'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121007',
+            'out_trade_no' => '201706091212121001789222',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 3,
             'trade_type' => 'NATIVE',
         ];
 
         $response = $this->gateway->query($para)->send();
+
+
+        $result = $response->isSuccessful();
+
         dd($response);
-        $response->isSuccessful();
+
+
     }
 
     //退款
@@ -131,19 +128,23 @@ class Wechatpay
         $para = [
             'body' => 'test',
             'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121004',
+            'out_trade_no' => '201706091212121001789222',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
             'trade_type' => 'NATIVE',
-            'out_refund_no'=>'126849880120170616161813' ,
+            'out_refund_no'=>'126849880120170609121212',
             'refund_fee'=>1,
             'cert_path'=>storage_path('uploads/e57755b07bbb/fe1bd9d60a607941a4ca.pem'),
             'key_path'=>storage_path('uploads/317becefdd9a/77e78f5b31bc56bf7cd5.pem')
         ];
 
         $response = $this->gateway->refund($para)->send();
+
         dd($response);
-        $response->isSuccessful();
+
+        $result = $response->isSuccessful();
+
+        dd($result);
     }
 
     //取消

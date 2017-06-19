@@ -54,7 +54,16 @@ class WechatController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function order(){
-        return 1;
+    //回调通知
+
+    public function webnotify(Array $para){
+
+        $response = $this->gateway->completePurchase($para)->send();
+
+        if ( $response->isPaid()) {
+            var_dump($response->getData());
+        } else {
+            echo "支付失败";
+        }
     }
 }
