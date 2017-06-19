@@ -362,6 +362,9 @@
                                     <row>
                                         <i-col span="18">
                                             <form-item label="证书_cert">
+                                                <div class="file-path" v-if="weChatForm.cert">
+                                                    {{ weChatForm.cert }}
+                                                </div>
                                                 <upload :action="actionCert"
                                                         :before-upload="uploadBefore"
                                                         :format="['jpg','jpeg','png']"
@@ -369,6 +372,7 @@
                                                             Authorization: `Bearer ${$store.state.token.access_token}`
                                                         }"
                                                         :max-size="2048"
+                                                        name="cert"
                                                         :on-error="uploadError"
                                                         :on-format-error="uploadFormatError"
                                                         :on-success="uploadSuccess"
