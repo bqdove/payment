@@ -274,7 +274,7 @@
                                     <row>
                                         <i-col span="12">
                                             <form-item>
-                                                <i-button :loading="loading" type="primary"
+                                                <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="alipaySubmit">
                                                     <span v-if="!loading">确认提交</span>
                                                     <span v-else>正在提交…</span>
@@ -349,7 +349,7 @@
                                     <row>
                                         <i-col span="12">
                                             <form-item>
-                                                <i-button :loading="loading" type="primary"
+                                                <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="weChatSubmit">
                                                     <span v-if="!loading">确认提交</span>
                                                     <span v-else>正在提交…</span>
@@ -397,7 +397,7 @@
                                     <row>
                                         <i-col span="12">
                                             <form-item>
-                                                <i-button :loading="loading" type="primary"
+                                                <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="unionPaySubmit">
                                                     <span v-if="!loading">确认提交</span>
                                                     <span v-else>正在提交…</span>
