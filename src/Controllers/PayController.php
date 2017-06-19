@@ -54,7 +54,6 @@ class PayController extends Controller{
     public function cancel(CancelHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
-
     }
 
     public function webNotify(WebNotifyHandler $handler)
