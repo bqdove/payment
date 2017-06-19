@@ -48,9 +48,14 @@ class Wechatpay
 
         $para = [
             'body' => 'test',
-//            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
-//            'notify_url' => 'http://pay.ibenchu.xyz:8080/api/multipay/webnotify',
+
+//          'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
             'out_trade_no' => '201706091212121029',
+            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
+            'notify_url' => 'http://lxnotadd.com',
+            'out_trade_no' => '201706091212121007',
+            'time_start'=>date('YmdHis'),
+            'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 3,
             'trade_type' => 'NATIVE',
@@ -81,9 +86,21 @@ class Wechatpay
     }
 
     //回调通知
-    public function webNotify(){
 
-        $response = $this->gateway->completePurchase(['request_params' => file_get_contents('php://input')])->send();
+    public function webNotify(Array $para){
+        $para = [
+            'body' => 'test',
+            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
+            'notify_url' => 'http://lxnotadd.com',
+            'out_trade_no' => '201706091212121007',
+            'time_start'=>date('YmdHis'),
+            'time_expire'=>date('YmdHis',time() + 600),
+            'spbill_create_ip' => '36.45.175.53',
+            'total_fee' => 3,
+            'trade_type' => 'NATIVE',
+        ];
+
+        $response = $this->gateway->completePurchase($para)->send();
 
         if ( $response->isPaid()) {
             var_dump($response->getData());
@@ -120,8 +137,8 @@ class Wechatpay
             'trade_type' => 'NATIVE',
             'out_refund_no'=>'126849880120170616161813' ,
             'refund_fee'=>1,
-            'cert_path'=>public_path('weixin/cert/apiclient_cert.pem'),
-            'key_path'=>public_path('weixin/cert/apiclient_key.pem')
+            'cert_path'=>storage_path('uploads/e57755b07bbb/fe1bd9d60a607941a4ca.pem'),
+            'key_path'=>storage_path('uploads/317becefdd9a/77e78f5b31bc56bf7cd5.pem')
         ];
 
         $response = $this->gateway->refund($para)->send();
