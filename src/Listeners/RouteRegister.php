@@ -45,7 +45,7 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'wechat'], function () {
                 $this->router->post('set',WechatController::class.'@set');
                 $this->router->post('get',WechatController::class.'@get');
-
+                $this->router->any('webnotify',WechatController::class.'@webnotify');
             });
 
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'union'], function () {
@@ -55,11 +55,10 @@ class RouteRegister extends AbstractRouteRegister
 
             $this->router->any('webnotify',PayController::class. '@webNotify');
         });
+        $this->router->group(['middlerware'=>['cross','web'],'perfix'=>'api'],function (){
+            $this->router->post('upload', UploadController::class. '@execute');
 
-        $this->router->get('test', UploadController::class. '@upload');
-        $this->router->post('upload', UploadController::class. '@execute');
-
-
+        });
 
 
     }
