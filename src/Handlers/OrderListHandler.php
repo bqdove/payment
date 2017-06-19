@@ -36,7 +36,7 @@ class OrderListHandler extends Handler
         }
 
         //如果有任意一个参数存在，那么开始时间如果不填写默认为查询当天，结束日期也是一样。
-        if ($this->request-input('start'))
+        if ($this->request->input('start'))
         {
             $startTime = $this->request->input('start');
         }else{

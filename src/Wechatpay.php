@@ -49,7 +49,7 @@ class Wechatpay
 
         $para = [
             'body' => 'test',
-            'out_trade_no' => '201706091212121001789222',
+            'out_trade_no' => '2017060912121210017892222',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -57,23 +57,28 @@ class Wechatpay
             'trade_type' => 'NATIVE',
         ];
 
+        $out_trade_no = $para['out_trade_no'];
+
+        if (Order::where('out_trade_no', $out_trade_no))
+        {
+
+        }
+
         $order = new Order();
 
         $order->out_trade_no = $para['out_trade_no'];
 
         $order->trade_status = 0;
 
-        $order->seller_id = $para['mch_id'];
+        $order->seller_id = $this->gateway->getMchId();
 
         $order->total_amount = $para['total_fee'];
-
-        $order->out_trade_no = $para['out_trade_no'];
 
         $order->trade_no = '';
 
         $order->created_at = time();
 
-        $order->payment = wechat;
+        $order->payment = 'wechat';
 
         $order->subject = '';
 
@@ -94,6 +99,8 @@ class Wechatpay
             ->setValidateResult(false);
         header('Content-Type: '.$qrCode->getContentType());
         echo $qrCode->writeString();
+
+
 
 
 
