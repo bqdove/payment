@@ -66,8 +66,9 @@ class UploadHandler extends Handler
 
         $dictionary = $this->pathSplit($hash, '12', Collection::make([
 
-            '../storage/uploads',
+            '/storage/uploads',
         ]))->implode(DIRECTORY_SEPARATOR);
+        dd($dictionary);
 
         $file = Str::substr($hash, 12, 20) . '.' . $avatar->getClientOriginalExtension();
 
@@ -77,7 +78,7 @@ class UploadHandler extends Handler
 
         $this->data['path'] = $this->pathSplit($hash, '12,20', Collection::make([
 
-                '../storage/uploads',
+                '/storage/uploads',
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
 
         $this->settings->set($keyInSetting,  $this->data['path']);
