@@ -14,7 +14,7 @@
         data() {
             return {
                 actionCert: `${window.api}/multipay/upload?driver=wechat&certname=cert`,
-                actionKey: `${window.api}/multipay/upload?driver=wechat&certname=key`,
+                actionKey: `${window.api}/multipay/upload?driver=wechat&certname=cert_key`,
                 alipayForm: {
                     alipay_enabled: true,
                     private_key: '',
@@ -146,7 +146,7 @@
                 weChatForm: {
                     app_id: '',
                     app_secret: '',
-                    cert_path: '',
+                    cert: '',
                     enabled: true,
                     key: '',
                     mch_id: '',
@@ -192,10 +192,12 @@
             },
             search() {
                 const self = this;
-                self.$http.post(`${window.api}/multipay/orde`, self.filterSearch).then(response => {
-                    console.log(response);
-                }).finally(error => {
-                    console.log(error);
+                self.$http.post(`${window.api}/multipay/order`, self.filterSearch).then(() => {
+                    self.$notice.open({
+                        title: injection.trans('setting.success'),
+                    });
+                }).finally(() => {
+                    self.loading = false;
                 });
             },
             unionPaySubmit() {
@@ -253,7 +255,7 @@
                 self.$notice.open({
                     title: data.message,
                 });
-                self.weChatForm.cert_path = data.data.path;
+                self.weChatForm.cert = data.data.path;
             },
         },
     };
@@ -372,7 +374,7 @@
                                                         :on-success="uploadSuccess"
                                                         ref="upload"
                                                         :show-upload-list="false"
-                                                        v-if="weChatForm.cert_path === '' || weChatForm.cert_path === null">
+                                                        v-if="weChatForm.cert === '' || weChatForm.cert === null">
                                                     <i-button type="ghost">+上传</i-button>
                                                 </upload>
                                             </form-item>
