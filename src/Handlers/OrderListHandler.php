@@ -11,8 +11,7 @@ use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Models\Order;
-use Validator;
-
+use Illuminate\Http\Request;
 
 /*
  * Classs PayHandler
@@ -21,19 +20,15 @@ class OrderListHandler extends Handler
 {
     public function execute()
     {
-        $validator = Validator::make($this->request->all(), [
-            'start' => 'required|unique:posts|max:64|date_format()',
-        ]);
-
         //如果传入参数都为空，那么返回所有的订单信息
-        if (! $this->request->query('start') && !$this->request->query('end') && !$this->request->input('search'))
+        if (! $this->request->input('start') && !$this->request->input('end') && !$this->request->input('search'))
         {
             $allOrders = Order::orderBy('created_at', 'DESC')->paginate(30);
 
             return $this->success()->withData($allOrders)->withMessage('成功返回所有的订单信息');
         }
 
-        if ((! $this->request->query('start') && !$this->request->query('end')) && $keyword = $this->request->input('search'))
+        if ((! $this->request->input('start') && !$this->request->input('end')) && $keyword = $this->request->input('search'))
         {
             $filterOrders = Order::where('out_trade_no', 'like', '%'.$keyword)->paginate(30);
 
@@ -41,16 +36,16 @@ class OrderListHandler extends Handler
         }
 
         //如果有任意一个参数存在，那么开始时间如果不填写默认为查询当天，结束日期也是一样。
-        if ($this->request->query('start'))
+        if ($this->request-input('start'))
         {
-            $startTime = $this->request->query('start');
+            $startTime = $this->request->input('start');
         }else{
             $startTime = date('Y-m-d', time());
         }
 
-        if ($this->request->query('end'))
+        if ($this->request->input('end'))
         {
-            $endTime = $this->request->query('end');
+            $endTime = $this->request->input('end');
         }else{
             $endTime = date('Y-m-d', time());
         }
@@ -62,9 +57,9 @@ class OrderListHandler extends Handler
 
         $query = Order::whereBetween('created_at', [$startTime, $endTime]);
 
-        if ($this->request->query('search'))
+        if ($this->request->input('search'))
         {
-            $keyword = $this->request->query('search');
+            $keyword = $this->request->input('search');
 
             $filterOrders = $query->where('out_trade_no', 'like', '%'.$keyword)->paginate(30);
         }else{
