@@ -11,6 +11,7 @@ use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Omnipay\Omnipay;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+use Notadd\Multipay\Models\Order;
 
 class Alipay
 {
@@ -44,8 +45,8 @@ class Alipay
         $this->gateway->setPrivateKey($this->settings->get('alipay.private_key'));//支付宝应用私钥
         $this->gateway->setAlipayPublicKey($this->settings->get('alipay.public_key'));//支付宝应用公钥
 //        $this->gateway->setSellerEmail($this->settings['seller_email']); //收款账户 email地址
-        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080');
-        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080');
+        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/api/multipay/alipay/webnotify');
+        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/alipay/webnotify');
         $this->gateway->sandbox();
         return $this;
      }
@@ -95,6 +96,21 @@ class Alipay
              */
             die('你已经支付失败, 请稍候重试'); //The notify response
         }
+
+
+
+        $order = new Order();
+        $order->out_trade_no = $result['out_trade_no'];
+        $order->total_amount = $result['total_amount'];
+        $order->trade_no = $result['trade_no'];
+        $order->seller_id = $result['seller_id'];
+        $order->trade_status = 1;
+        $order->payment = 'alipay';
+        $order->created_at = $result['timestamp'];
+        $order->subject = 'phone';
+        $order->pay_way = 'test';
+
+        $order->save();
     }
     
     /**

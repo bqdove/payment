@@ -13,6 +13,7 @@ namespace Notadd\Multipay\Handlers;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
+use Notadd\Multipay\Alipay;
 
 /*
  * Classs WebNotifyHandler
@@ -41,10 +42,9 @@ class WebNotifyHandler extends Handler
      */
     public function execute()
     {
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver', 'way']);
-        $this->multipay->webNotify($driver, $way, $para);
+        $alipay = new Alipay();
+        $alipay->webNotify();
+//        $this->multipay->webNotify();
     }
 
 }
