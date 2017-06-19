@@ -13,7 +13,8 @@
         },
         data() {
             return {
-                action: 'http://pay.ibenchu.xyz:8080/upload',
+                actionCert: `${window.api}/multipay/upload?driver=wechat&certname=cert`,
+                actionKey: `${window.api}/multipay/upload?driver=wechat&certname=key`,
                 alipayForm: {
                     alipay_enabled: true,
                     private_key: '',
@@ -43,8 +44,12 @@
                         },
                     ],
                 },
+                filterSearch: {
+                    end: '',
+                    search: '',
+                    start: '',
+                },
                 loading: false,
-                managementSearch: '',
                 orderColumns: [
                     {
                         type: 'expand',
@@ -185,6 +190,14 @@
                     }
                 });
             },
+            search() {
+                const self = this;
+                self.$http.post(`${window.api}/multipay/orde`, self.filterSearch).then(response => {
+                    console.log(response);
+                }).finally(error => {
+                    console.log(error);
+                });
+            },
             unionPaySubmit() {
                 const self = this;
                 self.loading = true;
@@ -224,6 +237,23 @@
                         });
                     }
                 });
+            },
+            uploadBefore() {
+                injection.loading.start();
+            },
+            uploadFormatError(file) {
+                this.$notice.warning({
+                    title: '文件格式不正确',
+                    desc: `文件 ${file.name} 格式不正确`,
+                });
+            },
+            uploadSuccess(data) {
+                const self = this;
+                injection.loading.finish();
+                self.$notice.open({
+                    title: data.message,
+                });
+                self.weChatForm.cert_path = data.data.path;
             },
         },
     };
@@ -329,8 +359,31 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="上传文件">
-                                                <upload :action="action">
+                                            <form-item label="证书_cert">
+                                                <upload :action="actionCert"
+                                                        :before-upload="uploadBefore"
+                                                        :format="['jpg','jpeg','png']"
+                                                        :headers="{
+                                                            Authorization: `Bearer ${$store.state.token.access_token}`
+                                                        }"
+                                                        :max-size="2048"
+                                                        :on-error="uploadError"
+                                                        :on-format-error="uploadFormatError"
+                                                        :on-success="uploadSuccess"
+                                                        ref="upload"
+                                                        :show-upload-list="false"
+                                                        v-if="weChatForm.cert_path === '' || weChatForm.cert_path === null">
+                                                    <i-button type="ghost">+上传</i-button>
+                                                </upload>
+                                            </form-item>
+                                        </i-col>
+                                    </row>
+                                    <row>
+                                        <i-col span="18">
+                                            <form-item label="证书_Key">
+                                                <upload
+                                                        multiple
+                                                        :action="actionKey">
                                                     <i-button type="ghost">+上传</i-button>
                                                 </upload>
                                             </form-item>
@@ -418,19 +471,16 @@
                                     <ul class="clearfix">
                                         <li>
                                             成交时间
-                                            <date-picker type="date" placeholder="选择日期"
+                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.start"
                                                          style="width: 124px"></date-picker>
                                             -
-                                            <date-picker type="date" placeholder="选择日期"
+                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.end"
                                                          style="width: 124px"></date-picker>
                                         </li>
                                         <li class="store-body-header-right">
-                                            <i-input v-model="applicationWord" placeholder="请输入关键词进行搜索">
-                                                <i-select v-model="managementSearch" slot="prepend" style="width: 100px;">
-                                                    <i-option v-for="item in searchList"
-                                                              :value="item.value">{{ item.label }}</i-option>
-                                                </i-select>
-                                                <i-button slot="append" type="primary">搜索</i-button>
+                                            <i-input v-model="filterSearch.search" placeholder="请输入关键词进行搜索">
+                                                <span slot="prepend" style="width: 100px;">商户单号</span>
+                                                <i-button slot="append" type="primary" @click.native="search">搜索</i-button>
                                             </i-input>
                                         </li>
                                     </ul>
