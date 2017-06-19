@@ -7,14 +7,14 @@
  */
 namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Multipay\Handlers\ListHandler;
+use Notadd\Multipay\Handlers\OrderListHandler;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 
 
 class QueryController extends Controller
 {
-    public function list(ListHandler $handler)
+    public function orderList(OrderListHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }

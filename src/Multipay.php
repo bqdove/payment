@@ -92,9 +92,9 @@ class Multipay
      * @param  Array $para
      *
      */
-    public function webNotify($driver, $way, $para){
+    public function webNotify($driver, $way){
 
-        $this->getDriver($driver)->getGateWay($way)->webNotify($para);
+        $this->getDriver($driver)->getGateWay($way)->webNotify();
     }
 
     /**

@@ -14,6 +14,8 @@ use Notadd\Multipay\Controllers\PayController;
 use Notadd\Multipay\Controllers\QueryController;
 use Notadd\Multipay\Controllers\UploadController;
 use Notadd\Multipay\Controllers\WechatController;
+use Notadd\Multipay\Controllers\UnionController;
+
 
 /**
  * Class RouteRegister.
@@ -32,25 +34,33 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->get('refund', PayController::class. '@refund');
             $this->router->get('cancel', PayController::class. '@cancel');
             $this->router->get('test', PayController::class. '@test');
-            $this->router->get('order', QueryController::class.'@list');
+            $this->router->get('order', QueryController::class.'@orderList');
+
+            $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'alipay'], function () {
+                $this->router->post('set',AlipayController::class.'@set');
+                $this->router->post('get',AlipayController::class.'@get');
+                $this->router->any('webnotify',AlipayController::class. '@webnotify');
+            });
+
+            $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'wechat'], function () {
+                $this->router->post('set',WechatController::class.'@set');
+                $this->router->post('get',WechatController::class.'@get');
+
+            });
+
+            $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'union'], function () {
+                $this->router->post('set',UnionController::class.'@set');
+                $this->router->post('get',UnionController::class.'@get');
+            });
+
+            $this->router->any('webnotify',PayController::class. '@webNotify');
         });
+
         $this->router->get('test', UploadController::class. '@upload');
         $this->router->post('upload', UploadController::class. '@execute');
-        $this->router->get('webnotify', PayController::class. '@webNotify');
 
 
-        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay/alipay'], function () {
-            $this->router->post('set',AlipayController::class.'@set');
-            $this->router->post('get',AlipayController::class.'@get');
-            $this->router->get('order',AlipayController::class.'@order');
-        });
 
-        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay/wechat'], function () {
-            $this->router->post('set',WechatController::class.'@set');
-            $this->router->post('get',WechatController::class.'@get');
-            $this->router->get('order',WechatController::class.'@order');
-
-        });
 
     }
 }

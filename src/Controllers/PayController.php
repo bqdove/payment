@@ -63,10 +63,5 @@ class PayController extends Controller{
 
     }
 
-    public function test()
-    {
-        $order = new Order();
-        dd($order);
-    }
 
 }

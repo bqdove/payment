@@ -11,6 +11,7 @@ use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Models\Order;
+use Validator;
 
 
 /*
@@ -20,12 +21,23 @@ class OrderListHandler extends Handler
 {
     public function execute()
     {
+        $validator = Validator::make($this->request->all(), [
+            'start' => 'required|unique:posts|max:64|date_format()',
+        ]);
+
         //如果传入参数都为空，那么返回所有的订单信息
         if (! $this->request->query('start') && !$this->request->query('end') && !$this->request->input('search'))
         {
-            $allOrders = Order::paginate(30);
+            $allOrders = Order::orderBy('created_at', 'DESC')->paginate(30);
 
             return $this->success()->withData($allOrders)->withMessage('成功返回所有的订单信息');
+        }
+
+        if ((! $this->request->query('start') && !$this->request->query('end')) && $keyword = $this->request->input('search'))
+        {
+            $filterOrders = Order::where('out_trade_no', 'like', '%'.$keyword)->paginate(30);
+
+            return $this->success()->withData($filterOrders)->withMessage('成功返回筛选订单信息');
         }
 
         //如果有任意一个参数存在，那么开始时间如果不填写默认为查询当天，结束日期也是一样。
@@ -54,7 +66,7 @@ class OrderListHandler extends Handler
         {
             $keyword = $this->request->query('search');
 
-            $filterOrders = $query->where('out_trade_no', 'like', $keyword)->paginate(30);
+            $filterOrders = $query->where('out_trade_no', 'like', '%'.$keyword)->paginate(30);
         }else{
             $filterOrders = $query->paginate(30);
         }

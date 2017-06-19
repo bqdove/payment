@@ -13,6 +13,7 @@ use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\ErrorCorrectionLevel;
+
 class Wechatpay
 {
     protected $settings;
@@ -34,7 +35,7 @@ class Wechatpay
         $this->gateway->setAppId('wx081bfce94ce71bfb');
         $this->gateway->setMchId('1268498801');
         $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
-        $this->gateway->setNotifyUrl('http://lxnotadd.com');
+        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/webnotify');
 
         return $this;
     }
@@ -47,9 +48,9 @@ class Wechatpay
 
         $para = [
             'body' => 'test',
-            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
-            'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121007',
+//            'openid'=>'oTIyBw_wQrCOWeQg4ybxsAyiv70E',
+//            'notify_url' => 'http://pay.ibenchu.xyz:8080/api/multipay/webnotify',
+            'out_trade_no' => '201706091212121029',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 3,
             'trade_type' => 'NATIVE',
@@ -72,13 +73,17 @@ class Wechatpay
         header('Content-Type: '.$qrCode->getContentType());
         echo $qrCode->writeString();
 
+        if ($response->isSuccessful())
+        {
+            return 1;
+        }
+
     }
 
-
     //回调通知
-    public function webNotify(Array $para){
+    public function webNotify(){
 
-        $response = $this->gateway->completePurchase()->send();
+        $response = $this->gateway->completePurchase(['request_params' => file_get_contents('php://input')])->send();
 
         if ( $response->isPaid()) {
             var_dump($response->getData());
@@ -86,6 +91,7 @@ class Wechatpay
             echo "支付失败";
         }
     }
+
     //查询
     public function query(Array $para){
 
