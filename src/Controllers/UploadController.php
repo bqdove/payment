@@ -28,6 +28,11 @@ class UploadController extends Controller
      */
 
 
+    public function upload()
+    {
+        return view('multipay::upload');
+    }
+
     public function execute(UploadHandler $handler)
     {
        
