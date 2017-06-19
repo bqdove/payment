@@ -55,7 +55,9 @@ class RouteRegister extends AbstractRouteRegister
 
             $this->router->any('webnotify',PayController::class. '@webNotify');
         });
-        $this->router->group(['middlerware'=>['cross','web'],'perfix'=>'api'],function (){
+        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api'], function (){
+            $this->router->get('test',UploadController::class.'@upload');
+
             $this->router->post('upload', UploadController::class. '@execute');
 
         });
