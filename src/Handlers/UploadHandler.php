@@ -54,11 +54,12 @@ class UploadHandler extends Handler
             'file.required' => '必须上传一个文件！',
         ]);
 
-        $avatar = $this->request->file('cert');
 
         $driver = $this->request->query('driver');//网关:微信 or 银联
 
         $certName = $this->request->query('certname');//证书类型 证书1, 证书2
+
+        $avatar = $this->request->file($certName);
 
         $keyInSetting = $driver . "." . $certName;
 
