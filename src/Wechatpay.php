@@ -48,8 +48,7 @@ class Wechatpay
     {
         $para = [
             'body' => 'test',
-            'out_trade_no' => '201706091212121001758521222325',
-            'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
+            'out_trade_no' => '2017060912121210017458125001094',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -113,18 +112,20 @@ class Wechatpay
 
         if ($response->isPaid()) {
             //pay success
+            Log::info('test');
             if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
             {
-              $order->total_amount = $arrayData['total_fee'];
+              $order->total_amount = $arrayData['total_fee']/100;
               $order->trade_no = $arrayData['transaction_id'];
               $order->pay_way = $arrayData['trade_type'];
               $order->trade_status = 1;
+              $json = '{'.'openid:'.$arrayData['openid'].','.'bank_type:'.$arrayData['bank_type'].'}';
+              Log::info($json);
+              $order->options = $json;
               $order->save();
               die('success');
             }
         }else{
-            //pay fail
-            Log::info('微信没有来骚扰我');
             return false;
         }
     }
