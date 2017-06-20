@@ -11,7 +11,7 @@ use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 use Notadd\Multipay\Handlers\SetUnionpayconfHandler;
 use Notadd\Multipay\Handlers\UnionWebNotifyHandler;
-
+use Illuminate\Http\Request;
 
 /**
  * Class MultipayController.
@@ -39,8 +39,15 @@ class UnionController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetUnionpayconfHandler $handler)
+    public function set(SetUnionpayconfHandler $handler ,Request $request)
     {
+        $this->validate($request,[
+            'mer_id'=>'required',
+            'key'=>'required',
+        ],[
+            'mer_id'=>'mer_id不能为空',
+            'key'=>'key不能为空',
+        ]);
         return $handler->toResponse()->generateHttpResponse();
     }
 
