@@ -35,9 +35,10 @@ class Wechatpay
 //        $this->gateway->setAppId('wx081bfce94ce71bfb');
         $this->gateway->setAppId($this->settings->get('wechat.app_id'));
 //        $this->gateway->setMchId('1268498801');
-        $this->gateway->setMchId('wechat.mch_id');
+        $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
 //        $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
         $this->gateway->setApiKey($this->settings->get('wechat.key'));
+
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify');
 
         return $this;
@@ -45,11 +46,9 @@ class Wechatpay
     //支付接口
     public function pay()
     {
-
-
         $para = [
             'body' => 'test',
-            'out_trade_no' => '2017060912121210017892453431112',
+            'out_trade_no' => '2017060912121210017892453431123',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -100,7 +99,7 @@ class Wechatpay
         $gateway = Omnipay::create('WechatPay');
         $gateway->setAppId($this->settings->get($this->settings->get('wechat.app_id')));
         $gateway->setMchId($this->settings->get($this->settings->get('wechat.mch_id')));
-        $gateway->setApiKey($this->settings->get($this->settings->get('wechat')));
+        $gateway->setApiKey($this->settings->get($this->settings->get('wechat.key')));
         $response = $gateway->completePurchase([
             'request_params' => file_get_contents('php://input')
         ])->send();
@@ -113,7 +112,7 @@ class Wechatpay
             //pay success
             if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
             {
-              $order->total_amount = $arrayData['total_fee']/100;
+              $order->total_amount = $arrayData['total_fee'];
               $order->trade_no = $arrayData['transaction_id'];
               $order->pay_way = $arrayData['trade_type'];
               $order->trade_status = 1;
