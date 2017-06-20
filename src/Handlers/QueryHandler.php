@@ -11,18 +11,12 @@ namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 
 /*
- * Classs PayHandler
+ * Classs QueryHandler
  */
 class QueryHandler extends Handler
 {
-    /**
-     * @var SettingsRepository
-     */
-    protected $settings;
-
     /**
      * @var \Notadd\Multipay\Multipay
      */
@@ -32,7 +26,6 @@ class QueryHandler extends Handler
     {
         parent::__construct($container);
         $this->multipay = $this->container->make('Multipay');
-        $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
     /*

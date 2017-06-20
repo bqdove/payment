@@ -12,19 +12,13 @@ namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Alipay;
 
 /*
- * Classs WebNotifyHandler
+ * Classs AlipayWebNotifyHandler
  */
 class AlipayWebNotifyHandler extends Handler
 {
-    /**
-     * @var SettingsRepository
-     */
-    protected $settings;
-
     /**
      * @var \Notadd\Multipay\Multipay
      */
@@ -34,7 +28,6 @@ class AlipayWebNotifyHandler extends Handler
     {
         parent::__construct($container);
         $this->multipay = $this->container->make('Multipay');
-        $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
     /*
@@ -44,7 +37,6 @@ class AlipayWebNotifyHandler extends Handler
     {
         $alipay = new Alipay();
         $alipay->webNotify();
-//        $this->multipay->webNotify();
     }
 
 }

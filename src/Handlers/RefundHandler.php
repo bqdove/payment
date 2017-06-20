@@ -12,18 +12,12 @@ namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 
 /*
- * Classs PayHandler
+ * Classs RefundHandler
  */
 class RefundHandler extends Handler
 {
-    /**
-     * @var SettingsRepository
-     */
-    protected $settings;
-
     /**
      * @var \Notadd\Multipay\Multipay
      */
@@ -33,7 +27,6 @@ class RefundHandler extends Handler
     {
         parent::__construct($container);
         $this->multipay = $this->container->make('Multipay');
-        $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
     /*
@@ -45,5 +38,4 @@ class RefundHandler extends Handler
         $para = $this->request->except(['driver','way']);
         $this->multipay->refund($driver,$way,$para);
     }
-
 }
