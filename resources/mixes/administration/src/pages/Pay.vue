@@ -50,6 +50,8 @@
                     start: '',
                 },
                 loading: false,
+                messageCert: '',
+                messageKey: '',
                 orderColumns: [
                     {
                         type: 'expand',
@@ -244,33 +246,35 @@
             uploadBefore() {
                 injection.loading.start();
             },
-            uploadCertError(file) {
+            uploadCertError() {
                 this.$notice.warning({
                     title: '文件格式不正确',
-                    desc: `文件 ${file.name} 格式不正确`,
                 });
+                this.messageCert = '';
             },
-            uploadCertKeyError(file) {
+            uploadCertKeyError() {
                 this.$notice.warning({
                     title: '文件格式不正确',
-                    desc: `文件 ${file.name} 格式不正确`,
                 });
+                this.messageKey = '';
             },
             uploadCertSuccess(data) {
                 const self = this;
                 injection.loading.finish();
                 self.$notice.open({
-                    title: data.message,
+                    title: '证书_cert上传成功',
                 });
-                self.weChatForm.cert = data.data.path;
+                self.messageCert = '已上传';
+                self.weChatForm.cert = data;
             },
             uploadCertKeySuccess(data) {
                 const self = this;
                 injection.loading.finish();
                 self.$notice.open({
-                    title: data.message,
+                    title: '证书_key上传成功',
                 });
-                self.weChatForm.cert_key = data.data.path;
+                self.messageKey = '已上传';
+                self.weChatForm.cert_key = data;
             },
         },
     };
@@ -377,12 +381,9 @@
                                     <row>
                                         <i-col span="18">
                                             <form-item label="证书_cert">
-                                                <div class="file-path" v-if="weChatForm.cert">
-                                                    {{ weChatForm.cert }}
-                                                </div>
                                                 <upload :action="actionCert"
                                                         :before-upload="uploadBefore"
-                                                        :format="['jpg','jpeg','png']"
+                                                        :format="['pem']"
                                                         :headers="{
                                                             Authorization: `Bearer ${$store.state.token.access_token}`
                                                         }"
@@ -392,9 +393,9 @@
                                                         :on-format-error="uploadCertError"
                                                         :on-success="uploadCertSuccess"
                                                         ref="upload"
-                                                        :show-upload-list="false"
-                                                        v-if="weChatForm.cert === '' || weChatForm.cert === null">
+                                                        :show-upload-list="false">
                                                     <i-button type="ghost">+上传</i-button>
+                                                    <span>{{ messageCert }}</span>
                                                 </upload>
                                             </form-item>
                                         </i-col>
@@ -402,12 +403,9 @@
                                     <row>
                                         <i-col span="18">
                                             <form-item label="证书_Key">
-                                                <div class="file-path" v-if="weChatForm.cert_key">
-                                                    {{ weChatForm.cert_key }}
-                                                </div>
                                                 <upload :action="actionKey"
                                                         :before-upload="uploadBefore"
-                                                        :format="['jpg','jpeg','png']"
+                                                        :format="['pem']"
                                                         :headers="{
                                                             Authorization: `Bearer ${$store.state.token.access_token}`
                                                         }"
@@ -417,9 +415,9 @@
                                                         :on-format-error="uploadCertKeyError"
                                                         :on-success="uploadCertKeySuccess"
                                                         ref="upload"
-                                                        :show-upload-list="false"
-                                                        v-if="weChatForm.cert_key === '' || weChatForm.cert_key === null">
+                                                        :show-upload-list="false">
                                                     <i-button type="ghost">+上传</i-button>
+                                                    <span>{{ messageKey }}</span>
                                             </form-item>
                                         </i-col>
                                     </row>
