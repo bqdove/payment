@@ -4,8 +4,14 @@
 
     export default {
         beforeRouteEnter(to, from, next) {
-            next(() => {
-                injection.sidebar.active('setting');
+            injection.loading.start();
+            injection.http.get('http://pay.ibenchu.xyz:8080/api/multipay/order').then(response => {
+                const orderData = response.data.data.data;
+                next(vm => {
+                    vm.orderData = orderData;
+                    injection.loading.finish();
+                    injection.sidebar.active('setting');
+                });
             });
         },
         components: {
@@ -66,54 +72,36 @@
                     },
                     {
                         align: 'center',
-                        key: 'num',
+                        key: 'trade_no',
                         title: '支付订单号',
-                        width: 200,
+                        width: 300,
                     },
                     {
                         align: 'center',
-                        key: 'count',
+                        key: 'total_amount',
                         title: '金额(元)',
                         width: 200,
                     },
                     {
                         align: 'center',
-                        key: 'status',
+                        key: 'trade_status',
                         title: '状态',
                         width: 200,
                     },
                     {
-                        key: 'createTime',
+                        key: 'created_at',
                         title: '时间',
                     },
                 ],
                 orderData: [
                     {
-                        count: '99.00',
-                        createTime: '2017-6-16 16:12:25',
-                        num: 222222224566,
-                        payStyle: '微信支付',
-                        status: '代付款',
-                        transactionCtx: '长安通充值长安通充值',
-                        transactionNum: 78654342367878,
-                    },
-                    {
-                        count: '99.00',
-                        createTime: '2017-6-16 16:12:25',
-                        num: 222222226466,
-                        payStyle: '微信支付',
-                        status: '代付款',
-                        transactionCtx: '长安通充值长安通充值',
-                        transactionNum: 78654342367878,
-                    },
-                    {
-                        count: '99.00',
-                        createTime: '2017-6-16 16:12:25',
-                        num: 22222222,
-                        payStyle: '微信支付',
-                        status: '代付款',
-                        transactionCtx: '长安通充值长安通充值',
-                        transactionNum: 78654342367878,
+                        total_amount: '',
+                        created_at: '',
+                        out_trade_no: '',
+                        payment: '',
+                        trade_status: '',
+                        subject: '',
+                        trade_no: '',
                     },
                 ],
                 searchList: [
@@ -503,10 +491,12 @@
                                     <ul class="clearfix">
                                         <li>
                                             成交时间
-                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.start"
+                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                                         v-model="filterSearch.start"
                                                          style="width: 124px"></date-picker>
                                             -
-                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.end"
+                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                                         v-model="filterSearch.end"
                                                          style="width: 124px"></date-picker>
                                         </li>
                                         <li class="store-body-header-right">
