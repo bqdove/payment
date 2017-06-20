@@ -24,10 +24,7 @@ class Wechatpay
     {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> f89e18bb84557c933fed681cc4f90b498c823667
     /*
      * 获取支付网关
      */
@@ -50,11 +47,7 @@ class Wechatpay
     {
         $para = [
             'body' => 'test',
-<<<<<<< HEAD
             'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
-=======
-            'out_trade_no' => '2017060912121210017892453431112',
->>>>>>> f89e18bb84557c933fed681cc4f90b498c823667
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
