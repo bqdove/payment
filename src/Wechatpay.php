@@ -49,6 +49,7 @@ class Wechatpay
         $para = [
             'body' => 'test',
             'out_trade_no' => '201706091212121001758521222325',
+            'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',

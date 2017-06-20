@@ -16,7 +16,7 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Wechatpay;
 
 /*
- * Classs WebNotifyHandler
+ * Classs WechatWebNotifyHandler
  */
 class WechatWebNotifyHandler extends Handler
 {
@@ -34,7 +34,6 @@ class WechatWebNotifyHandler extends Handler
     {
         parent::__construct($container);
         $this->multipay = $this->container->make('Multipay');
-        $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
     /*

@@ -9,10 +9,7 @@
 namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
-use Illuminate\Container\Container;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Models\Order;
-use Illuminate\Support\Facades\Log;
 
 class AllHandler extends Handler
 {

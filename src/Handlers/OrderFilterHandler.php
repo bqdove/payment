@@ -8,14 +8,10 @@
 namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
-use Illuminate\Container\Container;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Models\Order;
 
-use Illuminate\Http\Request;
-
 /*
- * Classs PayHandler
+ * Classs OrderFilterHandler
  */
 class OrderFilterHandler extends Handler
 {
@@ -72,6 +68,5 @@ class OrderFilterHandler extends Handler
         }else{
             return $this->withCode('404')->withError('未找到您需要的数据');
         }
-
     }
 }
