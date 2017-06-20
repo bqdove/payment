@@ -110,9 +110,11 @@ class Wechatpay
         if ($response->isPaid()) {
             //pay success
             Log::info('微信来调我了');
+            return true;
         }else{
             //pay fail
             Log::info('微信没有来骚扰我');
+            return false;
         }
     }
 
