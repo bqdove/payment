@@ -43,12 +43,13 @@ class Wechatpay
 
         return $this;
     }
+
     //支付接口
     public function pay()
     {
         $para = [
             'body' => 'test',
-            'out_trade_no' => '2017060912121210017458125001094',
+            'out_trade_no' => '2017060912121210017458125001095',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -112,15 +113,14 @@ class Wechatpay
 
         if ($response->isPaid()) {
             //pay success
-            Log::info('test');
             if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
             {
               $order->total_amount = $arrayData['total_fee']/100;
               $order->trade_no = $arrayData['transaction_id'];
               $order->pay_way = $arrayData['trade_type'];
               $order->trade_status = 1;
-              $json = '{'.'openid:'.$arrayData['openid'].','.'bank_type:'.$arrayData['bank_type'].'}';
-              Log::info($json);
+              $optionArr = ['openid' => $arrayData['openid']];
+              $json = json_encode($optionArr);
               $order->options = $json;
               $order->save();
               die('success');
