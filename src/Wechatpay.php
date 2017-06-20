@@ -35,9 +35,10 @@ class Wechatpay
 //        $this->gateway->setAppId('wx081bfce94ce71bfb');
         $this->gateway->setAppId($this->settings->get('wechat.app_id'));
 //        $this->gateway->setMchId('1268498801');
-        $this->gateway->setMchId('wechat.mch_id');
+        $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
 //        $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
         $this->gateway->setApiKey($this->settings->get('wechat.key'));
+
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify');
 
         return $this;
@@ -47,7 +48,11 @@ class Wechatpay
     {
         $para = [
             'body' => 'test',
+<<<<<<< HEAD
             'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
+=======
+            'out_trade_no' => '2017060912121210017892453431123',
+>>>>>>> dedbec3c23d598bc604524ee8fd293092a6efc03
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -98,7 +103,7 @@ class Wechatpay
         $gateway = Omnipay::create('WechatPay');
         $gateway->setAppId($this->settings->get($this->settings->get('wechat.app_id')));
         $gateway->setMchId($this->settings->get($this->settings->get('wechat.mch_id')));
-        $gateway->setApiKey($this->settings->get($this->settings->get('wechat')));
+        $gateway->setApiKey($this->settings->get($this->settings->get('wechat.key')));
         $response = $gateway->completePurchase([
             'request_params' => file_get_contents('php://input')
         ])->send();
@@ -109,7 +114,6 @@ class Wechatpay
 
         if ($response->isPaid()) {
             //pay success
-            Log::info('微信you来调戏我了');
             if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
             {
               $order->total_amount = $arrayData['total_fee'];
@@ -125,6 +129,8 @@ class Wechatpay
             return false;
         }
     }
+
+
     //xml=>array
     private function xmlToArray($xml)
     {
