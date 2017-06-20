@@ -24,6 +24,10 @@ class Wechatpay
     {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> f89e18bb84557c933fed681cc4f90b498c823667
     /*
      * 获取支付网关
      */
@@ -46,7 +50,11 @@ class Wechatpay
     {
         $para = [
             'body' => 'test',
+<<<<<<< HEAD
             'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
+=======
+            'out_trade_no' => '2017060912121210017892453431112',
+>>>>>>> f89e18bb84557c933fed681cc4f90b498c823667
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -102,13 +110,35 @@ class Wechatpay
             'request_params' => file_get_contents('php://input')
         ])->send();
 
+        $xmlData = file_get_contents('php://input');
+
+        $arrayData = $this->xmlToArray($xmlData);
+
         if ($response->isPaid()) {
             //pay success
-            Log::info('微信来调我了');
+            Log::info('微信you来调戏我了');
+            if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
+            {
+              $order->total_amount = $arrayData['total_fee'];
+              $order->trade_no = $arrayData['transaction_id'];
+              $order->pay_way = $arrayData['trade_type'];
+              $order->trade_status = 1;
+              $order->save();
+              return 'success';
+            }
         }else{
             //pay fail
             Log::info('微信没有来骚扰我');
+            return false;
         }
+    }
+    //xml=>array
+    private function xmlToArray($xml)
+    {
+        //禁止引用外部xml实体
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        return $values;
     }
 
     //查询
