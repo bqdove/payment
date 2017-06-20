@@ -27,7 +27,6 @@ class RouteRegister extends AbstractRouteRegister
      */
     public function handle()
     {
-
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/multipay'], function () {
             $this->router->get('pay', PayController::class. '@pay');
             $this->router->get('query', PayController::class. '@query');
@@ -54,14 +53,10 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'union'], function () {
                 $this->router->post('set',UnionController::class.'@set');
                 $this->router->post('get',UnionController::class.'@get');
+                $this->router->post('webnotify',UnionController::class.'webnotify');
             });
 
             $this->router->any('webnotify',PayController::class. '@webNotify');
         });
-        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api'], function (){
-
-        });
-
-
     }
 }
