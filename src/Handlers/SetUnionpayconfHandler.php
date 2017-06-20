@@ -58,7 +58,7 @@ class SetUnionpayconfHandler extends AbstractSetHandler
 
         $this->settings->set('unionpay.version','5.0');
 
-        $this->settings->set('unionpay.signMethod','RSA');
+        $this->settings->set('unionpay.signMethod','01');
 
         return true;
     }

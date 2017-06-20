@@ -10,6 +10,7 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 use Notadd\Multipay\Handlers\SetUnionpayconfHandler;
+use Notadd\Multipay\Handlers\UnionWebNotifyHandler;
 
 
 /**
@@ -43,5 +44,8 @@ class UnionController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 
-
+    public function webnotify(UnionWebNotifyHandler $handler )
+    {
+        return $handler->toResponse()->generateHttpResponse();
+    }
 }

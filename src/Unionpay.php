@@ -31,12 +31,10 @@ class Unionpay
         $this->gateway->setCertPath($this->settings->get('union.certPath'));
         $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
         $this->gateway->setCertDir($this->settings->get('union.certDir'));
-        $this->gateway->setReturnUrl($this->settings->get('union.returnUrl'));
-        $this->gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
-
+        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/multipay/webnotify');
+        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/multipay/webnotify');
         return $this;
     }
-
 
     /**
      * 支付接口
@@ -58,9 +56,9 @@ class Unionpay
 //                    'transType' => $transType// transtype
 //            ];
 
-            $response = $this->gateway->purchase($para)->send();
+        $response = $this->gateway->purchase($para)->send();
 
-            $response->getRedirectHtml(); //For PC/Wap
+        $response->getRedirectHtml(); //For PC/Wap
     }
     /**
      * 回调方法接口
@@ -68,19 +66,24 @@ class Unionpay
     public function webNotify()
     {
 
-            $response = $this->gateway->completePurchase(['request_params'=>$_REQUEST])->send();
+        $gateway = Omnipay::create('UnionPay');
+        $gateway->setMerId($this->settings->get('union.merId'));
+        $gateway->setCertPath($this->settings->get('union.certPath'));
+        $gateway->setCertPassword($this->settings->get('union.certPassword'));
+        $gateway->setCertDir($this->settings->get('union.certDir'));
+        $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
 
-            if ($response->isPaid()) {
-                /**
-                 * Payment is successful
-                 */
-                die('success'); //The notify response should be 'success' only
-            } else {
-                /**
-                 * Payment is not successful
-                 */
-                die('你已经支付失败, 请稍候重试'); //The notify response
-            }
+        if ($response->isPaid()) {
+            /**
+             * Payment is successful
+             */
+            die('success'); //The notify response should be 'success' only
+        } else {
+            /**
+             * Payment is not successful
+             */
+            die('你已经支付失败, 请稍候重试'); //The notify response
+        }
     }
     /**
      *查询接口
