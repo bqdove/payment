@@ -6,9 +6,13 @@
         beforeRouteEnter(to, from, next) {
             injection.loading.start();
             injection.http.get('http://pay.ibenchu.xyz:8080/api/multipay/order').then(response => {
-                const orderData = response.data.data.data;
+                const data = response.data.data;
                 next(vm => {
-                    vm.orderData = orderData;
+                    vm.orderData = data.data;
+                    vm.page.total = data.total;
+                    vm.page.per_page = data.per_page;
+                    vm.page.last_page = data.last_page;
+                    vm.page.to = data.to;
                     injection.loading.finish();
                     injection.sidebar.active('setting');
                 });
@@ -104,6 +108,12 @@
                         trade_no: '',
                     },
                 ],
+                page: {
+                    last_page: 0,
+                    per_page: 0,
+                    to: 0,
+                    total: 0,
+                },
                 searchList: [
                     {
                         label: '店铺名称',
@@ -183,10 +193,13 @@
             },
             search() {
                 const self = this;
-                self.$http.post(`${window.api}/multipay/order`, self.filterSearch).then(() => {
-                    self.$notice.open({
-                        title: injection.trans('setting.success'),
-                    });
+                self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', self.filterSearch).then(response => {
+                    const data = response.data.data;
+                    this.orderData = data.data;
+                    this.page.total = data.total;
+                    this.page.per_page = data.per_page;
+                    this.page.last_page = data.last_page;
+                    this.page.to = data.to;
                 }).finally(() => {
                     self.loading = false;
                 });
@@ -507,9 +520,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- <div class="page">
-                                     <page :total="100" show-elevator></page>
-                                 </div>-->
                             </div>
                         </div>
                         <i-table class="order-table"
@@ -518,6 +528,11 @@
                                  :data="orderData"
                                  ref="orderList">
                         </i-table>
+                        <div class="page">
+                            <page :total="page.total"
+                                  :page-size="page.per_page"
+                                  show-elevator></page>
+                        </div>
                     </card>
                 </tab-pane>
             </tabs>
