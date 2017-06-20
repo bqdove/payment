@@ -43,7 +43,7 @@ class WechatWebNotifyHandler extends Handler
     public function execute()
     {
         $wechat = new Wechatpay();
-        $wechat->webNotify();
+        $wechat->webnotify();
     }
 
 }

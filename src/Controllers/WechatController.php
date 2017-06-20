@@ -10,6 +10,7 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Multipay\Handlers\GetWechatconfHandler;
 use Notadd\Multipay\Handlers\SetWechatconfHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
+use Notadd\Multipay\Handlers\WechatWebNotifyHandler;
 
 use Illuminate\Http\Request;
 
@@ -56,14 +57,10 @@ class WechatController extends Controller
 
     //回调通知
 
-    public function webnotify(Array $para){
-
-        $response = $this->gateway->completePurchase($para)->send();
-
-        if ( $response->isPaid()) {
-            var_dump($response->getData());
-        } else {
-            echo "支付失败";
-        }
+    public function webnotify(WechatWebNotifyHandler $handler)
+    {
+        return $handler->toResponse()->generateHttpResponse();
     }
+
+
 }

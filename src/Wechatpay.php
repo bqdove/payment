@@ -14,6 +14,7 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Notadd\Multipay\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class Wechatpay
 {
@@ -49,20 +50,13 @@ class Wechatpay
 
         $para = [
             'body' => 'test',
-            'out_trade_no' => '2017060912121210017892222',
+            'out_trade_no' => '2017060912121210017892228529',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
             'trade_type' => 'NATIVE',
         ];
-
-        $out_trade_no = $para['out_trade_no'];
-
-        if (Order::where('out_trade_no', $out_trade_no))
-        {
-
-        }
 
         $order = new Order();
 
@@ -99,13 +93,28 @@ class Wechatpay
             ->setValidateResult(false);
         header('Content-Type: '.$qrCode->getContentType());
         echo $qrCode->writeString();
-
-
-
-
-
     }
 
+    //回调
+    public function webnotify(){
+
+        $gateway = Omnipay::create('WechatPay');
+        $gateway->setAppId('wx081bfce94ce71bfb');
+        $gateway->setMchId('1268498801');
+        $gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
+
+        $response = $gateway->completePurchase([
+            'request_params' => file_get_contents('php://input')
+        ])->send();
+
+        if ($response->isPaid()) {
+            //pay success
+            Log::info('微信来调我了');
+        }else{
+            //pay fail
+            Log::info('微信没有来骚扰我');
+        }
+    }
 
 
     //查询
