@@ -48,7 +48,7 @@ class Wechatpay
     {
         $para = [
             'body' => 'test',
-            'out_trade_no' => '2017060912121210017892453431123',
+            'out_trade_no' => '201706091212121001758521222325',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -97,9 +97,11 @@ class Wechatpay
     public function webnotify(){
 
         $gateway = Omnipay::create('WechatPay');
-        $gateway->setAppId($this->settings->get($this->settings->get('wechat.app_id')));
-        $gateway->setMchId($this->settings->get($this->settings->get('wechat.mch_id')));
-        $gateway->setApiKey($this->settings->get($this->settings->get('wechat.key')));
+
+        $gateway->setAppId($this->settings->get('wechat.app_id'));
+        $gateway->setMchId($this->settings->get('wechat.mch_id'));
+        $gateway->setApiKey($this->settings->get('wechat.key'));
+
         $response = $gateway->completePurchase([
             'request_params' => file_get_contents('php://input')
         ])->send();
@@ -117,7 +119,7 @@ class Wechatpay
               $order->pay_way = $arrayData['trade_type'];
               $order->trade_status = 1;
               $order->save();
-              return 'success';
+              die('success');
             }
         }else{
             //pay fail
