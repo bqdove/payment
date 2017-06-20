@@ -4,8 +4,18 @@
 
     export default {
         beforeRouteEnter(to, from, next) {
-            next(() => {
-                injection.sidebar.active('setting');
+            injection.loading.start();
+            injection.http.get('http://pay.ibenchu.xyz:8080/api/multipay/order').then(response => {
+                const data = response.data.data;
+                next(vm => {
+                    vm.orderData = data.data;
+                    vm.page.total = data.total;
+                    vm.page.per_page = data.per_page;
+                    vm.page.last_page = data.last_page;
+                    vm.page.to = data.to;
+                    injection.loading.finish();
+                    injection.sidebar.active('setting');
+                });
             });
         },
         components: {
@@ -50,6 +60,8 @@
                     start: '',
                 },
                 loading: false,
+                messageCert: '',
+                messageKey: '',
                 orderColumns: [
                     {
                         type: 'expand',
@@ -64,56 +76,44 @@
                     },
                     {
                         align: 'center',
-                        key: 'num',
+                        key: 'trade_no',
                         title: '支付订单号',
-                        width: 200,
+                        width: 300,
                     },
                     {
                         align: 'center',
-                        key: 'count',
+                        key: 'total_amount',
                         title: '金额(元)',
                         width: 200,
                     },
                     {
                         align: 'center',
-                        key: 'status',
+                        key: 'trade_status',
                         title: '状态',
                         width: 200,
                     },
                     {
-                        key: 'createTime',
+                        key: 'created_at',
                         title: '时间',
                     },
                 ],
                 orderData: [
                     {
-                        count: '99.00',
-                        createTime: '2017-6-16 16:12:25',
-                        num: 222222224566,
-                        payStyle: '微信支付',
-                        status: '代付款',
-                        transactionCtx: '长安通充值长安通充值',
-                        transactionNum: 78654342367878,
-                    },
-                    {
-                        count: '99.00',
-                        createTime: '2017-6-16 16:12:25',
-                        num: 222222226466,
-                        payStyle: '微信支付',
-                        status: '代付款',
-                        transactionCtx: '长安通充值长安通充值',
-                        transactionNum: 78654342367878,
-                    },
-                    {
-                        count: '99.00',
-                        createTime: '2017-6-16 16:12:25',
-                        num: 22222222,
-                        payStyle: '微信支付',
-                        status: '代付款',
-                        transactionCtx: '长安通充值长安通充值',
-                        transactionNum: 78654342367878,
+                        total_amount: '',
+                        created_at: '',
+                        out_trade_no: '',
+                        payment: '',
+                        trade_status: '',
+                        subject: '',
+                        trade_no: '',
                     },
                 ],
+                page: {
+                    last_page: 0,
+                    per_page: 0,
+                    to: 0,
+                    total: 0,
+                },
                 searchList: [
                     {
                         label: '店铺名称',
@@ -147,6 +147,7 @@
                     app_id: '',
                     app_secret: '',
                     cert: '',
+                    cert_key: '',
                     enabled: true,
                     key: '',
                     mch_id: '',
@@ -192,10 +193,13 @@
             },
             search() {
                 const self = this;
-                self.$http.post(`${window.api}/multipay/order`, self.filterSearch).then(() => {
-                    self.$notice.open({
-                        title: injection.trans('setting.success'),
-                    });
+                self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', self.filterSearch).then(response => {
+                    const data = response.data.data;
+                    this.orderData = data.data;
+                    this.page.total = data.total;
+                    this.page.per_page = data.per_page;
+                    this.page.last_page = data.last_page;
+                    this.page.to = data.to;
                 }).finally(() => {
                     self.loading = false;
                 });
@@ -243,19 +247,35 @@
             uploadBefore() {
                 injection.loading.start();
             },
-            uploadFormatError(file) {
+            uploadCertError() {
                 this.$notice.warning({
                     title: '文件格式不正确',
-                    desc: `文件 ${file.name} 格式不正确`,
                 });
+                this.messageCert = '';
             },
-            uploadSuccess(data) {
+            uploadCertKeyError() {
+                this.$notice.warning({
+                    title: '文件格式不正确',
+                });
+                this.messageKey = '';
+            },
+            uploadCertSuccess(data) {
                 const self = this;
                 injection.loading.finish();
                 self.$notice.open({
-                    title: data.message,
+                    title: '证书_cert上传成功',
                 });
-                self.weChatForm.cert = data.data.path;
+                self.messageCert = '已上传';
+                self.weChatForm.cert = data;
+            },
+            uploadCertKeySuccess(data) {
+                const self = this;
+                injection.loading.finish();
+                self.$notice.open({
+                    title: '证书_key上传成功',
+                });
+                self.messageKey = '已上传';
+                self.weChatForm.cert_key = data;
             },
         },
     };
@@ -364,18 +384,19 @@
                                             <form-item label="证书_cert">
                                                 <upload :action="actionCert"
                                                         :before-upload="uploadBefore"
-                                                        :format="['jpg','jpeg','png']"
+                                                        :format="['pem']"
                                                         :headers="{
                                                             Authorization: `Bearer ${$store.state.token.access_token}`
                                                         }"
                                                         :max-size="2048"
+                                                        name="cert"
                                                         :on-error="uploadError"
-                                                        :on-format-error="uploadFormatError"
-                                                        :on-success="uploadSuccess"
+                                                        :on-format-error="uploadCertError"
+                                                        :on-success="uploadCertSuccess"
                                                         ref="upload"
-                                                        :show-upload-list="false"
-                                                        v-if="weChatForm.cert === '' || weChatForm.cert === null">
+                                                        :show-upload-list="false">
                                                     <i-button type="ghost">+上传</i-button>
+                                                    <span>{{ messageCert }}</span>
                                                 </upload>
                                             </form-item>
                                         </i-col>
@@ -383,11 +404,21 @@
                                     <row>
                                         <i-col span="18">
                                             <form-item label="证书_Key">
-                                                <upload
-                                                        multiple
-                                                        :action="actionKey">
+                                                <upload :action="actionKey"
+                                                        :before-upload="uploadBefore"
+                                                        :format="['pem']"
+                                                        :headers="{
+                                                            Authorization: `Bearer ${$store.state.token.access_token}`
+                                                        }"
+                                                        :max-size="2048"
+                                                        name="cert_key"
+                                                        :on-error="uploadError"
+                                                        :on-format-error="uploadCertKeyError"
+                                                        :on-success="uploadCertKeySuccess"
+                                                        ref="upload"
+                                                        :show-upload-list="false">
                                                     <i-button type="ghost">+上传</i-button>
-                                                </upload>
+                                                    <span>{{ messageKey }}</span>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -473,10 +504,12 @@
                                     <ul class="clearfix">
                                         <li>
                                             成交时间
-                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.start"
+                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                                         v-model="filterSearch.start"
                                                          style="width: 124px"></date-picker>
                                             -
-                                            <date-picker type="date" placeholder="选择日期" v-model="filterSearch.end"
+                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                                         v-model="filterSearch.end"
                                                          style="width: 124px"></date-picker>
                                         </li>
                                         <li class="store-body-header-right">
@@ -487,9 +520,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- <div class="page">
-                                     <page :total="100" show-elevator></page>
-                                 </div>-->
                             </div>
                         </div>
                         <i-table class="order-table"
@@ -498,6 +528,11 @@
                                  :data="orderData"
                                  ref="orderList">
                         </i-table>
+                        <div class="page">
+                            <page :total="page.total"
+                                  :page-size="page.per_page"
+                                  show-elevator></page>
+                        </div>
                     </card>
                 </tab-pane>
             </tabs>

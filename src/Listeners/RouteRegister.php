@@ -60,9 +60,6 @@ class RouteRegister extends AbstractRouteRegister
         });
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api'], function (){
 
-
-
-
         });
 
 

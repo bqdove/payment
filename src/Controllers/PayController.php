@@ -8,20 +8,13 @@
 
 namespace Notadd\Multipay\Controllers;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Illuminate\Container\Container;
 use Notadd\Multipay\Handlers\CancelHandler;
 use Notadd\Multipay\Handlers\PayHandler;
 use Notadd\Multipay\Handlers\QueryHandler;
 use Notadd\Multipay\Handlers\RefundHandler;
-use Notadd\Multipay\Models\Order;
+
 
 class PayController extends Controller{
-
-    /**
-     * @var SettingsRepository
-     */
-    protected $settings;
 
     /**
      * @var \Notadd\Multipay\Multipay
@@ -32,7 +25,6 @@ class PayController extends Controller{
     {
         parent::__construct();
         $this->multipay = $this->container->make('Multipay');
-        $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
     public function pay(PayHandler $handler)
@@ -54,5 +46,4 @@ class PayController extends Controller{
     {
         return $handler->toResponse()->generateHttpResponse();
     }
-
 }

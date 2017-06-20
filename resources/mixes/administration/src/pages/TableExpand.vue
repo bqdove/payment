@@ -7,18 +7,17 @@
 </script>
 <template>
     <row class="expand-row">
-        <i-col span="6">
+        <i-col>
             <span class="expand-key">付款方式：</span>
-            <span class="expand-value">{{ row.payStyle }}</span>
+            <span class="expand-value">{{ row.payment }}</span>
         </i-col>
-        <i-col span="6">
+        <i-col>
             <span class="expand-key">平台交易号：</span>
-            <span class="expand-value">{{ row.transactionNum }}</span>
+            <span class="expand-value">{{ row.trade_no }}</span>
         </i-col>
-        <i-col span="6">
+        <i-col>
             <span class="expand-key">交易内容：</span>
-            <span class="expand-value">{{ row.transactionCtx }}</span>
+            <span class="expand-value">{{ row.subject }}</span>
         </i-col>
-        <i-col span="6"></i-col>
     </row>
 </template>
