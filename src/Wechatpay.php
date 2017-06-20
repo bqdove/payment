@@ -46,10 +46,9 @@ class Wechatpay
 
        // http://lxnotadd.com/webnotify?driver=wechat&way=WechatPay_Native&app_id=wx081bfce94ce71bfb&mch_id=1268498801&body=test&total_fee=1&out_trade_no=201706091212121004&spbill_create_ip=36.45.175.53&notify_url=http://lxnotadd.com&trade_type=NATIVE
 
-
         $para = [
-            'body' => 'test',
-            'out_trade_no' => '2017060912121210017892453431112',
+            'body' => '手机',
+            'out_trade_no' => '2017060912121210017892453431142',
             'time_start'=>date('YmdHis'),
             'time_expire'=>date('YmdHis',time() + 600),
             'spbill_create_ip' => '36.45.175.53',
@@ -73,7 +72,7 @@ class Wechatpay
 
         $order->payment = 'wechat';
 
-        $order->subject = '';
+        $order->subject = $para['body'];
 
         $order->save();
 
@@ -112,10 +111,9 @@ class Wechatpay
 
         if ($response->isPaid()) {
             //pay success
-            Log::info('微信you来调戏我了');
             if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
             {
-              $order->total_amount = $arrayData['total_fee'];
+              $order->total_amount = $arrayData['total_fee']/100;
               $order->trade_no = $arrayData['transaction_id'];
               $order->pay_way = $arrayData['trade_type'];
               $order->trade_status = 1;
@@ -128,6 +126,8 @@ class Wechatpay
             return false;
         }
     }
+
+
     //xml=>array
     private function xmlToArray($xml)
     {
@@ -164,7 +164,6 @@ class Wechatpay
     public function refund(Array $para){
         $para = [
             'body' => 'test',
-            'notify_url' => 'http://lxnotadd.com',
             'out_trade_no' => '201706091212121001789222',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
@@ -177,11 +176,7 @@ class Wechatpay
 
         $response = $this->gateway->refund($para)->send();
 
-        dd($response);
-
         $result = $response->isSuccessful();
-
-        dd($result);
     }
 
     //取消
