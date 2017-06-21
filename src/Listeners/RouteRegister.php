@@ -32,7 +32,7 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->get('query', PayController::class. '@query');
             $this->router->get('refund', PayController::class. '@refund');
             $this->router->get('cancel', PayController::class. '@cancel');
-            $this->router->get('test', PayController::class. '@test');
+            $this->router->get('test', UploadController::class. '@test');
             $this->router->post('order', QueryController::class.'@orderList');
             $this->router->get('order',QueryController::class. '@all');
             $this->router->post('upload', UploadController::class. '@execute');
