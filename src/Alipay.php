@@ -117,6 +117,9 @@ class Alipay
                     $order->payment = 'alipay';
                     $order->created_at = $_POST['gmt_create'];
                     $order->subject = $_POST['subject'];
+                    $optionArr = ['buyer_id' => $_POST['buyer_id'],'invoice_amount' => $_POST['invoice_amount'],'fund_bill_list'=>$_POST['fund_bill_list']];
+                    $json = json_encode($optionArr);
+                    $order->options = $json;
                     $order->save();
                     die('success'); //The notify response should be 'success' only
                 }
