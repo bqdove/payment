@@ -12,6 +12,7 @@ use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Notadd\Multipay\Handlers\SetAlipayconfHandler;
 use Notadd\Multipay\Handlers\AlipayWebNotifyHandler;
+use Notadd\Multipay\Handlers\AlipayReturnNotifyHandler;
 
 /**
  * Class MultipayController.
@@ -44,7 +45,14 @@ class AlipayController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 
+    //异步回调
     public function webNotify(AlipayWebNotifyHandler $handler)
+    {
+        return $handler->toResponse()->generateHttpResponse();
+    }
+
+    //同步回调
+    public function returnNotify(AlipayReturnNotifyHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
