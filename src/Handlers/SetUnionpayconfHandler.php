@@ -60,6 +60,8 @@ class SetUnionpayconfHandler extends AbstractSetHandler
 
         $this->settings->set('unionpay.signMethod','01');
 
+        $this->settings->set('unionpay.encoding','utf-8');
+
         return true;
     }
 }

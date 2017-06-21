@@ -50,6 +50,7 @@ class GetUnionpayconfHandler extends DataHandler
             'certDir'=>$this->settings->get('unionpay.certDir',''),
             'version'=>$this->settings->get('union.version',''),
             'signMethod'=>$this->settings->get('unionpay.signMethod',''),
+            'encoding'=>$this->settings->get('unionpay.encoding',''),
         ] ;
     }
 
