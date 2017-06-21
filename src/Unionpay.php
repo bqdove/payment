@@ -27,8 +27,8 @@ class Unionpay
     public function getGateWay($gatewayname)
     {
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setMerId($this->settings->get('union.merId'));
-        $this->gateway->setCertPath($this->settings->get('union.certPath'));
+        $this->gateway->setMerId('777290058110097');
+        $this->gateway->setCertPath($this->settings->get('union.cert'));
         $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
         $this->gateway->setCertDir($this->settings->get('union.certDir'));
         $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/multipay/webnotify');
@@ -38,12 +38,7 @@ class Unionpay
 
     /**
      * 支付接口
-     * @param $merId
-     * @param $transType
-     * @param $orderId
-     * @param $txnTime
-     * @param $orderDesc
-     * @param $txnAmt
+     *
      */
     public function pay()
     {
@@ -51,12 +46,15 @@ class Unionpay
                 'version'=>$this->settings->get('unionpay.version'),
                 'signMethod'=>$this->settings->get('unionpay.signMethod'),
                 'encoding'=>$this->settings->get('unionpay.encoding'),
-                'orderId'   => $orderId, //商户订单号
-                'txnTime'   => $txnTime, //Should be format 'YmdHis'
-                'orderDesc' => $orderDesc, //Order Title
-                'txnAmt'    => $txnAmt, //Order Total Fee
+                'orderId'   => '201706211420351000', //商户订单号
+                'txnTime'   => '20170621142035', //订单发送时间
+                'txnAmt'    => 1, //交易金额（分）
+                'certId'=>'',//证书ID
                 'currencyCode' => 156,//交易币种
                 'txnType' => 01,//交易类型
+                'bizType'=>000501,//产品类型
+                'channelType'=>07,//渠道类型
+                'verify_sign'=>$this->settings->get('verify_sign'),
         ];
 
         $response = $this->gateway->purchase($para)->send();
