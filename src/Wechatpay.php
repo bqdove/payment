@@ -20,11 +20,6 @@ class Wechatpay
     protected $settings;
     protected $gateway;
 
-    public function execute()
-    {
-        // TODO: Implement execute() method.
-    }
-
     public function __construct()
     {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
@@ -52,15 +47,16 @@ class Wechatpay
     //支付接口
     public function pay()
     {
-        $para = [
-            'body' => 'test',
-            'out_trade_no' => '2017060912121210017458125001095',
-            'time_start'=>date('YmdHis'),
-            'time_expire'=>date('YmdHis',time() + 600),
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 1,
-            'trade_type' => 'NATIVE',
-        ];
+//        $para = [
+//            'body' => 'test',
+//            'out_trade_no' => '2017060912121210017458125001095',
+//            'time_start'=>date('YmdHis'),
+//            'time_expire'=>date('YmdHis',time() + 600),
+//            'spbill_create_ip' => '36.45.175.53',
+//            'total_fee' => 1,
+//            'trade_type' => 'NATIVE',
+//        ];
+        $para = $_POST;
 
         $order = new Order();
 
@@ -148,7 +144,7 @@ class Wechatpay
     //查询
     public function query(){
 
-        $para = array_merge($_POST);
+        $para = $_POST;
 
         if ($para['out_trade_no'] || $para['trade_no'])
         {
@@ -159,30 +155,34 @@ class Wechatpay
 
         if ($response->isSuccessful())
         {
-            $response->getData();
+            dd($response->getData());
         }
 
     }
 
     //退款
     public function refund(){
-        $para = [
-            'body' => 'test',
-            'notify_url' => 'http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify',
-            'out_trade_no' => '201706091212121001789222',
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 1,
-            'trade_type' => 'NATIVE',
-            'out_refund_no'=>'126849880120170609121212',
-            'refund_fee'=>1,
-            'cert_path'=>storage_path($this->settings->get('wechat.cert')),
-            'key_path'=>storage_path($this->settings->get('wechat.cert_key'))
-        ];
+        $para = $_POST;
+        $out_refund_no = (string)($this->settings->get('wechat.mch_id'));
+        $out_refund_no .= date('YmdHis', time());
+        $para = $para + ['out_refund_no' => $out_refund_no,
+                'cert_path'=>$this->settings->get('wechat.cert'),
+                'key_path'=>$this->settings->get('wechat.cert_key')];
 
-        $response = $this->gateway->refund($para)->send();
 
-        $result = $response->isSuccessful();
+        if ($para['out_trade_no'] || $para['trade_no'])
+        {
+            $response = $this->gateway->refund($para)->send();
 
+            dd($response->getData());
+
+            if ($response->isSuccessful())
+            {
+                dd($response->getData());
+            }
+        }else{
+            return ['code' => '402', 'msg' => '请传入out_trade_no 或者 trade_no'];
+        }
     }
 
     //取消
