@@ -88,7 +88,7 @@ class Unionpay
 
         $gateway = Omnipay::create('UnionPay');
         $gateway->setMerId($this->settings->get('union.merId'));
-        $gateway->setCertPath($this->settings->get('union.certPath'));
+        $gateway->setCertPath($this->settings->get('union.cert'));
         $gateway->setCertPassword($this->settings->get('union.certPassword'));
         $gateway->setCertDir($this->settings->get('union.certDir'));
         $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
@@ -108,14 +108,23 @@ class Unionpay
     /**
      *查询接口
      */
-    public function query(Array $para)
+    public function query()
     {
-//        $order = [
-//            'merId' => $merId,//merId
-//            'transType' => $transType,// transtype
-//            'orderId' => $orderId, //Your order ID
-//            'orderTime' => $orderTime, //Should be format 'YmdHis'
-//        ];
+        $para = [
+            'version'=>$this->settings->get('unionpay.version'),
+            'signMethod'=>$this->settings->get('unionpay.signMethod'),
+            'encoding'=>$this->settings->get('unionpay.encoding'),
+            'orderId'   => '201706211420351000', //商户订单号
+            'txnTime'   => '20170621142035', //订单发送时间
+            'txnAmt'    => 1, //交易金额（分）
+            'certId'=>'',//证书ID
+            'currencyCode' => 156,//交易币种
+            'txnType' => 01,//交易类型
+            'bizType'=>000501,//产品类型
+            'channelType'=>07,//渠道类型
+            'accessType'=>0,//接入类型
+        ];
+
         $response = $this->gateway->query($para)->send();
 
         var_dump($response->getData());
@@ -126,15 +135,22 @@ class Unionpay
      * 退款接口
      */
 
-    public function refund(Array $para)
+    public function refund()
     {
-//        $order = [
-//                'merId'  => $merId,
-//                'transType' => $transType,
-//                'orderId' => $orderId, //Your site trade no, not union tn.
-//                'orderTime' => $orderTime, //Order trade time
-//                'txnAmt'  => $totalFee, //Order total fee
-//        ];
+        $para = [
+            'version'=>$this->settings->get('unionpay.version'),
+            'signMethod'=>$this->settings->get('unionpay.signMethod'),
+            'encoding'=>$this->settings->get('unionpay.encoding'),
+            'orderId'   => '201706211420351000', //商户订单号
+            'txnTime'   => '20170621142035', //订单发送时间
+            'txnAmt'    => 1, //交易金额（分）
+            'certId'=>'',//证书ID
+            'currencyCode' => 156,//交易币种
+            'txnType' => 01,//交易类型
+            'bizType'=>000501,//产品类型
+            'channelType'=>07,//渠道类型
+            'accessType'=>0,//接入类型
+        ];
 
         $response = $this->gateway->refund($para)->send();
 
@@ -145,15 +161,23 @@ class Unionpay
      * 取消接口
      */
 
-    public function cancel(Array $para)
+    public function cancel()
     {
-//        $order = [
-//            'merId'  => $merId,
-//            'transType' => $transType,
-//            'orderId' => $orderId, //Your site trade no, not union tn.
-//            'orderTime' => $orderTime, //Order trade time
-//            'txnAmt'  => $totalFee, //Order total fee
-//        ];
+
+        $para = [
+            'version'=>$this->settings->get('unionpay.version'),
+            'signMethod'=>$this->settings->get('unionpay.signMethod'),
+            'encoding'=>$this->settings->get('unionpay.encoding'),
+            'orderId'   => '201706211420351000', //商户订单号
+            'txnTime'   => '20170621142035', //订单发送时间
+            'txnAmt'    => 1, //交易金额（分）
+            'certId'=>'',//证书ID
+            'currencyCode' => 156,//交易币种
+            'txnType' => 01,//交易类型
+            'bizType'=>000501,//产品类型
+            'channelType'=>07,//渠道类型
+            'accessType'=>0,//接入类型
+        ];
 
         $response = $this->gateway->consumeUndo($para)->send();
 
