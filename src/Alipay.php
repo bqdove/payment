@@ -12,6 +12,7 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Omnipay\Omnipay;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Notadd\Multipay\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class Alipay
 {
@@ -90,30 +91,48 @@ class Alipay
      */
     public function webNotify()
     {
-        $request = $this->gateway->completePurchase();
+        Log::info('test');
+        Log::info(array_merge($_POST, $_GET));
+        $arrayData = array_merge($_POST, $_GET);
+        $gateway = Omnipay::create('Alipay_AopPage');
+        $gateway->setSignType($this->settings->get('alipay.sign_type')); // RSA/RSA2/MD5
+        $gateway->setAppId($this->settings->get('alipay.app_id')); //支付宝应用ID
+        $gateway->setPrivateKey($this->settings->get('alipay.private_key'));//支付宝应用私钥
+        $gateway->setAlipayPublicKey($this->settings->get('alipay.public_key'));//支付宝应用公钥
+
+        $request = $gateway->completePurchase();
+
+        Log::info('a');
+
         $request->setParams(array_merge($_POST, $_GET)); //Don't use $_REQUEST for may contain $_COOKIE
 
-        Log::info(array_merge($_POST, $_GET));
-
+        Log::info('b');
         /**
          * @var AopCompletePurchaseResponse $response
          */
         try {
+            Log::info('c');
+
             $response = $request->send();
 
+            Log::info('1');
             if ($response->isPaid()) {
                 /**
                  * Payment is successful
                  */
+                Log::info('2');
+
                 if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
                 {
-                    $order->out_trade_no = $result['out_trade_no'];
-                    $order->total_amount = $result['total_amount'];
-                    $order->trade_no = $result['trade_no'];
-                    $order->seller_id = $result['seller_id'];
+                    Log::info('3');
+
+                    $order->out_trade_no = $arrayData['out_trade_no'];
+                    $order->total_amount = $arrayData['total_amount'];
+                    $order->trade_no = $arrayData['trade_no'];
+                    $order->seller_id = $arrayData['seller_id'];
                     $order->trade_status = 1;
                     $order->payment = 'alipay';
-                    $order->created_at = $result['timestamp'];
+                    $order->created_at = $arrayData['timestamp'];
                     $order->subject = 'phone';
                     $order->pay_way = 'test';
                     $order->save();
