@@ -42,8 +42,8 @@ class WechatController extends Controller
     public function set(SetWechatconfHandler $handler,Request $request)
     {
         $this->validate($request,[
-            'app_id'=>'required',
-            'mch_id'=>'required',
+            'app_id'=>'required|^[a-z0-9A-Z]{32}$',
+            'mch_id'=>'required|[0-9]{10}',
             'key'=>'required',
             'app_secret'=>'required'
         ],[
