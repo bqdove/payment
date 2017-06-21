@@ -242,7 +242,7 @@
                 self.loading = true;
                 self.$refs.weChatForm.validate(valid => {
                     if (valid) {
-                        self.$http.post(`${window.api}/multipay/wechat/set`, self.weChatForm).then(() => {
+                        self.$http.post('http://notadd.allen/api/multipay/wechat/set', self.weChatForm).then(() => {
                             self.$notice.open({
                                 title: injection.trans('weChat.setting.success'),
                             });
