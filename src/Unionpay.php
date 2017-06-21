@@ -29,7 +29,7 @@ class Unionpay
     public function getGateWay($gatewayname)
     {
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setMerId('777290058110097');
+        $this->gateway->setMerId($this->settings->get('union.merId'));
         $this->gateway->setCertPath($this->settings->get('union.cert'));
         $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
         $this->gateway->setCertDir($this->settings->get('union.certDir'));
@@ -113,29 +113,22 @@ class Unionpay
             die('你已经支付失败, 请稍候重试');
         }
     }
+
     /**
      *查询接口
      */
     public function query()
     {
-        $para = [
-            'version'=>$this->settings->get('unionpay.version'),
-            'signMethod'=>$this->settings->get('unionpay.signMethod'),
-            'encoding'=>$this->settings->get('unionpay.encoding'),
-            'orderId'   => '201706211420351000', //商户订单号
-            'txnTime'   => '20170621142035', //订单发送时间
-            'txnAmt'    => 1, //交易金额（分）
-            'certId'=>'',//证书ID
-            'currencyCode' => 156,//交易币种
-            'txnType' => 01,//交易类型
-            'bizType'=>000501,//产品类型
-            'channelType'=>07,//渠道类型
-            'accessType'=>0,//接入类型
-        ];
-
-        $response = $this->gateway->query($para)->send();
-
-        var_dump($response->getData());
+        $para = array_merge($_POST);
+        if($para['orderId'] || $para['trade_no']){
+            $response = $this->gateway->query($para)->send();
+        }else{
+            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        }
+        if($response->successful())
+        {
+            $response->getData();
+        }
     }
 
     /**
@@ -145,24 +138,16 @@ class Unionpay
 
     public function refund()
     {
-        $para = [
-            'version'=>$this->settings->get('unionpay.version'),
-            'signMethod'=>$this->settings->get('unionpay.signMethod'),
-            'encoding'=>$this->settings->get('unionpay.encoding'),
-            'orderId'   => '201706211420351000', //商户订单号
-            'txnTime'   => '20170621142035', //订单发送时间
-            'txnAmt'    => 1, //交易金额（分）
-            'certId'=>'',//证书ID
-            'currencyCode' => 156,//交易币种
-            'txnType' => 01,//交易类型
-            'bizType'=>000501,//产品类型
-            'channelType'=>07,//渠道类型
-            'accessType'=>0,//接入类型
-        ];
-
-        $response = $this->gateway->refund($para)->send();
-
-        var_dump($response->getData());
+        $para = array_merge($_POST);
+        if($para['orderId'] || $para['trade_no']){
+            $response = $this->gateway->refund($para)->send();
+        }else{
+            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        }
+        if($response->successful())
+        {
+            $response->getData();
+        }
     }
 
     /**
@@ -171,27 +156,15 @@ class Unionpay
 
     public function cancel()
     {
-
-        $para = [
-            'version'=>$this->settings->get('unionpay.version'),
-            'signMethod'=>$this->settings->get('unionpay.signMethod'),
-            'encoding'=>$this->settings->get('unionpay.encoding'),
-            'orderId'   => '201706211420351000', //商户订单号
-            'txnTime'   => '20170621142035', //订单发送时间
-            'txnAmt'    => 1, //交易金额（分）
-            'certId'=>'',//证书ID
-            'currencyCode' => 156,//交易币种
-            'txnType' => 01,//交易类型
-            'bizType'=>000501,//产品类型
-            'channelType'=>07,//渠道类型
-            'accessType'=>0,//接入类型
-        ];
-
-        $response = $this->gateway->consumeUndo($para)->send();
-
-//        var_dump($response->isSuccessful());
-
-        var_dump($response->getData());
+        $para = array_merge($_POST);
+        if($para['orderId'] || $para['trade_no']){
+            $response = $this->gateway->cancel($para)->send();
+        }else{
+            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        }
+        if($response->successful())
+        {
+            $response->getData();
+        }
     }
-
 }
