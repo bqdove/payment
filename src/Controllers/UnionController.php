@@ -44,9 +44,11 @@ class UnionController extends Controller
         $this->validate($request,[
             'mer_id'=>'required',
             'key'=>'required',
+            'cert'=>'required|mimes:pfx',
         ],[
             'mer_id'=>'mer_id不能为空',
             'key'=>'key不能为空',
+            'cert'=>'不能为空',
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }

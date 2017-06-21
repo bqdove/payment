@@ -46,15 +46,15 @@ class WechatController extends Controller
             'mch_id'=>'required|regex:/\d{10}/',
             'key'=>'required|regex:/\w{32}/',
             'app_secret'=>'required|regex:/\w/',
-            'cert'=>'mimes:pem',
-            'cert_key'=>'mimes:pem'
+            'cert'=>'required|mimes:pem',
+            'cert_key'=>'required|mimes:pem'
         ],[
             'app_id'=>'app_id不能为空',
             'mch_id'=>'mch_id不能为空',
             'key'=>'key不能为空',
             'app_secret'=>'app_secret不能为空',
-            'cert'=>'证书必须为pem格式的',
-            'cert_key'=>'mimes:pem'
+            'cert'=>'证书不能为空，证书必须为pem格式的',
+            'cert_key'=>'证书不能为空，证书必须为pem格式'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }

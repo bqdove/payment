@@ -24,10 +24,6 @@ class UploadController extends Controller
 
     public function execute(UploadHandler $handler,Request $request)
     {
-        $this->validate($request,[
-            'file.file'    => '上传文件格式必须为文件格式！',
-            'file.required' => '必须上传一个文件！',
-        ]);
         return $handler->toResponse()->generateHttpResponse();
     }
 }
