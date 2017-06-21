@@ -91,7 +91,6 @@ class Alipay
      */
     public function webNotify()
     {
-        Log::info('test');
         Log::info(array_merge($_POST, $_GET));
         $arrayData = array_merge($_POST, $_GET);
         $gateway = Omnipay::create('Alipay_AopPage');
@@ -100,32 +99,18 @@ class Alipay
         $gateway->setPrivateKey($this->settings->get('alipay.private_key'));//支付宝应用私钥
         $gateway->setAlipayPublicKey($this->settings->get('alipay.public_key'));//支付宝应用公钥
 
-        $request = $gateway->completePurchase();
-
-        Log::info('a');
-
-        $request->setParams(array_merge($_POST, $_GET)); //Don't use $_REQUEST for may contain $_COOKIE
-
-        Log::info('b');
         /**
          * @var AopCompletePurchaseResponse $response
          */
         try {
-            Log::info('c');
+            $response = $gateway->completePurchase(['params' => array_merge($_POST, $_GET)])->send();
 
-            $response = $request->send();
-
-            Log::info('1');
             if ($response->isPaid()) {
                 /**
                  * Payment is successful
                  */
-                Log::info('2');
-
                 if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
                 {
-                    Log::info('3');
-
                     $order->out_trade_no = $arrayData['out_trade_no'];
                     $order->total_amount = $arrayData['total_amount'];
                     $order->trade_no = $arrayData['trade_no'];
