@@ -57,7 +57,7 @@ class WechatController extends Controller
 
     //回调通知
 
-    public function webnotify(WechatWebNotifyHandler $handler)
+    public function webNotify(WechatWebNotifyHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }

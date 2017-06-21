@@ -56,6 +56,26 @@ class Alipay
      */
     public function pay(Array $para)
     {
+        $order = new Order();
+
+        $order->out_trade_no = $para['out_trade_no'];
+
+        $order->trade_status = 0;
+
+        $order->seller_id = $para['app_id'];
+
+        $order->total_amount = $para['total_amount'];
+
+        $order->trade_no = '';
+
+        $order->created_at = time();
+
+        $order->payment = 'alipay';
+
+        $order->subject = $para['subject'];
+
+        $order->save();
+
         $request = $this->gateway->purchase();
 
         $request->setBizContent($para);
@@ -73,6 +93,8 @@ class Alipay
         $request = $this->gateway->completePurchase();
         $request->setParams(array_merge($_POST, $_GET)); //Don't use $_REQUEST for may contain $_COOKIE
 
+        Log::info(array_merge($_POST, $_GET));
+
         /**
          * @var AopCompletePurchaseResponse $response
          */
@@ -83,7 +105,20 @@ class Alipay
                 /**
                  * Payment is successful
                  */
-                die('success'); //The notify response should be 'success' only
+                if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
+                {
+                    $order->out_trade_no = $result['out_trade_no'];
+                    $order->total_amount = $result['total_amount'];
+                    $order->trade_no = $result['trade_no'];
+                    $order->seller_id = $result['seller_id'];
+                    $order->trade_status = 1;
+                    $order->payment = 'alipay';
+                    $order->created_at = $result['timestamp'];
+                    $order->subject = 'phone';
+                    $order->pay_way = 'test';
+                    $order->save();
+                    die('success'); //The notify response should be 'success' only
+                }
             } else {
                 /**
                  * Payment is not successful
@@ -99,18 +134,7 @@ class Alipay
 
 
 
-        $order = new Order();
-        $order->out_trade_no = $result['out_trade_no'];
-        $order->total_amount = $result['total_amount'];
-        $order->trade_no = $result['trade_no'];
-        $order->seller_id = $result['seller_id'];
-        $order->trade_status = 1;
-        $order->payment = 'alipay';
-        $order->created_at = $result['timestamp'];
-        $order->subject = 'phone';
-        $order->pay_way = 'test';
 
-        $order->save();
     }
     
     /**

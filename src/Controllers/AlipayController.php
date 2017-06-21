@@ -44,7 +44,7 @@ class AlipayController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function webnotify(AlipayWebNotifyHandler $handler)
+    public function webNotify(AlipayWebNotifyHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
