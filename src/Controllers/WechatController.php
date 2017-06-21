@@ -43,7 +43,7 @@ class WechatController extends Controller
     {
         $this->validate($request,[
             'app_id'=>'required',
-            'mch_id'=>'required|numeric',
+            'mch_id'=>'required',
             'key'=>'required',
             'app_secret'=>'required'
         ],[
