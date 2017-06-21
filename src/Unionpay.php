@@ -33,7 +33,7 @@ class Unionpay
         $this->gateway->setCertPath($this->settings->get('union.cert'));
         $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
         $this->gateway->setCertDir($this->settings->get('union.certDir'));
-        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/multipay/webnotify');
+        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/multipay');
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/multipay/webnotify');
         return $this;
     }
@@ -85,24 +85,32 @@ class Unionpay
      */
     public function webNotify()
     {
-
+        $arrayData = array_merge($_POST);
         $gateway = Omnipay::create('UnionPay');
         $gateway->setMerId($this->settings->get('union.merId'));
         $gateway->setCertPath($this->settings->get('union.cert'));
         $gateway->setCertPassword($this->settings->get('union.certPassword'));
         $gateway->setCertDir($this->settings->get('union.certDir'));
-        $response = $gateway->completePurchase(['request_params'=>$_REQUEST])->send();
-
+        $response = $gateway->completePurchase(['params'=>array_merge($_POST)])->send();
         if ($response->isPaid()) {
             /**
              * Payment is successful
              */
-            die('success'); //The notify response should be 'success' only
+            if($order = Order::where('out_trade_no', $_POST['out_trade_no'])->first()){
+            $order->total_amount = $_POST['total_amount'];
+            $order->trade_no = $_POST['trade_no'];
+            $order->seller_id = $_POST['seller_id'];
+            $order->trade_status = 1;
+            $order->payment = 'union';
+            $order->created_at = $_POST['gmt_create'];
+            $order->save();
+            die('success');
+            }
         } else {
             /**
              * Payment is not successful
              */
-            die('你已经支付失败, 请稍候重试'); //The notify response
+            die('你已经支付失败, 请稍候重试');
         }
     }
     /**
