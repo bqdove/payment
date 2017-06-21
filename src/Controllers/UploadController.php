@@ -18,6 +18,10 @@ class UploadController extends Controller
      * @param \Notadd\Pay\Handlers\UploadHandler $handler
      *
      */
+    public function test(){
+        return view('multipay::upload');
+    }
+
     public function execute(UploadHandler $handler,Request $request)
     {
         $this->validate($request,[
