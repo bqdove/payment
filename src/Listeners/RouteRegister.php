@@ -40,23 +40,23 @@ class RouteRegister extends AbstractRouteRegister
 
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'alipay'], function () {
                 $this->router->post('set',AlipayController::class.'@set');
-                $this->router->post('get',AlipayController::class.'@get');
-                $this->router->post('webnotify',AlipayController::class. '@webNotify');
+                $this->router->get('get',AlipayController::class.'@get');
+                $this->router->any('webnotify',AlipayController::class. '@webNotify');
             });
 
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'wechat'], function () {
                 $this->router->post('set',WechatController::class.'@set');
-                $this->router->post('get',WechatController::class.'@get');
+                $this->router->get('get',WechatController::class.'@get');
                 $this->router->post('webnotify',WechatController::class. '@webNotify');
             });
 
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'union'], function () {
                 $this->router->post('set',UnionController::class.'@set');
-                $this->router->post('get',UnionController::class.'@get');
-                $this->router->post('webnotify',UnionController::class.'webnotify');
+                $this->router->get('get',UnionController::class.'@get');
+//                $this->router->post('webnotify',UnionController::class.'webnotify');
             });
 
-            $this->router->any('webnotify',PayController::class. '@webNotify');
+//            $this->router->any('webnotify',PayController::class. '@webNotify');
         });
     }
 }
