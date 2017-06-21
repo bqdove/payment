@@ -46,7 +46,7 @@ class Alipay
         $this->gateway->setPrivateKey($this->settings->get('alipay.private_key'));//支付宝应用私钥
         $this->gateway->setAlipayPublicKey($this->settings->get('alipay.public_key'));//支付宝应用公钥
 //        $this->gateway->setSellerEmail($this->settings['seller_email']); //收款账户 email地址
-        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/');
+        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/api/multipay/alipay/notify');
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/alipay/webnotify');
         $this->gateway->sandbox();
         return $this;
@@ -87,7 +87,7 @@ class Alipay
     }
 
     /**
-     * 异步&&同步通知
+     * 异步通知
      */
     public function webNotify()
     {
@@ -135,12 +135,17 @@ class Alipay
              */
             die('你已经支付失败, 请稍候重试'); //The notify response
         }
-
-
-
-
     }
-    
+
+    /**
+     * 同步回调
+     */
+    public function returnNotify()
+    {
+        return $_GET;
+    }
+
+
     /**
      * 查询接口
      */

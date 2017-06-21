@@ -40,7 +40,10 @@ class RouteRegister extends AbstractRouteRegister
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'alipay'], function () {
                 $this->router->post('set',AlipayController::class.'@set');
                 $this->router->get('get',AlipayController::class.'@get');
-                $this->router->any('webnotify',AlipayController::class. '@webNotify');
+                //异步回调
+                $this->router->post('webnotify',AlipayController::class. '@webNotify');
+                //同步回调
+                $this->router->get('notify',AlipayController::class.'@returnNotify');
             });
 
             $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'wechat'], function () {
