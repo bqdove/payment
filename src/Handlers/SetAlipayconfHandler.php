@@ -47,13 +47,6 @@ class SetAlipayconfHandler extends AbstractSetHandler
     }
 
     /**
-     * Errors for handler.
-     *
-     * @return array
-     */
-
-
-    /**
      * Execute Handler.
      *
      * @return bool

@@ -11,33 +11,19 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Http\Request;
-use Notadd\Foundation\Routing\Abstracts\Handler;
-use Illuminate\Container\Container;
-use SplFileInfo;
-
-use Illuminate\Filesystem\Filesystem;
-
 class UploadController extends Controller
 {
 
     /**
      * @param \Notadd\Pay\Handlers\UploadHandler $handler
      *
-     * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
-     * @throws \Exception
      */
-
-
-    public function upload()
-    {
+    public function test(){
         return view('multipay::upload');
     }
 
-    public function execute(UploadHandler $handler)
+    public function execute(UploadHandler $handler,Request $request)
     {
-       
         return $handler->toResponse()->generateHttpResponse();
     }
-
-
 }

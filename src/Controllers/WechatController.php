@@ -10,6 +10,7 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Multipay\Handlers\GetWechatconfHandler;
 use Notadd\Multipay\Handlers\SetWechatconfHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
+use Notadd\Multipay\Handlers\WechatWebNotifyHandler;
 
 use Illuminate\Http\Request;
 
@@ -41,29 +42,31 @@ class WechatController extends Controller
     public function set(SetWechatconfHandler $handler,Request $request)
     {
         $this->validate($request,[
-            'app_id'=>'required|numeric',
-            'mch_id'=>'required|numeric',
-            'key'=>'required',
-            'app_secret'=>'required'
+            'app_id'=>'required|regex:/\w{18}/',
+            'mch_id'=>'required|regex:/\d{10}/',
+            'key'=>'required|regex:/\w{32}/',
+            'app_secret'=>'required|regex:/\w/',
+            'cert'=>'required|mimes:pem',
+            'cert_key'=>'required|mimes:pem'
         ],[
             'app_id'=>'app_id不能为空',
             'mch_id'=>'mch_id不能为空',
             'key'=>'key不能为空',
-            'app_secret'=>'app_secret不能为空'
+            'app_secret'=>'app_secret不能为空',
+            'cert'=>'证书不能为空，证书必须为pem格式的',
+            'cert_key'=>'证书不能为空，证书必须为pem格式'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }
 
     //回调通知
 
-    public function webnotify(Array $para){
-
-        $response = $this->gateway->completePurchase($para)->send();
-
-        if ( $response->isPaid()) {
-            var_dump($response->getData());
-        } else {
-            echo "支付失败";
-        }
+    public function webNotify(WechatWebNotifyHandler $handler)
+    {
+        return $handler->toResponse()->generateHttpResponse();
     }
+
+
+
+
 }

@@ -11,6 +11,8 @@ namespace Notadd\Multipay;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
+use Notadd\Multipay\Models\Order;
+
 
 class Unionpay
 {
@@ -28,74 +30,105 @@ class Unionpay
     {
         $this->gateway = Omnipay::create($gatewayname);
         $this->gateway->setMerId($this->settings->get('union.merId'));
-        $this->gateway->setCertPath($this->settings->get('union.certPath'));
+        $this->gateway->setCertPath($this->settings->get('union.cert'));
         $this->gateway->setCertPassword($this->settings->get('union.certPassword'));
         $this->gateway->setCertDir($this->settings->get('union.certDir'));
-        $this->gateway->setReturnUrl($this->settings->get('union.returnUrl'));
-        $this->gateway->setNotifyUrl($this->settings->get('union.notifyUrl'));
-
+        $this->gateway->setReturnUrl('http://pay.ibenchu.xyz:8080/multipay');
+        $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/multipay/webnotify');
         return $this;
     }
 
-
     /**
      * 支付接口
-     * @param $merId
-     * @param $transType
-     * @param $orderId
-     * @param $txnTime
-     * @param $orderDesc
-     * @param $txnAmt
+     *
      */
-    public function pay(Array $para)
+    public function pay()
     {
-//            $order = [
-//                    'orderId'   => $orderId, //Your order ID
-//                    'txnTime'   => $txnTime, //Should be format 'YmdHis'
-//                    'orderDesc' => $orderDesc, //Order Title
-//                    'txnAmt'    => $txnAmt, //Order Total Fee
-//                    'merId' => $merId,//merId
-//                    'transType' => $transType// transtype
-//            ];
+        $para = [
+                'version'=>$this->settings->get('unionpay.version'),
+                'signMethod'=>$this->settings->get('unionpay.signMethod'),
+                'encoding'=>$this->settings->get('unionpay.encoding'),
+                'orderId'   => '201706211420351000', //商户订单号
+                'txnTime'   => '20170621142035', //订单发送时间
+                'txnAmt'    => 1, //交易金额（分）
+                'certId'=>'',//证书ID
+                'currencyCode' => 156,//交易币种
+                'txnType' => 01,//交易类型
+                'bizType'=>000501,//产品类型
+                'channelType'=>07,//渠道类型
+        ];
 
-            $response = $this->gateway->purchase($para)->send();
+        $order = new Order();
 
-            $response->getRedirectHtml(); //For PC/Wap
+        $order->out_trade_no = $para['orderId'];
+
+        $order->trade_status = 0;
+
+        $order->seller_id = $this->gateway->getMerId();
+
+        $order->total_amount = $para['txnAmt'];
+
+        $order->trade_no = '';
+
+        $order->created_at = time();
+
+        $order->payment = 'union';
+
+        $order->save();
+
+        $response = $this->gateway->purchase($para)->send();
+
+        $response->getRedirectHtml(); //For PC/Wap
     }
     /**
      * 回调方法接口
      */
     public function webNotify()
     {
-
-            $response = $this->gateway->completePurchase(['request_params'=>$_REQUEST])->send();
-
-            if ($response->isPaid()) {
-                /**
-                 * Payment is successful
-                 */
-                die('success'); //The notify response should be 'success' only
-            } else {
-                /**
-                 * Payment is not successful
-                 */
-                die('你已经支付失败, 请稍候重试'); //The notify response
+        $arrayData = array_merge($_POST);
+        $gateway = Omnipay::create('UnionPay');
+        $gateway->setMerId($this->settings->get('union.merId'));
+        $gateway->setCertPath($this->settings->get('union.cert'));
+        $gateway->setCertPassword($this->settings->get('union.certPassword'));
+        $gateway->setCertDir($this->settings->get('union.certDir'));
+        $response = $gateway->completePurchase(['params'=>array_merge($_POST)])->send();
+        if ($response->isPaid()) {
+            /**
+             * Payment is successful
+             */
+            if($order = Order::where('out_trade_no', $_POST['out_trade_no'])->first()){
+            $order->total_amount = $_POST['total_amount'];
+            $order->trade_no = $_POST['trade_no'];
+            $order->seller_id = $_POST['seller_id'];
+            $order->trade_status = 1;
+            $order->payment = 'union';
+            $order->created_at = $_POST['gmt_create'];
+            $order->save();
+            die('success');
             }
+        } else {
+            /**
+             * Payment is not successful
+             */
+            die('你已经支付失败, 请稍候重试');
+        }
     }
+
     /**
      *查询接口
      */
-    public function query(Array $para)
+    public function query()
     {
-//        $order = [
-//            'merId' => $merId,//merId
-//            'transType' => $transType,// transtype
-//            'orderId' => $orderId, //Your order ID
-//            'orderTime' => $orderTime, //Should be format 'YmdHis'
-//        ];
-        $response = $this->gateway->query($para)->send();
-
-        var_dump($response->getData());
+        $para = array_merge($_POST);
+        if($para['orderId'] || $para['trade_no']){
+            $response = $this->gateway->query($para)->send();
+        }else{
+            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        }
+        if($response->successful())
+        {
+            $response->getData();
+        }
     }
 
     /**
@@ -103,40 +136,35 @@ class Unionpay
      * 退款接口
      */
 
-    public function refund(Array $para)
+    public function refund()
     {
-//        $order = [
-//                'merId'  => $merId,
-//                'transType' => $transType,
-//                'orderId' => $orderId, //Your site trade no, not union tn.
-//                'orderTime' => $orderTime, //Order trade time
-//                'txnAmt'  => $totalFee, //Order total fee
-//        ];
-
-        $response = $this->gateway->refund($para)->send();
-
-        var_dump($response->getData());
+        $para = array_merge($_POST);
+        if($para['orderId'] || $para['trade_no']){
+            $response = $this->gateway->refund($para)->send();
+        }else{
+            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        }
+        if($response->successful())
+        {
+            $response->getData();
+        }
     }
 
     /**
      * 取消接口
      */
 
-    public function cancel(Array $para)
+    public function cancel()
     {
-//        $order = [
-//            'merId'  => $merId,
-//            'transType' => $transType,
-//            'orderId' => $orderId, //Your site trade no, not union tn.
-//            'orderTime' => $orderTime, //Order trade time
-//            'txnAmt'  => $totalFee, //Order total fee
-//        ];
-
-        $response = $this->gateway->consumeUndo($para)->send();
-
-//        var_dump($response->isSuccessful());
-
-        var_dump($response->getData());
+        $para = array_merge($_POST);
+        if($para['orderId'] || $para['trade_no']){
+            $response = $this->gateway->cancel($para)->send();
+        }else{
+            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        }
+        if($response->successful())
+        {
+            $response->getData();
+        }
     }
-
 }

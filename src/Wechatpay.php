@@ -7,13 +7,13 @@
  */
 
 namespace Notadd\Multipay;
-
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Notadd\Multipay\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class Wechatpay
 {
@@ -25,7 +25,6 @@ class Wechatpay
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-
     /*
      * 获取支付网关
      */
@@ -33,36 +32,31 @@ class Wechatpay
     {
 
         $this->gateway = Omnipay::create($gatewayname);
-        $this->gateway->setAppId('wx081bfce94ce71bfb');
-        $this->gateway->setMchId('1268498801');
-        $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
+//        $this->gateway->setAppId('wx081bfce94ce71bfb');
+        $this->gateway->setAppId($this->settings->get('wechat.app_id'));
+//        $this->gateway->setMchId('1268498801');
+        $this->gateway->setMchId($this->settings->get('wechat.mch_id'));
+//        $this->gateway->setApiKey('t4IYxcncB94TMAp5c0ZCkQKwjseDJBGA');
+        $this->gateway->setApiKey($this->settings->get('wechat.key'));
+
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify');
 
         return $this;
     }
 
-    public function pay(Array $para)
+    //支付接口
+    public function pay()
     {
-
-       // http://lxnotadd.com/webnotify?driver=wechat&way=WechatPay_Native&app_id=wx081bfce94ce71bfb&mch_id=1268498801&body=test&total_fee=1&out_trade_no=201706091212121004&spbill_create_ip=36.45.175.53&notify_url=http://lxnotadd.com&trade_type=NATIVE
-
-
-        $para = [
-            'body' => 'test',
-            'out_trade_no' => '2017060912121210017892222',
-            'time_start'=>date('YmdHis'),
-            'time_expire'=>date('YmdHis',time() + 600),
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 1,
-            'trade_type' => 'NATIVE',
-        ];
-
-        $out_trade_no = $para['out_trade_no'];
-
-        if (Order::where('out_trade_no', $out_trade_no))
-        {
-
-        }
+//        $para = [
+//            'body' => 'test',
+//            'out_trade_no' => '2017060912121210017458125001095',
+//            'time_start'=>date('YmdHis'),
+//            'time_expire'=>date('YmdHis',time() + 600),
+//            'spbill_create_ip' => '36.45.175.53',
+//            'total_fee' => 1,
+//            'trade_type' => 'NATIVE',
+//        ];
+        $para = $_POST;
 
         $order = new Order();
 
@@ -80,7 +74,7 @@ class Wechatpay
 
         $order->payment = 'wechat';
 
-        $order->subject = '';
+        $order->subject = $para['body'];
 
         $order->save();
 
@@ -99,82 +93,110 @@ class Wechatpay
             ->setValidateResult(false);
         header('Content-Type: '.$qrCode->getContentType());
         echo $qrCode->writeString();
+    }
 
+    //回调
+    public function webnotify(){
 
+        $gateway = Omnipay::create('WechatPay');
 
+        $gateway->setAppId($this->settings->get('wechat.app_id'));
+        $gateway->setMchId($this->settings->get('wechat.mch_id'));
+        $gateway->setApiKey($this->settings->get('wechat.key'));
 
+        $response = $gateway->completePurchase([
+            'request_params' => file_get_contents('php://input')
+        ])->send();
 
+        $xmlData = file_get_contents('php://input');
+
+        $arrayData = $this->xmlToArray($xmlData);
+
+        if ($response->isPaid()) {
+            //pay success
+            if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
+            {
+              $order->total_amount = $arrayData['total_fee']/100;
+              $order->trade_no = $arrayData['transaction_id'];
+              $order->pay_way = $arrayData['trade_type'];
+              $order->trade_status = 1;
+              $optionArr = ['openid' => $arrayData['openid']];
+              $json = json_encode($optionArr);
+              $order->options = $json;
+              $order->save();
+              die('success');
+            }
+        }else{
+            return false;
+        }
     }
 
 
+    //xml=>array
+    private function xmlToArray($xml)
+    {
+        //禁止引用外部xml实体
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        return $values;
+    }
 
     //查询
-    public function query(Array $para){
+    public function query(){
 
-        $para = [
-            'body' => 'test',
-            'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121001789222',
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 3,
-            'trade_type' => 'NATIVE',
-        ];
+        $para = $_POST;
 
-        $response = $this->gateway->query($para)->send();
+        if ($para['out_trade_no'] || $para['trade_no'])
+        {
+            $response = $this->gateway->query($para)->send();
+        }else{
+            return ['code' => '402', 'msg' => '请传入out_trade_no 或者 trade_no'];
+        }
 
-
-        $result = $response->isSuccessful();
-
-        dd($response);
-
+        if ($response->isSuccessful())
+        {
+            dd($response->getData());
+        }
 
     }
 
     //退款
-    public function refund(Array $para){
-        $para = [
-            'body' => 'test',
-            'notify_url' => 'http://lxnotadd.com',
-            'out_trade_no' => '201706091212121001789222',
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 1,
-            'trade_type' => 'NATIVE',
-            'out_refund_no'=>'126849880120170609121212',
-            'refund_fee'=>1,
-            'cert_path'=>storage_path('uploads/e57755b07bbb/fe1bd9d60a607941a4ca.pem'),
-            'key_path'=>storage_path('uploads/317becefdd9a/77e78f5b31bc56bf7cd5.pem')
-        ];
+    public function refund(){
+        $para = $_POST;
+        $out_refund_no = (string)($this->settings->get('wechat.mch_id'));
+        $out_refund_no .= date('YmdHis', time());
+        $para = $para + ['out_refund_no' => $out_refund_no,
+                'cert_path'=>$this->settings->get('wechat.cert'),
+                'key_path'=>$this->settings->get('wechat.cert_key')];
 
-        $response = $this->gateway->refund($para)->send();
 
-        dd($response);
+        if ($para['out_trade_no'] || $para['trade_no'])
+        {
+            $response = $this->gateway->refund($para)->send();
 
-        $result = $response->isSuccessful();
+            dd($response->getData());
 
-        dd($result);
+            if ($response->isSuccessful())
+            {
+                dd($response->getData());
+            }
+        }else{
+            return ['code' => '402', 'msg' => '请传入out_trade_no 或者 trade_no'];
+        }
     }
 
     //取消
-
-    public function cancel(Array $para)
+    public function cancel()
     {
-
         $para = [
             'body' => 'test',
-            'notify_url' => 'http://lxnotadd.com',
+            'notify_url' => 'http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify',
             'out_trade_no' => '201706091212121006',
             'spbill_create_ip' => '36.45.175.53',
             'total_fee' => 1,
             'trade_type' => 'NATIVE',
-
         ];
-
-
         $response = $this->gateway->close($para)->send();
-        dd($response);
-//        var_dump($response->isSuccessful());
-//        var_dump($response->getData());
     }
-
 }
 

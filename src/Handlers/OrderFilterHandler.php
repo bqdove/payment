@@ -8,29 +8,26 @@
 namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
-use Illuminate\Container\Container;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Multipay\Models\Order;
-use Illuminate\Http\Request;
 
 /*
- * Classs PayHandler
+ * Classs OrderFilterHandler
  */
-class OrderListHandler extends Handler
+class OrderFilterHandler extends Handler
 {
     public function execute()
     {
         //如果传入参数都为空，那么返回所有的订单信息
         if (! $this->request->input('start') && !$this->request->input('end') && !$this->request->input('search'))
         {
-            $allOrders = Order::orderBy('created_at', 'DESC')->paginate(30);
+            $allOrders = Order::orderBy('created_at', 'DESC')->paginate(30)->toArray();
 
             return $this->success()->withData($allOrders)->withMessage('成功返回所有的订单信息');
         }
 
         if ((! $this->request->input('start') && !$this->request->input('end')) && $keyword = $this->request->input('search'))
         {
-            $filterOrders = Order::where('out_trade_no', 'like', '%'.$keyword)->paginate(30);
+            $filterOrders = Order::where('out_trade_no', 'like', '%'.$keyword)->paginate(30)->toArray();
 
             return $this->success()->withData($filterOrders)->withMessage('成功返回筛选订单信息');
         }
@@ -61,9 +58,9 @@ class OrderListHandler extends Handler
         {
             $keyword = $this->request->input('search');
 
-            $filterOrders = $query->where('out_trade_no', 'like', '%'.$keyword)->paginate(30);
+            $filterOrders = $query->where('out_trade_no', 'like', '%'.$keyword)->orderBy('created_at', 'DESC')->paginate(30)->toArray();
         }else{
-            $filterOrders = $query->paginate(30);
+            $filterOrders = $query->orderBy('created_at', 'DESC')->paginate(30)->toArray();
         }
         if(count($filterOrders))
         {
@@ -71,6 +68,5 @@ class OrderListHandler extends Handler
         }else{
             return $this->withCode('404')->withError('未找到您需要的数据');
         }
-
     }
 }

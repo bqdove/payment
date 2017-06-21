@@ -106,4 +106,16 @@ class Multipay
     public function cancel($driver, $way, $para){
         $this->getDriver($driver)->getGateWay($way)->cancel($para);
     }
+
+    public function use($config)
+    {
+        switch($config){
+            case 'alipay':
+                return $settings;
+            case 'wechat':
+                return $settings;
+            case 'unionpay':
+                return $settings;
+        }
+    }
 }

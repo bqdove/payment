@@ -9,13 +9,13 @@ namespace Notadd\Multipay\Controllers;
 
 use Illuminate\Http\Request;
 use Notadd\Foundation\Routing\Abstracts\Controller;
-use Notadd\Multipay\Handlers\OrderListHandler;
-use Notadd\Foundation\Setting\Contracts\SettingsRepository;
-use Illuminate\Container\Container;
+use Notadd\Multipay\Handlers\OrderFilterHandler;
+use Notadd\Multipay\Handlers\AllHandler;
+
 
 class QueryController extends Controller
 {
-    public function orderList(OrderListHandler $handler, Request $request)
+    public function orderList(OrderFilterHandler $handler, Request $request)
     {
         $this->validate($request,[
             'start'=>'date',
@@ -27,6 +27,11 @@ class QueryController extends Controller
             'keyword'=>'查询单号必须为纯数字'
         ]);
 
+        return $handler->toResponse()->generateHttpResponse();
+    }
+
+    public function all(AllHandler $handler)
+    {
         return $handler->toResponse()->generateHttpResponse();
     }
 }

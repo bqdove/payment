@@ -4,7 +4,7 @@
  *
  * @author        linxing <linxing@ibenchu.com>
  * @copyright (c) 2017, notadd.com
- * @datetime      17-6-14 下午9:01
+ * @datetime      17-6-20 下午7:51
  */
 
 
@@ -12,12 +12,19 @@ namespace Notadd\Multipay\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Container\Container;
+use Notadd\Foundation\Setting\Contracts\SettingsRepository;
+use Notadd\Multipay\Unionpay;
 
 /*
- * Classs RefundHandler
+ * Classs UnionWebNotifyHandler
  */
-class RefundHandler extends Handler
+class UnionWebNotifyHandler extends Handler
 {
+    /**
+     * @var SettingsRepository
+     */
+    protected $settings;
+
     /**
      * @var \Notadd\Multipay\Multipay
      */
@@ -32,10 +39,10 @@ class RefundHandler extends Handler
     /*
      * Execute Handler
      */
-    public function execute(){
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver','way']);
-        $this->multipay->refund($driver,$way,$para);
+    public function execute()
+    {
+        $union = new Unionpay();
+        $union->webnotify();
     }
+
 }
