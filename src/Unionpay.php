@@ -45,16 +45,19 @@ class Unionpay
      * @param $orderDesc
      * @param $txnAmt
      */
-    public function pay(Array $para)
+    public function pay()
     {
-//            $order = [
-//                    'orderId'   => $orderId, //Your order ID
-//                    'txnTime'   => $txnTime, //Should be format 'YmdHis'
-//                    'orderDesc' => $orderDesc, //Order Title
-//                    'txnAmt'    => $txnAmt, //Order Total Fee
-//                    'merId' => $merId,//merId
-//                    'transType' => $transType// transtype
-//            ];
+        $para = [
+                'version'=>$this->settings->get('unionpay.version'),
+                'signMethod'=>$this->settings->get('unionpay.signMethod'),
+                'encoding'=>$this->settings->get('unionpay.encoding'),
+                'orderId'   => $orderId, //商户订单号
+                'txnTime'   => $txnTime, //Should be format 'YmdHis'
+                'orderDesc' => $orderDesc, //Order Title
+                'txnAmt'    => $txnAmt, //Order Total Fee
+                'currencyCode' => 156,//交易币种
+                'txnType' => 01,//交易类型
+        ];
 
         $response = $this->gateway->purchase($para)->send();
 
