@@ -62,6 +62,16 @@
                 loading: false,
                 messageCert: '',
                 messageKey: '',
+                options1: {
+                    disabledDate(date) {
+                        return date && date.valueOf() > Date.now();
+                    },
+                },
+                options2: {
+                    disabledDate(date) {
+                        return date && date.valueOf() < self.getOrderBegin();
+                    },
+                },
                 orderColumns: [
                     {
                         type: 'expand',
@@ -191,6 +201,9 @@
                     }
                 });
             },
+            getOrderBegin() {
+                return Date.parse(this.filterSearch.start);
+            },
             search() {
                 const self = this;
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', self.filterSearch).then(response => {
@@ -229,7 +242,7 @@
                 self.loading = true;
                 self.$refs.weChatForm.validate(valid => {
                     if (valid) {
-                        self.$http.post(`${window.api}/multipay/wechat/set`, self.weChatForm).then(() => {
+                        self.$http.post('http://notadd.allen/api/multipay/wechat/set', self.weChatForm).then(() => {
                             self.$notice.open({
                                 title: injection.trans('weChat.setting.success'),
                             });
@@ -505,11 +518,11 @@
                                         <li>
                                             成交时间
                                             <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
-                                                         v-model="filterSearch.start"
+                                                         v-model="filterSearch.start" :options="options1"
                                                          style="width: 124px"></date-picker>
                                             -
                                             <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
-                                                         v-model="filterSearch.end"
+                                                         v-model="filterSearch.end" :options="options2"
                                                          style="width: 124px"></date-picker>
                                         </li>
                                         <li class="store-body-header-right">
