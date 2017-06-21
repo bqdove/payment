@@ -52,7 +52,7 @@ class SetUnionpayconfHandler extends AbstractSetHandler
     {
         $this->settings->set('unionpay.enabled',  $this->request->input('enabled'));
 
-        $this->settings->set('unionpay.mer_id',$this->request->input('mer_id'));
+        $this->settings->set('unionpay.merId',$this->request->input('merId'));
 
         $this->settings->set('unionpay.key',$this->request->input('key'));
 
