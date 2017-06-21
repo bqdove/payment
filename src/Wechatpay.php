@@ -20,6 +20,11 @@ class Wechatpay
     protected $settings;
     protected $gateway;
 
+    public function execute()
+    {
+        // TODO: Implement execute() method.
+    }
+
     public function __construct()
     {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
@@ -143,18 +148,20 @@ class Wechatpay
     //查询
     public function query(){
 
-        $para = [
-            'body' => 'test',
-            'notify_url' => 'http://pay.ibenchu.xyz:8080/api/multipay/wechat/webnotify',
-            'out_trade_no' => '201706091212121001789222',
-            'spbill_create_ip' => '36.45.175.53',
-            'total_fee' => 3,
-            'trade_type' => 'NATIVE',
-        ];
+        $para = array_merge($_POST);
 
-        $response = $this->gateway->query($para)->send();
+        if ($para['out_trade_no'] || $para['trade_no'])
+        {
+            $response = $this->gateway->query($para)->send();
+        }else{
+            return ['code' => '402', 'msg' => '请传入out_trade_no 或者 trade_no'];
+        }
 
-        $result = $response->isSuccessful();
+        if ($response->isSuccessful())
+        {
+            $response->getData();
+        }
+
     }
 
     //退款
