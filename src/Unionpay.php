@@ -11,6 +11,8 @@ namespace Notadd\Multipay;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Illuminate\Container\Container;
 use Omnipay\Omnipay;
+use Notadd\Multipay\Models\Order;
+
 
 class Unionpay
 {
@@ -54,8 +56,25 @@ class Unionpay
                 'txnType' => 01,//交易类型
                 'bizType'=>000501,//产品类型
                 'channelType'=>07,//渠道类型
-                'verify_sign'=>$this->settings->get('verify_sign'),
         ];
+
+        $order = new Order();
+
+        $order->out_trade_no = $para['orderId'];
+
+        $order->trade_status = 0;
+
+        $order->seller_id = $this->gateway->getMerId();
+
+        $order->total_amount = $para['txnAmt'];
+
+        $order->trade_no = '';
+
+        $order->created_at = time();
+
+        $order->payment = 'union';
+
+        $order->save();
 
         $response = $this->gateway->purchase($para)->send();
 

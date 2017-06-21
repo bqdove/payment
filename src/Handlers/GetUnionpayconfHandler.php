@@ -45,7 +45,7 @@ class GetUnionpayconfHandler extends DataHandler
             'unionpay.enabled'=>$this->settings->get('unionpay.enabled', false),
             'merId'=>$this->settings->get('unionpay.merId',''),
             'key'=>$this->settings->get('unionpay.key',''),
-            'certPath'=>$this->settings->get('unionpay.certPath',''),
+            'cert'=>$this->settings->get('unionpay.cert',''),
             'certPassword'=>$this->settings->get('unionpay.certPassword',''),
             'certDir'=>$this->settings->get('unionpay.certDir',''),
             'version'=>$this->settings->get('union.version',''),
