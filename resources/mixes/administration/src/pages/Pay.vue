@@ -23,8 +23,8 @@
         },
         data() {
             return {
-                actionCert: `${window.api}/multipay/upload?driver=wechat&certname=cert`,
-                actionKey: `${window.api}/multipay/upload?driver=wechat&certname=cert_key`,
+                actionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert',
+                actionKey: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert_key',
                 alipayForm: {
                     alipay_enabled: true,
                     private_key: '',
@@ -186,7 +186,7 @@
                 self.loading = true;
                 self.$refs.alipayForm.validate(valid => {
                     if (valid) {
-                        self.$http.post(`${window.api}/multipay/alipay/set`, self.alipayForm).then(() => {
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/alipay/set', self.alipayForm).then(() => {
                             self.$notice.open({
                                 title: injection.trans('alipay.setting.success'),
                             });
@@ -222,7 +222,7 @@
                 self.loading = true;
                 self.$refs.unionPay.validate(valid => {
                     if (valid) {
-                        self.$http.post(`${window.api}/multipay/union/set`, self.unionPay).then(() => {
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/union/set', self.unionPay).then(() => {
                             self.$notice.open({
                                 title: injection.trans('union.setting.success'),
                             });
@@ -242,7 +242,7 @@
                 self.loading = true;
                 self.$refs.weChatForm.validate(valid => {
                     if (valid) {
-                        self.$http.post(`${window.api}/multipay/wechat/set`, self.weChatForm).then(() => {
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
                             self.$notice.open({
                                 title: injection.trans('weChat.setting.success'),
                             });
