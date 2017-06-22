@@ -22,6 +22,7 @@ class RefundHandler extends Handler
      * @var \Notadd\Multipay\Multipay
      */
     protected $multipay;
+    protected $config;
 
     public function __construct(Container $container)
     {
@@ -36,6 +37,6 @@ class RefundHandler extends Handler
         $driver = $this->request->query('driver');
         $way = $this->request->query('way');
         $para = $this->request->except(['driver','way']);
-        $this->multipay->refund($driver,$way,$para);
+        $this->multipay->use($config)->refund($driver,$way,$para);
     }
 }
