@@ -33,9 +33,6 @@ class RefundHandler extends Handler
      * Execute Handler
      */
     public function execute(){
-        $driver = $this->request->query('driver');
-        $way = $this->request->query('way');
-        $para = $this->request->except(['driver','way']);
-        $this->multipay->refund($driver,$way,$para);
+        $this->multipay->refund();
     }
 }
