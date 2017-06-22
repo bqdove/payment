@@ -30,7 +30,6 @@ class Wechatpay
      */
     public function getGateWay($gatewayname)
     {
-
         $this->gateway = Omnipay::create($gatewayname);
 //        $this->gateway->setAppId('wx081bfce94ce71bfb');
         $this->gateway->setAppId($this->settings->get('wechat.app_id'));
@@ -47,15 +46,6 @@ class Wechatpay
     //支付接口
     public function pay()
     {
-//        $para = [
-//            'body' => 'test',
-//            'out_trade_no' => '2017060912121210017458125001095',
-//            'time_start'=>date('YmdHis'),
-//            'time_expire'=>date('YmdHis',time() + 600),
-//            'spbill_create_ip' => '36.45.175.53',
-//            'total_fee' => 1,
-//            'trade_type' => 'NATIVE',
-//        ];
         $para = $_POST;
 
         $order = new Order();
@@ -92,7 +82,6 @@ class Wechatpay
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
             ->setValidateResult(false);
         header('Content-Type: '.$qrCode->getContentType());
-        echo $qrCode->writeString();
     }
 
     //回调
@@ -132,56 +121,48 @@ class Wechatpay
     }
 
 
-    //xml=>array
-    private function xmlToArray($xml)
-    {
-        //禁止引用外部xml实体
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        return $values;
-    }
-
     //查询
     public function query(){
 
-        $para = $_POST;
+        $para = Container::getInstance()->make('request')->all();
 
-        if ($para['out_trade_no'] || $para['trade_no'])
+        if ($para['out_trade_no'] || $para['transaction_id'])
         {
             $response = $this->gateway->query($para)->send();
         }else{
-            return ['code' => '402', 'msg' => '请传入out_trade_no 或者 trade_no'];
+            return 402;
         }
-
         if ($response->isSuccessful())
         {
-            dd($response->getData());
+           return $response->getData();
         }
 
     }
 
     //退款
     public function refund(){
-        $para = $_POST;
+        $para = Container::getInstance()->make('request')->all();
+
         $out_refund_no = (string)($this->settings->get('wechat.mch_id'));
         $out_refund_no .= date('YmdHis', time());
         $para = $para + ['out_refund_no' => $out_refund_no,
                 'cert_path'=>$this->settings->get('wechat.cert'),
                 'key_path'=>$this->settings->get('wechat.cert_key')];
 
-
-        if ($para['out_trade_no'] || $para['trade_no'])
+        if (($para['out_trade_no'] || $para['transaction_id']) && $para['refund_fee'] && $para['total_fee'])
         {
             $response = $this->gateway->refund($para)->send();
 
-            dd($response->getData());
+//            dd($response);
 
             if ($response->isSuccessful())
             {
-                dd($response->getData());
+                return $response->getData();
+            }else{
+                return false;
             }
         }else{
-            return ['code' => '402', 'msg' => '请传入out_trade_no 或者 trade_no'];
+            return 402;
         }
     }
 
@@ -198,5 +179,15 @@ class Wechatpay
         ];
         $response = $this->gateway->close($para)->send();
     }
+
+    //xml=>array
+    private function xmlToArray($xml)
+    {
+        //禁止引用外部xml实体
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        return $values;
+    }
+
 }
 
