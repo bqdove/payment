@@ -42,7 +42,7 @@ class WechatController extends Controller
     public function set(SetWechatconfHandler $handler,Request $request)
     {
         $this->validate($request,[
-            'app_id'=>'required',
+            'app_id'=>'required|regex:/\d{16}/',
             'mch_id'=>'required|regex:/\d{10}/',
             'key'=>'required|regex:/\w{32}/',
             'app_secret'=>'required|regex:/\w/',
@@ -56,6 +56,7 @@ class WechatController extends Controller
             'cert'=>'证书不能为空，证书必须为pem格式的',
             'cert_key'=>'证书不能为空，证书必须为pem格式'
         ]);
+
         return $handler->toResponse()->generateHttpResponse();
     }
 
