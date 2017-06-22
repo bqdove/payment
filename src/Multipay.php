@@ -64,6 +64,10 @@ class Multipay
      *
      */
     public function pay(){
+        if (!array_key_exists('driver',$_POST) || !array_key_exists('way',$_POST))
+        {
+            return json_encode(['code' => 402, 'msg' => '缺少驱动或者网关参数']);
+        }
         $driver = $_POST['driver'];
         $way = $_POST['way'];
         $this->getDriver($driver)->getGateWay($way)->pay();
@@ -77,6 +81,10 @@ class Multipay
      */
 
     public function query(){
+        if (!array_key_exists('driver',$_POST) || !array_key_exists('way',$_POST))
+        {
+            return json_encode(['code' => 402, 'msg' => '缺少驱动或者网关参数']);
+        }
         $driver = $_POST['driver'];
         $way = $_POST['way'];
         $this->getDriver($driver)->getGateWay($way)->query();
@@ -87,7 +95,11 @@ class Multipay
      * @param  Array $para
      *
      */
-    public function refund($driver, $way){
+    public function refund(){
+        if (!array_key_exists('driver',$_POST) || !array_key_exists('way',$_POST))
+        {
+            return json_encode(['code' => '402', 'msg' => '缺少驱动或者网关参数']);
+        }
         $driver = $_POST['driver'];
         $way = $_POST['way'];
         $this->getDriver($driver)->getGateWay($way)->refund();
@@ -113,15 +125,4 @@ class Multipay
         $this->getDriver($driver)->getGateWay($way)->cancel($para);
     }
 
-    public function use($config)
-    {
-        switch($config){
-            case 'alipay':
-                return $settings;
-            case 'wechat':
-                return $settings;
-            case 'unionpay':
-                return $settings;
-        }
-    }
 }
