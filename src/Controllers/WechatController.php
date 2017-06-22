@@ -43,19 +43,25 @@ class WechatController extends Controller
     public function set(SetWechatconfHandler $handler,Request $request)
     {
         $this->validate($request,[
-            'app_id'=>'required|regex:/\d{16}/',
+            'app_id'=>'required|regex:/\w{16}/',
             'mch_id'=>'required|regex:/\d{10}/',
             'key'=>'required|regex:/\w{32}/',
             'app_secret'=>'required|regex:/\w/',
             'cert'=>'required|mimes:pem',
             'cert_key'=>'required|mimes:pem'
         ],[
-            'app_id'=>'app_id不能为空',
-            'mch_id'=>'mch_id不能为空',
-            'key'=>'key不能为空',
-            'app_secret'=>'app_secret不能为空',
-            'cert'=>'证书不能为空，证书必须为pem格式的',
-            'cert_key'=>'证书不能为空，证书必须为pem格式'
+            'app_id.required'=>'app_id不能为空',
+            'app_id.regex'=>'appid必须为16位字符串',
+            'mch_id.required'=>'商户Id不能为空',
+            'mch_id.regex'=>'商户Id必须为为10位数字',
+            'key.required'=>'商户密钥不能为空',
+            'key.regex'=>'商户密钥必须为32位字符串',
+            'app_secret.regex'=>'app_secret必须为字符串格式',
+            'app_secret.required'=>'app_secret不能为空',
+            'cert.required'=>'证书不能为空',
+            'cert.mimes'=>'证书必须为pem格式的',
+            'cert_key.required'=>'证书不能为空',
+            'cert_key.mimes'=>'证书必须为pem格式'
         ]);
 
         return $handler->toResponse()->generateHttpResponse();
