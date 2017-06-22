@@ -8,7 +8,10 @@
 
 namespace Notadd\Multipay;
 
-use Illuminate\Contracts\Foundation\Application;
+
+use Notadd\Multipay\Handlers\GetAlipayconfHandler;
+use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
+use Notadd\Multipay\Handlers\GetWechatconfHandler;
 
 class Multipay
 {
@@ -26,10 +29,9 @@ class Multipay
     protected $drivers = [];
 
     /**
-      *  The url
+      *  The $config
       */
-    protected $url = '';
-
+    protected $config;
     /**
      *
      * The driver is the selected pay-driver;
@@ -117,11 +119,11 @@ class Multipay
     {
         switch($config){
             case 'alipay':
-                return $settings;
+                return new GetAlipayconfHandler();
             case 'wechat':
-                return $settings;
+                return new GetWechatconfHandler();
             case 'unionpay':
-                return $settings;
+                return new GetUnionpayconfHandler();
         }
     }
 }
