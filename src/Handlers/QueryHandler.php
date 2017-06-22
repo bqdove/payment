@@ -21,6 +21,7 @@ class QueryHandler extends Handler
      * @var \Notadd\Multipay\Multipay
      */
     protected $multipay;
+    protected $config;
 
     public function __construct(Container $container)
     {

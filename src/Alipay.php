@@ -55,8 +55,10 @@ class Alipay
     /**
      * 申请支付
      */
-    public function pay(Array $para)
+    public function pay()
     {
+        $para = $_POST;
+
         $order = new Order();
 
         $order->out_trade_no = $para['out_trade_no'];

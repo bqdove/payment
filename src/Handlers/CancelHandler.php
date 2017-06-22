@@ -22,6 +22,7 @@ class CancelHandler extends Handler
      * @var \Notadd\Multipay\Multipay
      */
     protected $multipay;
+    protected $config;
 
     public function __construct(Container $container)
     {
@@ -36,7 +37,7 @@ class CancelHandler extends Handler
         $driver = $this->request->query('driver');
         $way = $this->request->query('way');
         $para = $this->request->except(['driver','way']);
-        $this->multipay->cancel($driver,$way,$para);
+        $this->multipay->use($config)->cancel($driver,$way,$para);
     }
 
 }
