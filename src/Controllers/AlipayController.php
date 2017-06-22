@@ -13,6 +13,7 @@ use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Notadd\Multipay\Handlers\SetAlipayconfHandler;
 use Notadd\Multipay\Handlers\AlipayWebNotifyHandler;
 use Notadd\Multipay\Handlers\AlipayReturnNotifyHandler;
+use Illuminate\Http\Request;
 
 /**
  * Class MultipayController.
@@ -41,22 +42,17 @@ class AlipayController extends Controller
      * @throws \Exception
      */
 
-    public function set(SetWechatconfHandler $handler,Request $request)
+    public function set(SetAlipayconfHandler $handler,Request $request)
     {
         $this->validate($request,[
-            'app_id'=>'required|regex:/\w{18}/',
-            'mch_id'=>'required|regex:/\d{10}/',
-            'key'=>'required|regex:/\w{32}/',
-            'app_secret'=>'required|regex:/\w/',
-            'cert'=>'required|mimes:pem',
-            'cert_key'=>'required|mimes:pem'
+            'app_id'=>'required|regex:/\w{16}/',
+            'public_key'=>'required',
+            'private_key'=>'required'
         ],[
-            'app_id'=>'app_id不能为空',
-            'mch_id'=>'mch_id不能为空',
-            'key'=>'key不能为空',
-            'app_secret'=>'app_secret不能为空',
-            'cert'=>'证书不能为空，证书必须为pem格式的',
-            'cert_key'=>'证书不能为空，证书必须为pem格式'
+            'app_id.required'=>'app_id不能为空',
+            'app_id.regex'=>'app_id必须为16位',
+            'public_key.required'=>'公钥为必填字段',
+            'private_key.required'=>'私钥为必填字段'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }
