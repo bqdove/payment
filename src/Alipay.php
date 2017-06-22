@@ -149,8 +149,9 @@ class Alipay
     /**
      * 查询接口
      */
-    public function query(Array $para)
+    public function query()
     {
+        $para = $_POST;
 
         $request = $this->gateway->query();
 
@@ -165,15 +166,23 @@ class Alipay
     /**
      * 退款接口
      */
-    public function refund(Array $para)
+    public function refund()
     {
+        $para = $_POST;
+
         $request = $this->gateway->refund();
 
         $request->setBizContent($para);
 
         $response = $request->send();
 
-        dd($response->data()['alipay_trade_refund_response']);//get refund order information
+        if ($response->isSuccessful())
+        {
+            dd($response->data()['alipay_trade_refund_response']);//get refund order information
+        }else{
+            dd('退款失败，请稍候再试');
+        }
+
 
     }
 
