@@ -51,8 +51,6 @@ class GetWechatconfHandler extends DataHandler
             'app_secret'=>$this->settings->get('wechat.app_secret',''),
 
             'key'=>$this->settings->get('wechat.key',''),
-
-            'cert_path'=>$this->settings->get('wechat.cert_path','')
         ];
     }
     public function execute()
