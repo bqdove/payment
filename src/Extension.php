@@ -33,7 +33,6 @@ class Extension extends AbstractExtension
         $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
     }
 
-
     /**
      * Description of extension
      *

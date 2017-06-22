@@ -46,7 +46,7 @@ class Wechatpay
     //支付接口
     public function pay()
     {
-        $para = $_POST;
+        $para = Container::getInstance()->make('request')->all();
 
         $order = new Order();
 
@@ -70,6 +70,8 @@ class Wechatpay
 
         $response = $this->gateway->purchase($para)->send();
 
+        dd($response);
+
         $code_url = $response->getCodeUrl();
 
         $qrCode = new QrCode();
@@ -82,6 +84,7 @@ class Wechatpay
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
             ->setValidateResult(false);
         header('Content-Type: '.$qrCode->getContentType());
+        dd($qrCode);
     }
 
     //回调
@@ -153,13 +156,11 @@ class Wechatpay
         {
             $response = $this->gateway->refund($para)->send();
 
-//            dd($response);
-
             if ($response->isSuccessful())
             {
                 return $response->getData();
             }else{
-                return false;
+                return $response->getData();
             }
         }else{
             return 402;
