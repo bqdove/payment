@@ -176,7 +176,7 @@ class Alipay
             {
                 return $response->data()['alipay_trade_refund_response'];//get refund order information
             }else{
-                return false;
+                return $response->data()['alipay_trade_refund_response'];
             }
         }else{
             return 402;
