@@ -31,7 +31,13 @@ class PayHandler extends Handler
      * Execute Handler
      */
     public function execute(){
-        $this->multipay->pay();
+        $data = $this->multipay->pay();
+        $result = ['data' => $data];
+        if ($data) {
+            $this->withCode(200)->withData($result)->withMessage('获取支付跳转链接成功');
+        } else {
+            $this->withCode(500)->withError('获取支付跳转链接失败');
+        }
     }
 
 }

@@ -34,6 +34,14 @@ class RefundHandler extends Handler
      * Execute Handler
      */
     public function execute(){
-        $this->multipay->refund();
+        $data = $this->multipay->refund();
+        $result = ['data' => $data];
+        if ($data==402) {
+            $this->withCode(402)->withError('缺少关键参数,请查看相关开发文档');
+        }elseif($data == false){
+            $this->withCode(500)->withError('退款失败，请稍候重试');
+        }else{
+            $this->withCode(200)->withData($result)->withMessage('退款成功');
+        }
     }
 }
