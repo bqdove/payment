@@ -21,6 +21,7 @@ class QueryHandler extends Handler
      * @var \Notadd\Multipay\Multipay
      */
     protected $multipay;
+    protected $config;
 
     public function __construct(Container $container)
     {
@@ -35,7 +36,7 @@ class QueryHandler extends Handler
         $driver = $this->request->query('driver');
         $way = $this->request->query('way');
         $para = $this->request->except(['driver','way']);
-        $this->multipay->query($driver,$way,$para);
+        $this->multipay->use($config)->query($driver,$way,$para);
     }
 
 }
