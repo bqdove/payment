@@ -72,7 +72,8 @@ class Multipay
         }
         $driver = $_POST['driver'];
         $way = $_POST['way'];
-        $this->getDriver($driver)->getGateWay($way)->pay();
+        $data = $this->getDriver($driver)->getGateWay($way)->pay();
+        return $data;
     }
 
     /**
@@ -89,7 +90,8 @@ class Multipay
         }
         $driver = $_POST['driver'];
         $way = $_POST['way'];
-        $this->getDriver($driver)->getGateWay($way)->query();
+        $data = $this->getDriver($driver)->getGateWay($way)->query();
+        return $data;
     }
     /**
      * @param  String $driver
@@ -104,13 +106,13 @@ class Multipay
         }
         $driver = $_POST['driver'];
         $way = $_POST['way'];
-        $this->getDriver($driver)->getGateWay($way)->refund();
+        $data = $this->getDriver($driver)->getGateWay($way)->refund();
+        return $data;
     }
     /**
      * @param  String $driver
      * @param  String $way
      * @param  Array $para
-     *
      */
     public function webNotify($driver, $way){
 
@@ -127,16 +129,16 @@ class Multipay
         $this->getDriver($driver)->getGateWay($way)->cancel($para);
     }
 
-    public function use($config)
-    {
-        switch($config){
-            case 'alipay':
-                return new GetAlipayconfHandler();
-            case 'wechat':
-                return new GetWechatconfHandler();
-            case 'unionpay':
-                return new GetUnionpayconfHandler();
-        }
-    }
+//    public function use($config)
+//    {
+//        switch($config){
+//            case 'alipay':
+//                return new GetAlipayconfHandler();
+//            case 'wechat':
+//                return new GetWechatconfHandler();
+//            case 'unionpay':
+//                return new GetUnionpayconfHandler();
+//        }
+//    }
 
 }
