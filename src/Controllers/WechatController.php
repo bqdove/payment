@@ -42,7 +42,7 @@ class WechatController extends Controller
     public function set(SetWechatconfHandler $handler,Request $request)
     {
         $this->validate($request,[
-            'app_id'=>'required|regex:/\w{18}/',
+            'app_id'=>'required',
             'mch_id'=>'required|regex:/\d{10}/',
             'key'=>'required|regex:/\w{32}/',
             'app_secret'=>'required|regex:/\w/',
