@@ -57,26 +57,17 @@ class Alipay
      */
     public function pay()
     {
-        $para = $_POST;
+        $para = Container::getInstance()->make('request')->all();
 
         $order = new Order();
-
-        $order->out_trade_no = $para['out_trade_no'];
-
-        $order->trade_status = 0;
-
-        $order->seller_id = $para['app_id'];
-
-        $order->total_amount = $para['total_amount'];
-
-        $order->trade_no = '';
-
-        $order->created_at = time();
-
-        $order->payment = 'alipay';
-
-        $order->subject = $para['subject'];
-
+        $order->out_trade_no = $para['out_trade_no'];//获取商户订单号,微信数据库需要此数据
+        $order->trade_status = 0;//交易状态初始化为未支付
+        $order->seller_id = $this->settings->get('alipay.app_id');//卖家ID
+        $order->total_amount = $para['total_amount'];//交易金额
+        $order->trade_no = '';//平台返回的订单号
+        $order->created_at = time();//订单创建时间
+        $order->payment = 'alipay';//支付平台
+        $order->subject = $para['subject'];//订单主题
         $order->save();
 
         $request = $this->gateway->purchase();
@@ -85,7 +76,9 @@ class Alipay
 
         $response = $request->send();
 
-        $response->redirect();
+        $redirectUrl = $response->getRedirectUrl();
+
+        return $redirectUrl;
     }
 
     /**
@@ -93,7 +86,7 @@ class Alipay
      */
     public function webNotify()
     {
-        $arrayData = array_merge($_POST);
+        $arrayData = Container::getInstance()->make('request')->all();
         $gateway = Omnipay::create('Alipay_AopPage');
         $gateway->setSignType($this->settings->get('alipay.sign_type')); // RSA/RSA2/MD5
         $gateway->setAppId($this->settings->get('alipay.app_id')); //支付宝应用ID
@@ -153,7 +146,7 @@ class Alipay
      */
     public function query()
     {
-        $para = $_POST;
+        $para = Container::getInstance()->make('request')->all();
 
         $request = $this->gateway->query();
 
@@ -161,7 +154,7 @@ class Alipay
 
         $response = $request->send();
 
-        dd($response->data()['alipay_trade_query_response']);//get order information
+        return $response->data()['alipay_trade_query_response'];//get order information
 
     }
 
@@ -170,7 +163,7 @@ class Alipay
      */
     public function refund()
     {
-        $para = $_POST;
+        $para = Container::getInstance()->make('request')->all();
 
         $request = $this->gateway->refund();
 
@@ -178,14 +171,16 @@ class Alipay
 
         $response = $request->send();
 
-        if ($response->isSuccessful())
-        {
-            dd($response->data()['alipay_trade_refund_response']);//get refund order information
+        if ($para['out_trade_no'] || $para['trade_id'] && $para['total_amount']){
+            if ($response->isSuccessful())
+            {
+                return $response->data()['alipay_trade_refund_response'];//get refund order information
+            }else{
+                return false;
+            }
         }else{
-            dd('退款失败，请稍候再试');
+            return 402;
         }
-
-
     }
 
     /**
