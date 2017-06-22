@@ -63,8 +63,10 @@ class Multipay
      * @param  Array $para
      *
      */
-    public function pay($driver, $way, $para){
-        $this->getDriver($driver)->getGateWay($way)->pay($para);
+    public function pay(){
+        $driver = $_POST['driver'];
+        $way = $_POST['way'];
+        $this->getDriver($driver)->getGateWay($way)->pay();
     }
 
     /**
@@ -74,8 +76,10 @@ class Multipay
      *
      */
 
-    public function query($driver, $way, $para){
-        $this->getDriver($driver)->getGateWay($way)->query($para);
+    public function query(){
+        $driver = $_POST['driver'];
+        $way = $_POST['way'];
+        $this->getDriver($driver)->getGateWay($way)->query();
     }
     /**
      * @param  String $driver
@@ -83,8 +87,10 @@ class Multipay
      * @param  Array $para
      *
      */
-    public function refund($driver, $way, $para){
-        $this->getDriver($driver)->getGateWay($way)->refund($para);
+    public function refund($driver, $way){
+        $driver = $_POST['driver'];
+        $way = $_POST['way'];
+        $this->getDriver($driver)->getGateWay($way)->refund();
     }
     /**
      * @param  String $driver
