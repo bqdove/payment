@@ -42,13 +42,16 @@ class UnionController extends Controller
     public function set(SetUnionpayconfHandler $handler ,Request $request)
     {
         $this->validate($request,[
-            'mer_id'=>'required',
-            'key'=>'required',
+            'mer_id'=>'required|regex:/\d{15}/',
+            'key'=>'required|regex:/\w/',
             'cert'=>'required|mimes:pfx',
         ],[
-            'mer_id'=>'mer_id不能为空',
-            'key'=>'key不能为空',
-            'cert'=>'不能为空',
+            'mer_id.required'=>'mer_id不能为空',
+            'mer_id.regex'=>'mer_id必须为15位数字',
+            'key.required'=>'key不能为空',
+            'key.regex'=>'key格式为字母或者数字',
+            'cert.required'=>'不能为空',
+            'cert.mimes'=>'证书必须为pfx格式'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }
