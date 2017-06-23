@@ -78,7 +78,7 @@ class Alipay
 
         $redirectUrl = $response->getRedirectUrl();
 
-        return $redirectUrl;
+        return ['url' => $redirectUrl, 'type' => 'alipay'];
     }
 
     /**

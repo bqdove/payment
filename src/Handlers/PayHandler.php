@@ -32,11 +32,16 @@ class PayHandler extends Handler
      */
     public function execute(){
         $data = $this->multipay->pay();
-        $result = ['data' => $data];
-        if ($data) {
+
+        //微信二维码
+        if ($data['type'] == 'wechat')
+        {
+            $result = ['data' => $data['base64']];
+            $this->container->make('files')->delete($data['qrcode']);
+            $this->withCode(200)->withData($result)->withMessage('获取base64编码的支付二维码成功');
+        }elseif($data['type'] == 'alipay'){
+            $result = ['data' => $data['url']];
             $this->withCode(200)->withData($result)->withMessage('获取支付跳转链接成功');
-        } else {
-            $this->withCode(500)->withError('获取支付跳转链接失败');
         }
     }
 
