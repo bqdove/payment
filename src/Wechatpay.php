@@ -13,8 +13,8 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Notadd\Multipay\Models\Order;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
-
 class Wechatpay
 {
     protected $settings;
@@ -68,9 +68,9 @@ class Wechatpay
 
         $order->save();
 
+
         $response = $this->gateway->purchase($para)->send();
 
-        dd($response);
 
         $code_url = $response->getCodeUrl();
 
@@ -83,8 +83,16 @@ class Wechatpay
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
             ->setValidateResult(false);
-        header('Content-Type: '.$qrCode->getContentType());
-        dd($qrCode);
+
+        $qrcodeName = rand(1,10000).'.png';
+
+        $qrCode->writeFile(__DIR__. '/qrcode/'. $qrcodeName);
+
+        $str = file_get_contents(__DIR__. '/qrcode/'. $qrcodeName);
+
+        $base64_qrcode = base64_encode($str);
+
+        return ['base64' => $base64_qrcode, 'qrcode' => $qrcodeName, 'type' => 'wechat'];
     }
 
     //回调
