@@ -22,14 +22,14 @@
             expandRow,
         },
         data() {
-            const reg = /^\d{10}$/;
-            const validatorMch = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('商户ID不能为空'));
-                } else if (!reg.test(value)) {
-                    callback(new Error('商户ID必须为10位数字'));
-                }
-            };
+//            const reg = /^\d{10}$/;
+//            const validatorMch = (rule, value, callback) => {
+//                if (value === '') {
+//                    callback(new Error('商户ID不能为空'));
+//                } else if (!reg.test(value)) {
+//                    callback(new Error('商户ID必须为10位数字'));
+//                }
+//            };
             return {
                 actionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert',
                 actionKey: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert_key',
@@ -183,9 +183,9 @@
                             trigger: 'blur',
                         },
                         {
-                            message: 'APP_ID必须为18位字符串',
                             len: 18,
-                            trigger: 'blur',
+                            message: 'APP_ID必须为18位字符串',
+                            trigger: 'change',
                         },
                     ],
                     app_secret: [
@@ -218,9 +218,15 @@
                     ],
                     mch_id: [
                         {
+                            message: '商户ID不能为空',
                             required: true,
                             trigger: 'blur',
-                            validator: validatorMch,
+                        },
+                        {
+                            len: 10,
+                            message: '商户ID必须为10位数字',
+                            trigger: 'change',
+                            type: 'number',
                         },
                     ],
                 },
