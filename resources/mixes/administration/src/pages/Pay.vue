@@ -337,6 +337,7 @@
 //            getOrderBegin() {
 //                return Date.parse(this.filterSearch.start);
 //            },
+            changePage() {},
             queryMessage() {
                 const self = this;
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/query').then(response => {
@@ -346,8 +347,15 @@
                 });
             },
             search() {
+                console.log(this.filterSearch.start);
                 const self = this;
-                self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', self.filterSearch).then(response => {
+                const filterSearchParam = {
+                    end: this.filterSearch.end,
+                    search: this.filterSearch.search,
+                    start: new Date(this.filterSearch.start).toISOString(),
+                };
+                console.log(filterSearchParam.start);
+                self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', filterSearchParam).then(response => {
                     const data = response.data.data;
                     this.orderData = data.data;
                     this.page.total = data.total;
@@ -694,11 +702,11 @@
                                     <ul class="clearfix">
                                         <li>
                                             成交时间
-                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                            <date-picker format="yyyy-MM-dd" placeholder="选择日期" type="date"
                                                          v-model="filterSearch.start" :options="options1"
                                                          style="width: 124px"></date-picker>
                                             -
-                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                            <date-picker format="yyyy-MM-dd" placeholder="选择日期" type="date"
                                                          v-model="filterSearch.end" :options="options2"
                                                          style="width: 124px"></date-picker>
                                         </li>
@@ -721,6 +729,7 @@
                         <div class="page">
                             <page :total="page.total"
                                   :page-size="page.per_page"
+                                  @on-change="changePage"
                                   show-elevator></page>
                         </div>
                     </card>
