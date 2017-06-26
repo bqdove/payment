@@ -22,14 +22,30 @@
             expandRow,
         },
         data() {
-//            const reg = /^\d{10}$/;
-//            const validatorMch = (rule, value, callback) => {
-//                if (value === '') {
-//                    callback(new Error('商户ID不能为空'));
-//                } else if (!reg.test(value)) {
-//                    callback(new Error('商户ID必须为10位数字'));
-//                }
-//            };
+            const reg = /^\d{10}$/;
+            const validatorMch = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('商户ID不能为空'));
+                } else if (!reg.test(value)) {
+                    callback(new Error('商户ID必须为10位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorCert = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('证书_cert不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorCertKey = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('证书_Key不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 actionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert',
                 actionKey: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert_key',
@@ -49,7 +65,7 @@
                         {
                             message: 'APP_ID必须为16位',
                             min: 16,
-                            trigger: 'blur',
+                            trigger: 'change',
                         },
                     ],
                     private_key: [
@@ -197,16 +213,16 @@
                     ],
                     cert: [
                         {
-                            message: '证书_cert不能为空',
                             required: true,
-                            trigger: 'blur',
+                            trigger: 'change',
+                            validator: validatorCert,
                         },
                     ],
                     cert_key: [
                         {
-                            message: '证书_Key不能为空',
                             required: true,
                             trigger: 'blur',
+                            validator: validatorCertKey,
                         },
                     ],
                     key: [
@@ -215,18 +231,17 @@
                             required: true,
                             trigger: 'blur',
                         },
+                        {
+                            len: 32,
+                            message: '商户密钥必须为32位字符串',
+                            trigger: 'change',
+                        },
                     ],
                     mch_id: [
                         {
-                            message: '商户ID不能为空',
                             required: true,
-                            trigger: 'blur',
-                        },
-                        {
-                            len: 10,
-                            message: '商户ID必须为10位数字',
                             trigger: 'change',
-                            type: 'number',
+                            validator: validatorMch,
                         },
                     ],
                 },
@@ -297,26 +312,6 @@
                     }
                 });
             },
-            weChatSubmit() {
-                const self = this;
-                self.loading = true;
-                self.$refs.weChatForm.validate(valid => {
-                    if (valid) {
-                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
-                            self.$notice.open({
-                                title: injection.trans('weChat.setting.success'),
-                            });
-                        }).finally(() => {
-                            self.loading = false;
-                        });
-                    } else {
-                        self.loading = false;
-                        self.$notice.error({
-                            title: injection.trans('weChat.setting.fail'),
-                        });
-                    }
-                });
-            },
             uploadBefore() {
                 injection.loading.start();
             },
@@ -340,6 +335,7 @@
                 });
                 self.messageCert = '已上传';
                 self.weChatForm.cert = data;
+                console.log(data);
             },
             uploadCertKeySuccess(data) {
                 const self = this;
@@ -349,6 +345,26 @@
                 });
                 self.messageKey = '已上传';
                 self.weChatForm.cert_key = data;
+            },
+            weChatSubmit() {
+                const self = this;
+                self.loading = true;
+                self.$refs.weChatForm.validate(valid => {
+                    if (valid) {
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
+                            self.$notice.open({
+                                title: injection.trans('weChat.setting.success'),
+                            });
+                        }).finally(() => {
+                            self.loading = false;
+                        });
+                    } else {
+                        self.loading = false;
+                        self.$notice.error({
+                            title: injection.trans('weChat.setting.fail'),
+                        });
+                    }
+                });
             },
         },
     };
