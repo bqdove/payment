@@ -31,7 +31,7 @@ class AlipayController extends Controller
      */
     public function get(GetAlipayconfHandler $handler)
     {
-        return $handler->toResponse()->generateHttpResponse();
+       return $handler->toResponse()->generateHttpResponse();
     }
 
     /**

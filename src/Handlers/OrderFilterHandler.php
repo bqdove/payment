@@ -8,6 +8,7 @@
 
 namespace Notadd\Multipay\Handlers;
 
+use Carbon\Carbon;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Notadd\Multipay\Models\Order;
 
@@ -21,6 +22,7 @@ class OrderFilterHandler extends Handler
     {
         //如果传入参数都为空，那么返回所有的订单信息
         if (!$this->request->input('start') && !$this->request->input('end') && !$this->request->input('search')) {
+
             $allOrders = Order::orderBy('created_at', 'DESC')->paginate(30)->toArray();
 
             return $this->withCode(200)->withData($allOrders)->withMessage('成功返回所有的订单信息');
@@ -44,6 +46,9 @@ class OrderFilterHandler extends Handler
         } else {
             $endTime = date('Y-m-d', time());
         }
+        $startTime = Carbon::createFromTimestamp(strtotime($startTime));
+
+        $endTime = Carbon::createFromTimestamp(strtotime($endTime));
 
         if ($startTime > $endTime) {
             return $this->withCode('402')->withError('查询开始日期必须早于查询结束日期');
@@ -61,7 +66,7 @@ class OrderFilterHandler extends Handler
         if (count($filterOrders)) {
             return $this->withCode(200)->withData($filterOrders)->withMessage('筛选数据返回成功');
         } else {
-            return $this->withCode('404')->withError('未找到您需要的数据');
+            return $this->withCode(404)->withError('未找到您需要的数据');
         }
     }
 }

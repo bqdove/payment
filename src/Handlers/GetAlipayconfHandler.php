@@ -34,14 +34,15 @@ class GetAlipayconfHandler extends DataHandler
         $this->settings = $settings;
     }
 
-    /**
-     * Data for handler.
-     *
-     * @return array
-     */
     public function data()
     {
-        return [
+        $this->validate($this->request, [
+            'name' => 'required'
+        ], [
+            'name.required' => 'name参数为必传'
+        ]);
+
+        $data = [
             'alipay_enabled' => $this->settings->get('alipay.alipay_enabled', false),
 
             'sign_type' => $this->settings->get('alipay.sign_type'),
@@ -58,16 +59,20 @@ class GetAlipayconfHandler extends DataHandler
 
             'alipay_key' => $this->settings->get('alipay.alipay_key')
         ];
+
+        $name = $this->request->input('name');
+
+        $result = $data[$name];
+
+        if ($result) {
+            return $result;
+        } else {
+
+        }
     }
 
     public function execute()
     {
-        $this->validate($this->request, [
-            'name' => 'required',
-        ], [
-            'name.required' => '',
-        ]);
-
 
     }
 }
