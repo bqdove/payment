@@ -91,6 +91,7 @@
                 loading: false,
                 messageCert: '',
                 messageKey: '',
+                messageUnion: '',
                 options1: {
                     disabledDate(date) {
                         return date && date.valueOf() > Date.now();
@@ -169,6 +170,7 @@
                 ],
                 self: this,
                 unionPay: {
+                    cert: '',
                     enabled: true,
                     key: '',
                     mer_id: '',
@@ -345,6 +347,21 @@
                 });
                 self.messageKey = '已上传';
                 self.weChatForm.cert_key = data;
+            },
+            uploadUnionError() {
+                this.$notice.warning({
+                    title: '文件格式不正确',
+                });
+                this.messageUnion = '';
+            },
+            uploadUnionSuccess(data) {
+                const self = this;
+                injection.loading.finish();
+                self.$notice.open({
+                    title: '证书_cert上传成功',
+                });
+                self.messageUnion = '已上传';
+                self.unionPay.cert = data;
             },
             weChatSubmit() {
                 const self = this;
@@ -545,10 +562,22 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="上传文件">
-                                                <upload :action="action">
+                                            <form-item label="证书_cert" prop="cert">
+                                                <upload :action="actionCert"
+                                                        :before-upload="uploadBefore"
+                                                        :format="['pem']"
+                                                        :headers="{
+                                                            Authorization: `Bearer ${$store.state.token.access_token}`
+                                                        }"
+                                                        :max-size="2048"
+                                                        name="cert"
+                                                        :on-error="uploadError"
+                                                        :on-format-error="uploadUnionError"
+                                                        :on-success="uploadUnionSuccess"
+                                                        ref="upload"
+                                                        :show-upload-list="false">
                                                     <i-button type="ghost">+上传</i-button>
-                                                </upload>
+                                                    <span>{{ messageUnion }}</span>
                                             </form-item>
                                         </i-col>
                                     </row>
