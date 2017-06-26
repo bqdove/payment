@@ -22,9 +22,51 @@
             expandRow,
         },
         data() {
+            const reg1 = /^\d{10}$/;
+            const reg2 = /^\d{15}$/;
+            const validatorMch = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('商户ID不能为空'));
+                } else if (!reg1.test(value)) {
+                    callback(new Error('商户ID必须为10位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorUnion = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('ID不能为空'));
+                } else if (!reg2.test(value)) {
+                    callback(new Error('ID必须为15位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorCert = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('证书_cert不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorCertKey = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('证书_Key不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorCertUnion = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('证书_cert不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 actionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert',
                 actionKey: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert_key',
+                actionUnionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=union&certname=cert',
                 alipayForm: {
                     alipay_enabled: true,
                     private_key: '',
@@ -37,6 +79,11 @@
                             message: 'APP_ID不能为空',
                             required: true,
                             trigger: 'blur',
+                        },
+                        {
+                            message: 'APP_ID必须为16位',
+                            min: 16,
+                            trigger: 'change',
                         },
                     ],
                     private_key: [
@@ -62,6 +109,7 @@
                 loading: false,
                 messageCert: '',
                 messageKey: '',
+                messageUnion: '',
                 options1: {
                     disabledDate(date) {
                         return date && date.valueOf() > Date.now();
@@ -140,16 +188,31 @@
                 ],
                 self: this,
                 unionPay: {
+                    cert: '',
                     enabled: true,
                     key: '',
                     mer_id: '',
                 },
                 unionPayRules: {
-                    mer_id: [
+                    cert: [
                         {
-                            message: 'ID不能为空',
                             required: true,
                             trigger: 'blur',
+                            validator: validatorCertUnion,
+                        },
+                    ],
+                    key: [
+                        {
+                            message: '密钥不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    mer_id: [
+                        {
+                            required: true,
+                            trigger: 'change',
+                            validator: validatorUnion,
                         },
                     ],
                 },
@@ -169,12 +232,50 @@
                             required: true,
                             trigger: 'blur',
                         },
+                        {
+                            len: 18,
+                            message: 'APP_ID必须为18位字符串',
+                            trigger: 'change',
+                        },
                     ],
                     app_secret: [
                         {
                             message: 'APPSECRET不能为空',
                             required: true,
                             trigger: 'blur',
+                        },
+                    ],
+                    cert: [
+                        {
+                            required: true,
+                            trigger: 'change',
+                            validator: validatorCert,
+                        },
+                    ],
+                    cert_key: [
+                        {
+                            required: true,
+                            trigger: 'blur',
+                            validator: validatorCertKey,
+                        },
+                    ],
+                    key: [
+                        {
+                            message: '商户密钥不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                        {
+                            len: 32,
+                            message: '商户密钥必须为32位字符串',
+                            trigger: 'change',
+                        },
+                    ],
+                    mch_id: [
+                        {
+                            required: true,
+                            trigger: 'change',
+                            validator: validatorMch,
                         },
                     ],
                 },
@@ -203,6 +304,14 @@
             },
             getOrderBegin() {
                 return Date.parse(this.filterSearch.start);
+            },
+            queryMessage() {
+                const self = this;
+                self.$http.post('http://pay.ibenchu.xyz:8080/api/query').then(response => {
+                    console.log(response);
+                }).finally(() => {
+                    self.loading = false;
+                });
             },
             search() {
                 const self = this;
@@ -237,26 +346,6 @@
                     }
                 });
             },
-            weChatSubmit() {
-                const self = this;
-                self.loading = true;
-                self.$refs.weChatForm.validate(valid => {
-                    if (valid) {
-                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
-                            self.$notice.open({
-                                title: injection.trans('weChat.setting.success'),
-                            });
-                        }).finally(() => {
-                            self.loading = false;
-                        });
-                    } else {
-                        self.loading = false;
-                        self.$notice.error({
-                            title: injection.trans('weChat.setting.fail'),
-                        });
-                    }
-                });
-            },
             uploadBefore() {
                 injection.loading.start();
             },
@@ -280,6 +369,7 @@
                 });
                 self.messageCert = '已上传';
                 self.weChatForm.cert = data;
+                console.log(data);
             },
             uploadCertKeySuccess(data) {
                 const self = this;
@@ -289,6 +379,41 @@
                 });
                 self.messageKey = '已上传';
                 self.weChatForm.cert_key = data;
+            },
+            uploadUnionError() {
+                this.$notice.warning({
+                    title: '文件格式不正确',
+                });
+                this.messageUnion = '';
+            },
+            uploadUnionSuccess(data) {
+                const self = this;
+                injection.loading.finish();
+                self.$notice.open({
+                    title: '证书_cert上传成功',
+                });
+                self.messageUnion = '已上传';
+                self.unionPay.cert = data;
+            },
+            weChatSubmit() {
+                const self = this;
+                self.loading = true;
+                self.$refs.weChatForm.validate(valid => {
+                    if (valid) {
+                        self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/wechat/set', self.weChatForm).then(() => {
+                            self.$notice.open({
+                                title: injection.trans('weChat.setting.success'),
+                            });
+                        }).finally(() => {
+                            self.loading = false;
+                        });
+                    } else {
+                        self.loading = false;
+                        self.$notice.error({
+                            title: injection.trans('weChat.setting.fail'),
+                        });
+                    }
+                });
             },
         },
     };
@@ -306,7 +431,7 @@
                                         <i-col span="12">
                                             <form-item label="APP_ID" prop="app_id">
                                                 <i-input v-model="alipayForm.app_id"></i-input>
-                                                <a href="">点击此处获取</a>
+                                                <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -314,7 +439,7 @@
                                         <i-col span="12">
                                             <form-item label="公钥" prop="public_key">
                                                 <i-input v-model="alipayForm.public_key"></i-input>
-                                                <a href="">点击此处获取</a>
+                                                <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -322,7 +447,7 @@
                                         <i-col span="12">
                                             <form-item label="私钥" prop="private_key">
                                                 <i-input v-model="alipayForm.private_key"></i-input>
-                                                <a href="">点击此处获取</a>
+                                                <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -373,18 +498,18 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="商户ID">
+                                            <form-item label="商户ID" prop="mch_id">
                                                 <i-input v-model="weChatForm.mch_id"></i-input>
                                                 <p class="tip">
                                                     请输入商户账号，如果没有
-                                                    <a href="">点击此处获取</a>
+                                                    <a>点击此处获取</a>
                                                 </p>
                                             </form-item>
                                         </i-col>
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="商户密钥">
+                                            <form-item label="商户密钥" prop="key">
                                                 <i-input v-model="weChatForm.key"></i-input>
                                                 <p class="tip">
                                                     API密钥，在微信商户平台中“账户设置”-“账户安全”-“设置API密钥”
@@ -394,7 +519,7 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="证书_cert">
+                                            <form-item label="证书_cert" prop="cert">
                                                 <upload :action="actionCert"
                                                         :before-upload="uploadBefore"
                                                         :format="['pem']"
@@ -416,7 +541,7 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="证书_Key">
+                                            <form-item label="证书_Key"  prop="cert_key">
                                                 <upload :action="actionKey"
                                                         :before-upload="uploadBefore"
                                                         :format="['pem']"
@@ -469,10 +594,22 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="上传文件">
-                                                <upload :action="action">
+                                            <form-item label="证书_cert" prop="cert">
+                                                <upload :action="actionUnionCert"
+                                                        :before-upload="uploadBefore"
+                                                        :format="['pfx']"
+                                                        :headers="{
+                                                            Authorization: `Bearer ${$store.state.token.access_token}`
+                                                        }"
+                                                        :max-size="2048"
+                                                        name="cert"
+                                                        :on-error="uploadError"
+                                                        :on-format-error="uploadUnionError"
+                                                        :on-success="uploadUnionSuccess"
+                                                        ref="upload"
+                                                        :show-upload-list="false">
                                                     <i-button type="ghost">+上传</i-button>
-                                                </upload>
+                                                    <span>{{ messageUnion }}</span>
                                             </form-item>
                                         </i-col>
                                     </row>
