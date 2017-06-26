@@ -22,11 +22,12 @@
             expandRow,
         },
         data() {
+            const self = this;
             const reg1 = /^\d{10}$/;
             const reg2 = /^\d{15}$/;
             const reg3 = /^\d{16}$/;
-            const reg4 = /^[0-9a-zA-Z]{18}$/;
-            const reg5 = /^[0-9a-zA-Z]{32}$/;
+            const reg4 = /^(?=.*\d+)(?=.*[a-zA-Z]+)[\da-zA-Z]{18}$/;
+            const reg5 = /^(?!^\d+$)(?!^[a-zA-Z]+$)[\da-zA-Z]{32}$/;
             const validatorMch = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('商户ID不能为空'));
@@ -285,7 +286,7 @@
                     cert: [
                         {
                             required: true,
-                            trigger: 'change',
+                            trigger: 'blur',
                             validator: validatorCert,
                         },
                     ],
@@ -334,9 +335,12 @@
                     }
                 });
             },
-//            getOrderBegin() {
-//                return Date.parse(this.filterSearch.start);
-//            },
+            changePage(page) {
+                console.log(page);
+            },
+            getOrderBegin() {
+                return Date.parse(this.filterSearch.start);
+            },
             queryMessage() {
                 const self = this;
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/query').then(response => {
@@ -347,7 +351,57 @@
             },
             search() {
                 const self = this;
-                self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', self.filterSearch).then(response => {
+                let filterSearchParam;
+                if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: '',
+                        start: '',
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: this.filterSearch.search,
+                        start: '',
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end !== '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: '',
+                        start: '',
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: '',
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end !== '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: this.filterSearch.search,
+                        start: '',
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end === '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: this.filterSearch.search,
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end !== '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: '',
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: this.filterSearch.search,
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                }
+                self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', filterSearchParam).then(response => {
                     const data = response.data.data;
                     this.orderData = data.data;
                     this.page.total = data.total;
@@ -383,13 +437,13 @@
             },
             uploadCertError() {
                 this.$notice.warning({
-                    title: '文件格式不正确',
+                    title: '请上传pem格式证书',
                 });
                 this.messageCert = '';
             },
             uploadCertKeyError() {
                 this.$notice.warning({
-                    title: '文件格式不正确',
+                    title: '请上传pem格式证书',
                 });
                 this.messageKey = '';
             },
@@ -401,7 +455,6 @@
                 });
                 self.messageCert = '已上传';
                 self.weChatForm.cert = data;
-                console.log(data);
             },
             uploadCertKeySuccess(data) {
                 const self = this;
@@ -414,7 +467,7 @@
             },
             uploadUnionError() {
                 this.$notice.warning({
-                    title: '文件格式不正确',
+                    title: '请上传pfx格式证书',
                 });
                 this.messageUnion = '';
             },
@@ -460,7 +513,7 @@
                             <tab-pane label="支付宝">
                                 <i-form :label-width="200" :model="alipayForm" ref="alipayForm" :rules="alipayRules">
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="APP_ID" prop="app_id">
                                                 <i-input v-model="alipayForm.app_id"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -468,7 +521,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="应用公钥" prop="public_key">
                                                 <i-input v-model="alipayForm.public_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -476,7 +529,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="应用私钥" prop="private_key">
                                                 <i-input v-model="alipayForm.private_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -484,7 +537,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="支付宝公钥" prop="alipay_key">
                                                 <i-input v-model="alipayForm.alipay_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -492,7 +545,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="是否开启">
                                                 <i-switch size="large" v-model="alipayForm.alipay_enabled">
                                                     <span slot="open">开启</span>
@@ -502,7 +555,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item>
                                                 <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="alipaySubmit">
@@ -517,7 +570,7 @@
                             <tab-pane label="微信">
                                 <i-form :label-width="200" :model="weChatForm" ref="weChatForm" :rules="weChatRules">
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="APP_ID" prop="app_id">
                                                 <i-input v-model="weChatForm.app_id"></i-input>
                                                 <p class="tip">
@@ -527,7 +580,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="APP_SECRET" prop="app_secret">
                                                 <i-input v-model="weChatForm.app_secret"></i-input>
                                                 <p class="tip">
@@ -537,7 +590,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="商户ID" prop="mch_id">
                                                 <i-input v-model="weChatForm.mch_id"></i-input>
                                                 <p class="tip">
@@ -548,7 +601,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="商户密钥" prop="key">
                                                 <i-input v-model="weChatForm.key"></i-input>
                                                 <p class="tip">
@@ -601,7 +654,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="是否开启">
                                                 <i-switch size="large" v-model="weChatForm.enabled">
                                                     <span slot="open">开启</span>
@@ -611,7 +664,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item>
                                                 <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="weChatSubmit">
@@ -626,7 +679,7 @@
                             <tab-pane label="银联">
                                 <i-form :label-width="200" :model="unionPay" ref="unionPay" :rules="unionPayRules">
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="ID" prop="mer_id">
                                                 <i-input v-model="unionPay.mer_id"></i-input>
                                             </form-item>
@@ -654,14 +707,14 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="密钥" prop="key">
                                                 <i-input v-model="unionPay.key"></i-input>
                                             </form-item>
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="是否开启">
                                                 <i-switch size="large" v-model="unionPay.enabled">
                                                     <span slot="open">开启</span>
@@ -671,7 +724,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item>
                                                 <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="unionPaySubmit">
@@ -694,11 +747,11 @@
                                     <ul class="clearfix">
                                         <li>
                                             成交时间
-                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                            <date-picker format="yyyy-MM-dd" placeholder="开始时间" type="date"
                                                          v-model="filterSearch.start" :options="options1"
                                                          style="width: 124px"></date-picker>
                                             -
-                                            <date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期"
+                                            <date-picker format="yyyy-MM-dd" placeholder="结束时间" type="date"
                                                          v-model="filterSearch.end" :options="options2"
                                                          style="width: 124px"></date-picker>
                                         </li>
@@ -719,8 +772,10 @@
                                  ref="orderList">
                         </i-table>
                         <div class="page">
-                            <page :total="page.total"
+                            <page :current="1"
+                                  :total="page.total"
                                   :page-size="page.per_page"
+                                  @on-change="changePage"
                                   show-elevator></page>
                         </div>
                     </card>
