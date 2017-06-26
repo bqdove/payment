@@ -43,10 +43,10 @@ class WechatController extends Controller
     public function set(SetWechatconfHandler $handler, Request $request)
     {
         $this->validate($request, [
-            'app_id' => 'required|regex:/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{18}/',
+            'app_id' => 'required|regex:/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{18}$/',
             'mch_id' => 'required|regex:/^[0-9]{10}/',
-            'key' => 'required|regex:/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{32}/',
-            'app_secret' => 'required|regex:/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{32}/',
+            'key' => 'required|regex:/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{32}$/',
+            'app_secret' => 'required|regex:/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{32}$/',
             'cert' => 'required',
             'cert_key' => 'required'
         ], [
