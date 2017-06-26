@@ -24,6 +24,9 @@
         data() {
             const reg1 = /^\d{10}$/;
             const reg2 = /^\d{15}$/;
+            const reg3 = /^\d{16}$/;
+            const reg4 = /^[0-9a-zA-Z]{18}$/;
+            const reg5 = /^[0-9a-zA-Z]{32}$/;
             const validatorMch = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('商户ID不能为空'));
@@ -38,6 +41,42 @@
                     callback(new Error('ID不能为空'));
                 } else if (!reg2.test(value)) {
                     callback(new Error('ID必须为15位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorAlipay = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('APP_ID不能为空'));
+                } else if (!reg3.test(value)) {
+                    callback(new Error('APP_ID必须为16位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorWechatId = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('APP_ID不能为空'));
+                } else if (!reg4.test(value)) {
+                    callback(new Error('APP_ID必须为18位数字,字母组成的字符串(不含特殊字符)'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorAppSecret = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('APP_SECRET不能为空'));
+                } else if (!reg5.test(value)) {
+                    callback(new Error('APP_SECRET必须为32位数字,字母组成的字符串(不含特殊字符)'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorWeChatKey = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('商户密钥不能为空'));
+                } else if (!reg5.test(value)) {
+                    callback(new Error('商户密钥必须为32位数字,字母组成的字符串(不含特殊字符)'));
                 } else {
                     callback();
                 }
@@ -69,33 +108,36 @@
                 actionUnionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=union&certname=cert',
                 alipayForm: {
                     alipay_enabled: true,
+                    alipay_key: '',
                     private_key: '',
                     app_id: '',
                     public_key: '',
                 },
                 alipayRules: {
-                    app_id: [
+                    alipay_key: [
                         {
-                            message: 'APP_ID不能为空',
+                            message: '支付宝公钥不能为空',
                             required: true,
                             trigger: 'blur',
                         },
+                    ],
+                    app_id: [
                         {
-                            message: 'APP_ID必须为16位',
-                            min: 16,
+                            required: true,
                             trigger: 'change',
+                            validator: validatorAlipay,
                         },
                     ],
                     private_key: [
                         {
-                            message: '私钥不能为空',
+                            message: '应用私钥不能为空',
                             required: true,
                             trigger: 'blur',
                         },
                     ],
                     public_key: [
                         {
-                            message: '公钥不能为空',
+                            message: '应用公钥不能为空',
                             required: true,
                             trigger: 'blur',
                         },
@@ -228,21 +270,16 @@
                 weChatRules: {
                     app_id: [
                         {
-                            message: 'APP_ID不能为空',
                             required: true,
-                            trigger: 'blur',
-                        },
-                        {
-                            len: 18,
-                            message: 'APP_ID必须为18位字符串',
                             trigger: 'change',
+                            validator: validatorWechatId,
                         },
                     ],
                     app_secret: [
                         {
-                            message: 'APPSECRET不能为空',
                             required: true,
-                            trigger: 'blur',
+                            trigger: 'change',
+                            validator: validatorAppSecret,
                         },
                     ],
                     cert: [
@@ -261,14 +298,9 @@
                     ],
                     key: [
                         {
-                            message: '商户密钥不能为空',
                             required: true,
-                            trigger: 'blur',
-                        },
-                        {
-                            len: 32,
-                            message: '商户密钥必须为32位字符串',
                             trigger: 'change',
+                            validator: validatorWeChatKey,
                         },
                     ],
                     mch_id: [
@@ -302,9 +334,9 @@
                     }
                 });
             },
-            getOrderBegin() {
-                return Date.parse(this.filterSearch.start);
-            },
+//            getOrderBegin() {
+//                return Date.parse(this.filterSearch.start);
+//            },
             queryMessage() {
                 const self = this;
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/query').then(response => {
@@ -437,7 +469,7 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="公钥" prop="public_key">
+                                            <form-item label="应用公钥" prop="public_key">
                                                 <i-input v-model="alipayForm.public_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
@@ -445,8 +477,16 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="私钥" prop="private_key">
+                                            <form-item label="应用私钥" prop="private_key">
                                                 <i-input v-model="alipayForm.private_key"></i-input>
+                                                <a @click="queryMessage">点击此处获取</a>
+                                            </form-item>
+                                        </i-col>
+                                    </row>
+                                    <row>
+                                        <i-col span="12">
+                                            <form-item label="支付宝公钥" prop="alipay_key">
+                                                <i-input v-model="alipayForm.alipay_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
@@ -488,7 +528,7 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="APPSECRET" prop="app_secret">
+                                            <form-item label="APP_SECRET" prop="app_secret">
                                                 <i-input v-model="weChatForm.app_secret"></i-input>
                                                 <p class="tip">
                                                     在微信公众平台中“开发者中心”栏目可以产看到
