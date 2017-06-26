@@ -46,6 +46,7 @@ class OrderFilterHandler extends Handler
         } else {
             $endTime = date('Y-m-d', time());
         }
+
         $startTime = Carbon::createFromTimestamp(strtotime($startTime));
 
         $endTime = Carbon::createFromTimestamp(strtotime($endTime));
