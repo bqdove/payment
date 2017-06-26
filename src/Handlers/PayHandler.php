@@ -38,10 +38,10 @@ class PayHandler extends Handler
         {
             $result = ['data' => $data['base64']];
             $this->container->make('files')->delete($data['qrcode']);
-            $this->withCode(200)->withData($result)->withMessage('获取base64编码的支付二维码成功');
+            $this->withCode(200)->withData($result)->withMessage('获取base64编码的微信支付二维码成功');
         }elseif($data['type'] == 'alipay'){
             $result = ['data' => $data['url']];
-            $this->withCode(200)->withData($result)->withMessage('获取支付跳转链接成功');
+            $this->withCode(200)->withData($result)->withMessage('获取支付宝跳转链接成功');
         }
     }
 

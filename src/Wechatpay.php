@@ -86,13 +86,13 @@ class Wechatpay
 
         $qrcodeName = rand(1,10000).'.png';
 
-        $qrCode->writeFile(__DIR__. '/qrcode/'. $qrcodeName);
+        $qrCode->writeFile(__DIR__ . '/qrcode_temp/' . $qrcodeName);
 
-        $str = file_get_contents(__DIR__. '/qrcode/'. $qrcodeName);
+        $str = file_get_contents(__DIR__ . '/qrcode_temp/' . $qrcodeName);
 
         $base64_qrcode = base64_encode($str);
 
-        return ['base64' => $base64_qrcode, 'qrcode' => $qrcodeName, 'type' => 'wechat'];
+        return ['base64' => $base64_qrcode, 'qrcode' => __DIR__ . '/qrcode_temp/' . $qrcodeName, 'type' => 'wechat'];
     }
 
     //回调

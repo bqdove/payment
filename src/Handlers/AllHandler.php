@@ -16,6 +16,6 @@ class AllHandler extends Handler
     public function execute()
     {
         $data = Order::paginate(30)->toArray();
-        return $this->success()->withData($data)->withMessage('成功返回筛选订单信息');
+        return $this->withCode(200)->withData($data)->withMessage('成功返回筛选订单信息');
     }
 }

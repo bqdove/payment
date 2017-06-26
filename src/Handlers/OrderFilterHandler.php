@@ -22,14 +22,14 @@ class OrderFilterHandler extends Handler
         {
             $allOrders = Order::orderBy('created_at', 'DESC')->paginate(30)->toArray();
 
-            return $this->success()->withData($allOrders)->withMessage('成功返回所有的订单信息');
+            return $this->withCode(200)->withData($allOrders)->withMessage('成功返回所有的订单信息');
         }
 
         if ((! $this->request->input('start') && !$this->request->input('end')) && $keyword = $this->request->input('search'))
         {
             $filterOrders = Order::where('out_trade_no', 'like', '%'.$keyword)->paginate(30)->toArray();
 
-            return $this->success()->withData($filterOrders)->withMessage('成功返回筛选订单信息');
+            return $this->withCode(200)->withData($filterOrders)->withMessage('成功返回筛选订单信息');
         }
 
         //如果有任意一个参数存在，那么开始时间如果不填写默认为查询当天，结束日期也是一样。
@@ -64,7 +64,7 @@ class OrderFilterHandler extends Handler
         }
         if(count($filterOrders))
         {
-            return $this->success()->withData($filterOrders)->withMessage('筛选数据返回成功');
+            return $this->withCode(200)->withData($filterOrders)->withMessage('筛选数据返回成功');
         }else{
             return $this->withCode('404')->withError('未找到您需要的数据');
         }
