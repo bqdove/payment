@@ -48,12 +48,14 @@ class AlipayController extends Controller
         $this->validate($request, [
             'app_id' => 'required|regex:/^[0-9]{16}/',
             'public_key' => 'required',
-            'private_key' => 'required'
+            'private_key' => 'required',
+            'alipay_key' => 'required'
         ], [
             'app_id.required' => 'app_id不能为空',
             'app_id.regex' => 'app_id必须为16位数字',
             'public_key.required' => '公钥为必填字段',
-            'private_key.required' => '私钥为必填字段'
+            'private_key.required' => '私钥为必填字段',
+            'alipay_key.required' => '支付宝公钥为必填字段'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }
