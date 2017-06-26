@@ -6,6 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:19
  */
+
 namespace Notadd\Multipay;
 
 use Illuminate\Events\Dispatcher;
@@ -110,12 +111,14 @@ class Extension extends AbstractExtension
         return '0.1.0';
     }
 
-    public function register(){
+    public function register()
+    {
         return $this->registerPay();
     }
 
-    public function registerPay(){
-            $this->app->singleton('Multipay', function($app){
+    public function registerPay()
+    {
+        $this->app->singleton('Multipay', function ($app) {
             return new Multipay($app);
         });
     }

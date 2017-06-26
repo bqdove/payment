@@ -6,6 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:27
  */
+
 namespace Notadd\Multipay\Listeners;
 
 use Notadd\Foundation\Event\Abstracts\EventSubscriber;

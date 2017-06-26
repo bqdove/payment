@@ -11,18 +11,20 @@ namespace Notadd\Multipay\Controllers;
 use Notadd\Multipay\Handlers\UploadHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Http\Request;
+
 class UploadController extends Controller
 {
 
     /**
-     * @param \Notadd\Pay\Handlers\UploadHandler $handler
+     * @param \Notadd\Multipay\Handlers\UploadHandler $handler
      *
      */
-    public function test(){
+    public function test()
+    {
         return view('multipay::upload');
     }
 
-    public function execute(UploadHandler $handler,Request $request)
+    public function execute(UploadHandler $handler, Request $request)
     {
         return $handler->toResponse()->generateHttpResponse();
     }

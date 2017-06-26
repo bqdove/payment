@@ -18,6 +18,7 @@ use Notadd\Multipay\Wechatpay;
 /*
  * Classs WechatWebNotifyHandler
  */
+
 class WechatWebNotifyHandler extends Handler
 {
     /**

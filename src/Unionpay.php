@@ -20,9 +20,11 @@ class Unionpay
     protected $gateway;
 
     //获取配置
-    public function __construct(){
+    public function __construct()
+    {
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
+
     /**
      * 获取网关接口
      */
@@ -45,17 +47,17 @@ class Unionpay
     public function pay()
     {
         $para = [
-                'version'=>$this->settings->get('unionpay.version'),
-                'signMethod'=>$this->settings->get('unionpay.signMethod'),
-                'encoding'=>$this->settings->get('unionpay.encoding'),
-                'orderId'   => '201706211420351000', //商户订单号
-                'txnTime'   => '20170621142035', //订单发送时间
-                'txnAmt'    => 1, //交易金额（分）
-                'certId'=>'',//证书ID
-                'currencyCode' => 156,//交易币种
-                'txnType' => 01,//交易类型
-                'bizType'=>000501,//产品类型
-                'channelType'=>07,//渠道类型
+            'version' => $this->settings->get('unionpay.version'),
+            'signMethod' => $this->settings->get('unionpay.signMethod'),
+            'encoding' => $this->settings->get('unionpay.encoding'),
+            'orderId' => '201706211420351000', //商户订单号
+            'txnTime' => '20170621142035', //订单发送时间
+            'txnAmt' => 1, //交易金额（分）
+            'certId' => '',//证书ID
+            'currencyCode' => 156,//交易币种
+            'txnType' => 01,//交易类型
+            'bizType' => 000501,//产品类型
+            'channelType' => 07,//渠道类型
         ];
 
         $order = new Order();
@@ -80,6 +82,7 @@ class Unionpay
 
         $response->getRedirectHtml(); //For PC/Wap
     }
+
     /**
      * 回调方法接口
      */
@@ -91,20 +94,20 @@ class Unionpay
         $gateway->setCertPath($this->settings->get('union.cert'));
         $gateway->setCertPassword($this->settings->get('union.certPassword'));
         $gateway->setCertDir($this->settings->get('union.certDir'));
-        $response = $gateway->completePurchase(['params'=>array_merge($_POST)])->send();
+        $response = $gateway->completePurchase(['params' => array_merge($_POST)])->send();
         if ($response->isPaid()) {
             /**
              * Payment is successful
              */
-            if($order = Order::where('out_trade_no', $_POST['out_trade_no'])->first()){
-            $order->total_amount = $_POST['total_amount'];
-            $order->trade_no = $_POST['trade_no'];
-            $order->seller_id = $_POST['seller_id'];
-            $order->trade_status = 1;
-            $order->payment = 'union';
-            $order->created_at = $_POST['gmt_create'];
-            $order->save();
-            die('success');
+            if ($order = Order::where('out_trade_no', $_POST['out_trade_no'])->first()) {
+                $order->total_amount = $_POST['total_amount'];
+                $order->trade_no = $_POST['trade_no'];
+                $order->seller_id = $_POST['seller_id'];
+                $order->trade_status = 1;
+                $order->payment = 'union';
+                $order->created_at = $_POST['gmt_create'];
+                $order->save();
+                die('success');
             }
         } else {
             /**
@@ -120,13 +123,12 @@ class Unionpay
     public function query()
     {
         $para = array_merge($_POST);
-        if($para['orderId'] || $para['trade_no']){
+        if ($para['orderId'] || $para['trade_no']) {
             $response = $this->gateway->query($para)->send();
-        }else{
-            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        } else {
+            return ['code' => '500', 'msg' => '请传入orderId 或者 trade_no'];
         }
-        if($response->successful())
-        {
+        if ($response->successful()) {
             $response->getData();
         }
     }
@@ -139,13 +141,12 @@ class Unionpay
     public function refund()
     {
         $para = array_merge($_POST);
-        if($para['orderId'] || $para['trade_no']){
+        if ($para['orderId'] || $para['trade_no']) {
             $response = $this->gateway->refund($para)->send();
-        }else{
-            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        } else {
+            return ['code' => '500', 'msg' => '请传入orderId 或者 trade_no'];
         }
-        if($response->successful())
-        {
+        if ($response->successful()) {
             $response->getData();
         }
     }
@@ -157,13 +158,12 @@ class Unionpay
     public function cancel()
     {
         $para = array_merge($_POST);
-        if($para['orderId'] || $para['trade_no']){
+        if ($para['orderId'] || $para['trade_no']) {
             $response = $this->gateway->cancel($para)->send();
-        }else{
-            return ['code'=>'500','msg'=>'请传入orderId 或者 trade_no'];
+        } else {
+            return ['code' => '500', 'msg' => '请传入orderId 或者 trade_no'];
         }
-        if($response->successful())
-        {
+        if ($response->successful()) {
             $response->getData();
         }
     }

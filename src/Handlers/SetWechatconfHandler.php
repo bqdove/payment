@@ -25,10 +25,11 @@ class SetWechatconfHandler extends AbstractSetHandler
     /**
      * SetHandler constructor.
      *
-     * @param \Illuminate\Container\Container                         $container
+     * @param \Illuminate\Container\Container $container
      * @param \Notadd\Foundation\Setting\Contracts\SettingsRepository $settings
      */
-    public function __construct(Container $container, SettingsRepository $settings) {
+    public function __construct(Container $container, SettingsRepository $settings)
+    {
         parent::__construct($container);
         $this->settings = $settings;
     }
@@ -51,10 +52,10 @@ class SetWechatconfHandler extends AbstractSetHandler
     public function execute()
     {
         $this->settings->set('wechat.enabled', $this->request->input('enabled'));
-        $this->settings->set('wechat.app_id',$this->request->input('app_id'));//APP_ID
-        $this->settings->set('wechat.mch_id',$this->request->input('mch_id'));//商户Id
-        $this->settings->set('wechat.key',$this->request->input('key'));//APP_KEY
-        $this->settings->set('wechat.app_secret',$this->request->input('app_secret'));//商户密钥
+        $this->settings->set('wechat.app_id', $this->request->input('app_id'));//APP_ID
+        $this->settings->set('wechat.mch_id', $this->request->input('mch_id'));//商户Id
+        $this->settings->set('wechat.key', $this->request->input('key'));//APP_KEY
+        $this->settings->set('wechat.app_secret', $this->request->input('app_secret'));//商户密钥
         return true;
     }
 }

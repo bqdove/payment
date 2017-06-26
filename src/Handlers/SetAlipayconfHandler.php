@@ -25,13 +25,14 @@ class SetAlipayconfHandler extends AbstractSetHandler
     /**
      * SetHandler constructor.
      *
-     * @param \Illuminate\Container\Container                         $container
+     * @param \Illuminate\Container\Container $container
      * @param \Notadd\Foundation\Setting\Contracts\SettingsRepository $settings
      */
     public function __construct(
         Container $container,
         SettingsRepository $settings
-    ) {
+    )
+    {
         parent::__construct($container);
         $this->settings = $settings;
     }
@@ -53,21 +54,21 @@ class SetAlipayconfHandler extends AbstractSetHandler
      */
     public function execute()
     {
-        $this->settings->set('alipay.input_charset',  'UTF-8');
+        $this->settings->set('alipay.input_charset', 'UTF-8');
 
         $this->settings->set('alipay.version', 1.0);
 
         $this->settings->set('alipay.sign_type', 'RSA2');
 
-        $this->settings->set('alipay.enabled',  $this->request->input('alipay_enabled'));
+        $this->settings->set('alipay.enabled', $this->request->input('alipay_enabled'));
 
-        $this->settings->set('alipay.app_id',  $this->request->input('app_id'));
+        $this->settings->set('alipay.app_id', $this->request->input('app_id'));
 
         $this->settings->set('alipay.private_key', $this->request->input('private_key'));
 
         $this->settings->set('alipay.public_key', $this->request->input('public_key'));
 
-        return true ;
+        return true;
     }
 
 

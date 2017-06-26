@@ -5,6 +5,7 @@
  * Date: 2017/5/22
  * Time: 18:01
  */
+
 namespace Notadd\Multipay;
 
 use Illuminate\Container\Container;
@@ -22,6 +23,7 @@ class Alipay
     protected $settings;
 
     protected $gateway;
+
     /**
      * GetHandler constructor.
      *
@@ -34,13 +36,14 @@ class Alipay
         $this->settings = Container::getInstance()->make(SettingsRepository::class);
     }
 
-    public function getConfig($config){
+    public function getConfig($config)
+    {
         return $this->settings->get($config);
     }
 
     public function getGateWay($gatewayName)
     {
-        $this->gateway = Omnipay::create($gatewayName );
+        $this->gateway = Omnipay::create($gatewayName);
         $this->gateway->setSignType($this->settings->get('alipay.sign_type')); // RSA/RSA2/MD5
         $this->gateway->setAppId($this->settings->get('alipay.app_id')); //支付宝应用ID
         $this->gateway->setPrivateKey($this->settings->get('alipay.private_key'));//支付宝应用私钥
@@ -50,7 +53,7 @@ class Alipay
         $this->gateway->setNotifyUrl('http://pay.ibenchu.xyz:8080/api/multipay/alipay/webnotify');
         $this->gateway->sandbox();
         return $this;
-     }
+    }
 
     /**
      * 申请支付
@@ -103,8 +106,7 @@ class Alipay
                 /**
                  * Payment is successful
                  */
-                if($order = Order::where('out_trade_no', $_POST['out_trade_no'])->first())
-                {
+                if ($order = Order::where('out_trade_no', $_POST['out_trade_no'])->first()) {
                     $order->total_amount = $_POST['total_amount'];
                     $order->trade_no = $_POST['trade_no'];
                     $order->seller_id = $_POST['seller_id'];
@@ -112,7 +114,7 @@ class Alipay
                     $order->payment = 'alipay';
                     $order->created_at = $_POST['gmt_create'];
                     $order->subject = $_POST['subject'];
-                    $optionArr = ['buyer_id' => $_POST['buyer_id'],'invoice_amount' => $_POST['invoice_amount'],'fund_bill_list'=>$_POST['fund_bill_list']];
+                    $optionArr = ['buyer_id' => $_POST['buyer_id'], 'invoice_amount' => $_POST['invoice_amount'], 'fund_bill_list' => $_POST['fund_bill_list']];
                     $json = json_encode($optionArr);
                     $order->options = $json;
                     $order->save();
@@ -171,14 +173,13 @@ class Alipay
 
         $response = $request->send();
 
-        if ($para['out_trade_no'] || $para['trade_id'] && $para['total_amount']){
-            if ($response->isSuccessful())
-            {
+        if ($para['out_trade_no'] || $para['trade_id'] && $para['total_amount']) {
+            if ($response->isSuccessful()) {
                 return $response->data()['alipay_trade_refund_response'];//get refund order information
-            }else{
+            } else {
                 return $response->data()['alipay_trade_refund_response'];
             }
-        }else{
+        } else {
             return 402;
         }
     }

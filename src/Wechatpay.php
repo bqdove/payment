@@ -7,6 +7,7 @@
  */
 
 namespace Notadd\Multipay;
+
 use Omnipay\Omnipay;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
@@ -15,6 +16,7 @@ use Endroid\QrCode\ErrorCorrectionLevel;
 use Notadd\Multipay\Models\Order;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
+
 class Wechatpay
 {
     protected $settings;
@@ -75,7 +77,7 @@ class Wechatpay
         $code_url = $response->getCodeUrl();
 
         $qrCode = new QrCode();
-        $qrCode->setText( $code_url )
+        $qrCode->setText($code_url)
             ->setWriterByName('png')
             ->setMargin(10)
             ->setEncoding('UTF-8')
@@ -84,19 +86,20 @@ class Wechatpay
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
             ->setValidateResult(false);
 
-        $qrcodeName = rand(1,10000).'.png';
+        $qrcodeName = rand(1, 10000) . '.png';
 
-        $qrCode->writeFile(__DIR__. '/qrcode/'. $qrcodeName);
+        $qrCode->writeFile(__DIR__ . '/qrcode_temp/' . $qrcodeName);
 
-        $str = file_get_contents(__DIR__. '/qrcode/'. $qrcodeName);
+        $str = file_get_contents(__DIR__ . '/qrcode_temp/' . $qrcodeName);
 
         $base64_qrcode = base64_encode($str);
 
-        return ['base64' => $base64_qrcode, 'qrcode' => $qrcodeName, 'type' => 'wechat'];
+        return ['base64' => $base64_qrcode, 'qrcode' => __DIR__ . '/qrcode_temp/' . $qrcodeName, 'type' => 'wechat'];
     }
 
     //回调
-    public function webnotify(){
+    public function webnotify()
+    {
 
         $gateway = Omnipay::create('WechatPay');
 
@@ -114,63 +117,60 @@ class Wechatpay
 
         if ($response->isPaid()) {
             //pay success
-            if($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first())
-            {
-              $order->total_amount = $arrayData['total_fee']/100;
-              $order->trade_no = $arrayData['transaction_id'];
-              $order->pay_way = $arrayData['trade_type'];
-              $order->trade_status = 1;
-              $optionArr = ['openid' => $arrayData['openid']];
-              $json = json_encode($optionArr);
-              $order->options = $json;
-              $order->save();
-              die('success');
+            if ($order = Order::where('out_trade_no', $arrayData['out_trade_no'])->first()) {
+                $order->total_amount = $arrayData['total_fee'] / 100;
+                $order->trade_no = $arrayData['transaction_id'];
+                $order->pay_way = $arrayData['trade_type'];
+                $order->trade_status = 1;
+                $optionArr = ['openid' => $arrayData['openid']];
+                $json = json_encode($optionArr);
+                $order->options = $json;
+                $order->save();
+                die('success');
             }
-        }else{
+        } else {
             return false;
         }
     }
 
 
     //查询
-    public function query(){
+    public function query()
+    {
 
         $para = Container::getInstance()->make('request')->all();
 
-        if ($para['out_trade_no'] || $para['transaction_id'])
-        {
+        if ($para['out_trade_no'] || $para['transaction_id']) {
             $response = $this->gateway->query($para)->send();
-        }else{
+        } else {
             return 402;
         }
-        if ($response->isSuccessful())
-        {
-           return $response->getData();
+        if ($response->isSuccessful()) {
+            return $response->getData();
         }
 
     }
 
     //退款
-    public function refund(){
+    public function refund()
+    {
         $para = Container::getInstance()->make('request')->all();
 
         $out_refund_no = (string)($this->settings->get('wechat.mch_id'));
         $out_refund_no .= date('YmdHis', time());
         $para = $para + ['out_refund_no' => $out_refund_no,
-                'cert_path'=>$this->settings->get('wechat.cert'),
-                'key_path'=>$this->settings->get('wechat.cert_key')];
+                'cert_path' => $this->settings->get('wechat.cert'),
+                'key_path' => $this->settings->get('wechat.cert_key')];
 
-        if (($para['out_trade_no'] || $para['transaction_id']) && $para['refund_fee'] && $para['total_fee'])
-        {
+        if (($para['out_trade_no'] || $para['transaction_id']) && $para['refund_fee'] && $para['total_fee']) {
             $response = $this->gateway->refund($para)->send();
 
-            if ($response->isSuccessful())
-            {
+            if ($response->isSuccessful()) {
                 return $response->getData();
-            }else{
+            } else {
                 return $response->getData();
             }
-        }else{
+        } else {
             return 402;
         }
     }

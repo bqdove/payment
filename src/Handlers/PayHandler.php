@@ -14,6 +14,7 @@ use Illuminate\Container\Container;
 /*
  * Classs PayHandler
  */
+
 class PayHandler extends Handler
 {
     /**
@@ -30,18 +31,18 @@ class PayHandler extends Handler
     /*
      * Execute Handler
      */
-    public function execute(){
+    public function execute()
+    {
         $data = $this->multipay->pay();
 
         //微信二维码
-        if ($data['type'] == 'wechat')
-        {
+        if ($data['type'] == 'wechat') {
             $result = ['data' => $data['base64']];
             $this->container->make('files')->delete($data['qrcode']);
-            $this->withCode(200)->withData($result)->withMessage('获取base64编码的支付二维码成功');
-        }elseif($data['type'] == 'alipay'){
+            $this->withCode(200)->withData($result)->withMessage('获取base64编码的微信支付二维码成功');
+        } elseif ($data['type'] == 'alipay') {
             $result = ['data' => $data['url']];
-            $this->withCode(200)->withData($result)->withMessage('获取支付跳转链接成功');
+            $this->withCode(200)->withData($result)->withMessage('获取支付宝跳转链接成功');
         }
     }
 

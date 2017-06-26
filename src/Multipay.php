@@ -29,20 +29,23 @@ class Multipay
     protected $drivers = [];
 
     /**
-      *  The $config
-      */
+     *  The $config
+     */
     protected $config;
+
     /**
      *
      * The driver is the selected pay-driver;
      *
      */
-    public function __construct($app){
+    public function __construct($app)
+    {
         $this->app = $app;
     }
 
-    private function getDriver($name){
-        switch($name){
+    private function getDriver($name)
+    {
+        switch ($name) {
             case 'alipay':
                 return new Alipay();
             case 'wechat':
@@ -54,20 +57,21 @@ class Multipay
         }
     }
 
-    private function getDefaultDriver(){
+    private function getDefaultDriver()
+    {
         return new Alipay();
     }
 
-    
+
     /**
      * @param  String $driver
      * @param  String $way
      * @param  Array $para
      *
      */
-    public function pay(){
-        if (!array_key_exists('driver',$_POST) || !array_key_exists('way',$_POST))
-        {
+    public function pay()
+    {
+        if (!array_key_exists('driver', $_POST) || !array_key_exists('way', $_POST)) {
             return json_encode(['code' => 402, 'msg' => '缺少驱动或者网关参数']);
         }
         $driver = $_POST['driver'];
@@ -83,9 +87,9 @@ class Multipay
      *
      */
 
-    public function query(){
-        if (!array_key_exists('driver',$_POST) || !array_key_exists('way',$_POST))
-        {
+    public function query()
+    {
+        if (!array_key_exists('driver', $_POST) || !array_key_exists('way', $_POST)) {
             return json_encode(['code' => 402, 'msg' => '缺少驱动或者网关参数']);
         }
         $driver = $_POST['driver'];
@@ -93,15 +97,16 @@ class Multipay
         $data = $this->getDriver($driver)->getGateWay($way)->query();
         return $data;
     }
+
     /**
      * @param  String $driver
      * @param  String $way
      * @param  Array $para
      *
      */
-    public function refund(){
-        if (!array_key_exists('driver',$_POST) || !array_key_exists('way',$_POST))
-        {
+    public function refund()
+    {
+        if (!array_key_exists('driver', $_POST) || !array_key_exists('way', $_POST)) {
             return json_encode(['code' => '402', 'msg' => '缺少驱动或者网关参数']);
         }
         $driver = $_POST['driver'];
@@ -109,12 +114,14 @@ class Multipay
         $data = $this->getDriver($driver)->getGateWay($way)->refund();
         return $data;
     }
+
     /**
      * @param  String $driver
      * @param  String $way
      * @param  Array $para
      */
-    public function webNotify($driver, $way){
+    public function webNotify($driver, $way)
+    {
 
         $this->getDriver($driver)->getGateWay($way)->webNotify();
     }
@@ -125,7 +132,8 @@ class Multipay
      * @param  Array $para
      *
      */
-    public function cancel($driver, $way, $para){
+    public function cancel($driver, $way, $para)
+    {
         $this->getDriver($driver)->getGateWay($way)->cancel($para);
     }
 

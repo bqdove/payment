@@ -6,6 +6,7 @@
  * @copyright (c) 2017, notadd.com
  * @datetime 2017-04-24 18:42
  */
+
 namespace Notadd\Multipay\Handlers;
 
 use Illuminate\Container\Container;
@@ -27,10 +28,9 @@ class UploadHandler extends Handler
     /**
      * UploadHandler constructor.
      *
-     * @param \Illuminate\Container\Container   $container
+     * @param \Illuminate\Container\Container $container
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      * @param \Notadd\Foundation\Setting\Contracts\SettingsRepository $settings
-
      */
 
     protected $settings;
@@ -43,6 +43,7 @@ class UploadHandler extends Handler
         $this->files = $filesystem;
         $this->settings = $settings;
     }
+
     /**
      * Execute Handler.
      */
@@ -50,7 +51,7 @@ class UploadHandler extends Handler
     {
         $this->validate($this->request, [
 
-            'file.file'    => '上传文件格式必须为文件格式！',
+            'file.file' => '上传文件格式必须为文件格式！',
             'file.required' => '必须上传一个文件！',
         ]);
 
@@ -83,16 +84,17 @@ class UploadHandler extends Handler
 
             ]))->implode('/') . '.' . $avatar->getClientOriginalExtension();
 
-        $this->settings->set($keyInSetting,  $this->data['path']);
+        $this->settings->set($keyInSetting, $this->data['path']);
 
         return true;
     }
+
     /**
      * String split handler.
      *
      * @param string $path
      * @param string $dots
-     * @param null   $data
+     * @param null $data
      *
      * @return \Illuminate\Support\Collection|null
      */

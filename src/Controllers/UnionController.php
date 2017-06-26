@@ -6,7 +6,9 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:26
  */
+
 namespace Notadd\Multipay\Controllers;
+
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\GetUnionpayconfHandler;
 use Notadd\Multipay\Handlers\SetUnionpayconfHandler;
@@ -39,24 +41,24 @@ class UnionController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetUnionpayconfHandler $handler ,Request $request)
+    public function set(SetUnionpayconfHandler $handler, Request $request)
     {
-        $this->validate($request,[
-            'mer_id'=>'required|regex:/\d{15}/',
-            'key'=>'required|regex:/\w/',
-            'cert'=>'required|mimes:pfx',
-        ],[
-            'mer_id.required'=>'mer_id不能为空',
-            'mer_id.regex'=>'mer_id必须为15位数字',
-            'key.required'=>'key不能为空',
-            'key.regex'=>'key格式为字母或者数字',
-            'cert.required'=>'不能为空',
-            'cert.mimes'=>'证书必须为pfx格式'
+        $this->validate($request, [
+            'mer_id' => 'required|regex:/\d{15}/',
+            'key' => 'required|regex:/\w/',
+            'cert' => 'required|mimes:pfx',
+        ], [
+            'mer_id.required' => 'mer_id不能为空',
+            'mer_id.regex' => 'mer_id必须为15位数字',
+            'key.required' => 'key不能为空',
+            'key.regex' => 'key格式为字母或者数字',
+            'cert.required' => '不能为空',
+            'cert.mimes' => '证书必须为pfx格式'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function webnotify(UnionWebNotifyHandler $handler )
+    public function webnotify(UnionWebNotifyHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }

@@ -40,27 +40,27 @@ class WechatController extends Controller
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @throws \Exception
      */
-    public function set(SetWechatconfHandler $handler,Request $request)
+    public function set(SetWechatconfHandler $handler, Request $request)
     {
-        $this->validate($request,[
-            'app_id'=>'required|regex:/\w{18}/',
-            'mch_id'=>'required|regex:/\d{10}/',
-            'key'=>'required|regex:/\w{32}/',
-            'app_secret'=>'required|regex:/\w/',
-            'cert'=>'required',
-            'cert_key'=>'required'
-        ],[
-            'app_id.required'=>'app_id不能为空',
-            'app_id.regex'=>'appid必须为18位字符串',
-            'mch_id.required'=>'商户Id不能为空',
-            'mch_id.regex'=>'商户Id必须为为10位数字',
-            'key.required'=>'商户密钥不能为空',
-            'key.regex'=>'商户密钥必须为32位字符串',
-            'app_secret.regex'=>'app_secret必须为字符串格式',
-            'app_secret.required'=>'app_secret不能为空',
-            'cert.required'=>'证书不能为空',
+        $this->validate($request, [
+            'app_id' => 'required|regex:/\w{18}/',
+            'mch_id' => 'required|regex:/\d{10}/',
+            'key' => 'required|regex:/\w{32}/',
+            'app_secret' => 'required|regex:/\w/',
+            'cert' => 'required',
+            'cert_key' => 'required'
+        ], [
+            'app_id.required' => 'app_id不能为空',
+            'app_id.regex' => 'appid必须为18位字符串',
+            'mch_id.required' => '商户Id不能为空',
+            'mch_id.regex' => '商户Id必须为为10位数字',
+            'key.required' => '商户密钥不能为空',
+            'key.regex' => '商户密钥必须为32位字符串',
+            'app_secret.regex' => 'app_secret必须为字符串格式',
+            'app_secret.required' => 'app_secret不能为空',
+            'cert.required' => '证书不能为空',
 //            'cert.mimes'=>'证书必须为pem格式的',
-            'cert_key.required'=>'证书不能为空',
+            'cert_key.required' => '证书不能为空',
 //            'cert_key.mimes'=>'证书必须为pem格式'
         ]);
 
@@ -73,8 +73,6 @@ class WechatController extends Controller
     {
         return $handler->toResponse()->generateHttpResponse();
     }
-
-
 
 
 }

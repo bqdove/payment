@@ -16,6 +16,7 @@ use Illuminate\Container\Container;
 /*
  * Classs CancelHandler
  */
+
 class CancelHandler extends Handler
 {
     /**
@@ -33,11 +34,12 @@ class CancelHandler extends Handler
     /*
      * Execute Handler
      */
-    public function execute(){
+    public function execute()
+    {
         $driver = $this->request->query('driver');
         $way = $this->request->query('way');
-        $para = $this->request->except(['driver','way']);
-        $this->multipay->use($config)->cancel($driver,$way,$para);
+        $para = $this->request->except(['driver', 'way']);
+        $this->multipay->use($config)->cancel($driver, $way, $para);
     }
 
 }
