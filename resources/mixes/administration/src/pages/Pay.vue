@@ -25,8 +25,8 @@
             const reg1 = /^\d{10}$/;
             const reg2 = /^\d{15}$/;
             const reg3 = /^\d{16}$/;
-            const reg4 = /^[0-9a-zA-Z]{18}$/;
-            const reg5 = /^[0-9a-zA-Z]{32}$/;
+            const reg4 = /^(?=.*\d+)(?=.*[a-zA-Z]+)[\da-zA-Z]{18}$/;
+            const reg5 = /^(?!^\d+$)(?!^[a-zA-Z]+$)[\da-zA-Z]{32}$/;
             const validatorMch = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('商户ID不能为空'));
@@ -285,7 +285,7 @@
                     cert: [
                         {
                             required: true,
-                            trigger: 'change',
+                            trigger: 'blur',
                             validator: validatorCert,
                         },
                     ],
@@ -383,13 +383,13 @@
             },
             uploadCertError() {
                 this.$notice.warning({
-                    title: '文件格式不正确',
+                    title: '请上传pem格式证书',
                 });
                 this.messageCert = '';
             },
             uploadCertKeyError() {
                 this.$notice.warning({
-                    title: '文件格式不正确',
+                    title: '请上传pem格式证书',
                 });
                 this.messageKey = '';
             },
@@ -414,7 +414,7 @@
             },
             uploadUnionError() {
                 this.$notice.warning({
-                    title: '文件格式不正确',
+                    title: '请上传pfx格式证书',
                 });
                 this.messageUnion = '';
             },
@@ -460,7 +460,7 @@
                             <tab-pane label="支付宝">
                                 <i-form :label-width="200" :model="alipayForm" ref="alipayForm" :rules="alipayRules">
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="APP_ID" prop="app_id">
                                                 <i-input v-model="alipayForm.app_id"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -468,7 +468,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="应用公钥" prop="public_key">
                                                 <i-input v-model="alipayForm.public_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -476,7 +476,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="应用私钥" prop="private_key">
                                                 <i-input v-model="alipayForm.private_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -484,7 +484,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="支付宝公钥" prop="alipay_key">
                                                 <i-input v-model="alipayForm.alipay_key"></i-input>
                                                 <a @click="queryMessage">点击此处获取</a>
@@ -492,7 +492,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="是否开启">
                                                 <i-switch size="large" v-model="alipayForm.alipay_enabled">
                                                     <span slot="open">开启</span>
@@ -502,7 +502,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item>
                                                 <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="alipaySubmit">
@@ -517,7 +517,7 @@
                             <tab-pane label="微信">
                                 <i-form :label-width="200" :model="weChatForm" ref="weChatForm" :rules="weChatRules">
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="APP_ID" prop="app_id">
                                                 <i-input v-model="weChatForm.app_id"></i-input>
                                                 <p class="tip">
@@ -527,7 +527,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="APP_SECRET" prop="app_secret">
                                                 <i-input v-model="weChatForm.app_secret"></i-input>
                                                 <p class="tip">
@@ -537,7 +537,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="商户ID" prop="mch_id">
                                                 <i-input v-model="weChatForm.mch_id"></i-input>
                                                 <p class="tip">
@@ -548,7 +548,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="商户密钥" prop="key">
                                                 <i-input v-model="weChatForm.key"></i-input>
                                                 <p class="tip">
@@ -601,7 +601,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="是否开启">
                                                 <i-switch size="large" v-model="weChatForm.enabled">
                                                     <span slot="open">开启</span>
@@ -611,7 +611,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item>
                                                 <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="weChatSubmit">
@@ -626,7 +626,7 @@
                             <tab-pane label="银联">
                                 <i-form :label-width="200" :model="unionPay" ref="unionPay" :rules="unionPayRules">
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="ID" prop="mer_id">
                                                 <i-input v-model="unionPay.mer_id"></i-input>
                                             </form-item>
@@ -654,14 +654,14 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="密钥" prop="key">
                                                 <i-input v-model="unionPay.key"></i-input>
                                             </form-item>
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item label="是否开启">
                                                 <i-switch size="large" v-model="unionPay.enabled">
                                                     <span slot="open">开启</span>
@@ -671,7 +671,7 @@
                                         </i-col>
                                     </row>
                                     <row>
-                                        <i-col span="12">
+                                        <i-col span="14">
                                             <form-item>
                                                 <i-button class="submit-pay-btn" :loading="loading" type="primary"
                                                           @click.native="unionPaySubmit">
