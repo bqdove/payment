@@ -22,12 +22,22 @@
             expandRow,
         },
         data() {
-            const reg = /^\d{10}$/;
+            const reg1 = /^\d{10}$/;
+            const reg2 = /^\d{15}$/;
             const validatorMch = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('商户ID不能为空'));
-                } else if (!reg.test(value)) {
+                } else if (!reg1.test(value)) {
                     callback(new Error('商户ID必须为10位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorUnion = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('ID不能为空'));
+                } else if (!reg2.test(value)) {
+                    callback(new Error('ID必须为15位数字'));
                 } else {
                     callback();
                 }
@@ -46,9 +56,17 @@
                     callback();
                 }
             };
+            const validatorCertUnion = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('证书_cert不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 actionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert',
                 actionKey: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert_key',
+                actionUnionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=union&certname=cert',
                 alipayForm: {
                     alipay_enabled: true,
                     private_key: '',
@@ -176,11 +194,25 @@
                     mer_id: '',
                 },
                 unionPayRules: {
-                    mer_id: [
+                    cert: [
                         {
-                            message: 'ID不能为空',
                             required: true,
                             trigger: 'blur',
+                            validator: validatorCertUnion,
+                        },
+                    ],
+                    key: [
+                        {
+                            message: '密钥不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    mer_id: [
+                        {
+                            required: true,
+                            trigger: 'change',
+                            validator: validatorUnion,
                         },
                     ],
                 },
@@ -563,9 +595,9 @@
                                     <row>
                                         <i-col span="18">
                                             <form-item label="证书_cert" prop="cert">
-                                                <upload :action="actionCert"
+                                                <upload :action="actionUnionCert"
                                                         :before-upload="uploadBefore"
-                                                        :format="['pem']"
+                                                        :format="['pfx']"
                                                         :headers="{
                                                             Authorization: `Bearer ${$store.state.token.access_token}`
                                                         }"
