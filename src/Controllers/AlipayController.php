@@ -29,8 +29,14 @@ class AlipayController extends Controller
      *
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      */
-    public function get(GetAlipayconfHandler $handler)
+    public function get(GetAlipayconfHandler $handler, Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required'
+        ], [
+            'name.required' => '参数name为必填参数'
+        ]);
+
         return $handler->toResponse()->generateHttpResponse();
     }
 

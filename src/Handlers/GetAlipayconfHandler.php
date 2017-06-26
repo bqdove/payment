@@ -62,6 +62,13 @@ class GetAlipayconfHandler extends DataHandler
 
     public function execute()
     {
-        $this->data();
+        dd(1);
+        dd($this->request->input('name'));
+        $data = $this->data();
+
+//        $name = $this->request->input('name');
+
+
+        return $this->withCode(200)->withData($name)->withMessage('获取信息成功');
     }
 }
