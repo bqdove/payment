@@ -22,6 +22,7 @@
             expandRow,
         },
         data() {
+            const self = this;
             const reg1 = /^\d{10}$/;
             const reg2 = /^\d{15}$/;
             const reg3 = /^\d{16}$/;
@@ -334,10 +335,12 @@
                     }
                 });
             },
+            changePage(page) {
+                console.log(page);
+            },
             getOrderBegin() {
                 return Date.parse(this.filterSearch.start);
             },
-            changePage() {},
             queryMessage() {
                 const self = this;
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/query').then(response => {
@@ -726,7 +729,7 @@
                         <div class="page">
                             <page :total="page.total"
                                   :page-size="page.per_page"
-                                  @on-change="changePage"
+                                  @on-change="changePage(page)"
                                   show-elevator></page>
                         </div>
                     </card>
