@@ -351,11 +351,56 @@
             },
             search() {
                 const self = this;
-                const filterSearchParam = {
-                    end: new Date(this.filterSearch.end).toLocaleString(),
-                    search: this.filterSearch.search,
-                    start: new Date(this.filterSearch.start).toLocaleString(),
-                };
+                let filterSearchParam;
+                if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: '',
+                        start: '',
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: this.filterSearch.search,
+                        start: '',
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end !== '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: '',
+                        start: '',
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: '',
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end !== '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: this.filterSearch.search,
+                        start: '',
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end === '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: this.filterSearch.search,
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end !== '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: '',
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: this.filterSearch.search,
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                }
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', filterSearchParam).then(response => {
                     const data = response.data.data;
                     this.orderData = data.data;
