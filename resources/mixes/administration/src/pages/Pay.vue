@@ -22,6 +22,14 @@
             expandRow,
         },
         data() {
+            const reg = /^\d{10}$/;
+            const validatorMch = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('商户ID不能为空'));
+                } else if (!reg.test(value)) {
+                    callback(new Error('商户ID必须为10位数字'));
+                }
+            };
             return {
                 actionCert: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert',
                 actionKey: 'http://pay.ibenchu.xyz:8080/api/multipay/upload?driver=wechat&certname=cert_key',
@@ -36,6 +44,11 @@
                         {
                             message: 'APP_ID不能为空',
                             required: true,
+                            trigger: 'blur',
+                        },
+                        {
+                            message: 'APP_ID必须为16位',
+                            min: 16,
                             trigger: 'blur',
                         },
                     ],
@@ -169,12 +182,45 @@
                             required: true,
                             trigger: 'blur',
                         },
+                        {
+                            message: 'APP_ID必须为18位字符串',
+                            len: 18,
+                            trigger: 'blur',
+                        },
                     ],
                     app_secret: [
                         {
                             message: 'APPSECRET不能为空',
                             required: true,
                             trigger: 'blur',
+                        },
+                    ],
+                    cert: [
+                        {
+                            message: '证书_cert不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    cert_key: [
+                        {
+                            message: '证书_Key不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    key: [
+                        {
+                            message: '商户密钥不能为空',
+                            required: true,
+                            trigger: 'blur',
+                        },
+                    ],
+                    mch_id: [
+                        {
+                            required: true,
+                            trigger: 'blur',
+                            validator: validatorMch,
                         },
                     ],
                 },
@@ -203,6 +249,14 @@
             },
             getOrderBegin() {
                 return Date.parse(this.filterSearch.start);
+            },
+            queryMessage() {
+                const self = this;
+                self.$http.post('http://pay.ibenchu.xyz:8080/api/query').then(response => {
+                    console.log(response);
+                }).finally(() => {
+                    self.loading = false;
+                });
             },
             search() {
                 const self = this;
@@ -306,7 +360,7 @@
                                         <i-col span="12">
                                             <form-item label="APP_ID" prop="app_id">
                                                 <i-input v-model="alipayForm.app_id"></i-input>
-                                                <a href="">点击此处获取</a>
+                                                <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -314,7 +368,7 @@
                                         <i-col span="12">
                                             <form-item label="公钥" prop="public_key">
                                                 <i-input v-model="alipayForm.public_key"></i-input>
-                                                <a href="">点击此处获取</a>
+                                                <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -322,7 +376,7 @@
                                         <i-col span="12">
                                             <form-item label="私钥" prop="private_key">
                                                 <i-input v-model="alipayForm.private_key"></i-input>
-                                                <a href="">点击此处获取</a>
+                                                <a @click="queryMessage">点击此处获取</a>
                                             </form-item>
                                         </i-col>
                                     </row>
@@ -373,18 +427,18 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="商户ID">
+                                            <form-item label="商户ID" prop="mch_id">
                                                 <i-input v-model="weChatForm.mch_id"></i-input>
                                                 <p class="tip">
                                                     请输入商户账号，如果没有
-                                                    <a href="">点击此处获取</a>
+                                                    <a>点击此处获取</a>
                                                 </p>
                                             </form-item>
                                         </i-col>
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="商户密钥">
+                                            <form-item label="商户密钥" prop="key">
                                                 <i-input v-model="weChatForm.key"></i-input>
                                                 <p class="tip">
                                                     API密钥，在微信商户平台中“账户设置”-“账户安全”-“设置API密钥”
@@ -394,7 +448,7 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="证书_cert">
+                                            <form-item label="证书_cert" prop="cert">
                                                 <upload :action="actionCert"
                                                         :before-upload="uploadBefore"
                                                         :format="['pem']"
@@ -416,7 +470,7 @@
                                     </row>
                                     <row>
                                         <i-col span="18">
-                                            <form-item label="证书_Key">
+                                            <form-item label="证书_Key"  prop="cert_key">
                                                 <upload :action="actionKey"
                                                         :before-upload="uploadBefore"
                                                         :format="['pem']"
