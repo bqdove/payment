@@ -25,10 +25,11 @@ class SetUnionpayconfHandler extends AbstractSetHandler
     /**
      * SetHandler constructor.
      *
-     * @param \Illuminate\Container\Container                         $container
+     * @param \Illuminate\Container\Container $container
      * @param \Notadd\Foundation\Setting\Contracts\SettingsRepository $settings
      */
-    public function __construct(Container $container, SettingsRepository $settings) {
+    public function __construct(Container $container, SettingsRepository $settings)
+    {
         parent::__construct($container);
         $this->settings = $settings;
     }
@@ -50,17 +51,17 @@ class SetUnionpayconfHandler extends AbstractSetHandler
      */
     public function execute()
     {
-        $this->settings->set('unionpay.enabled',  $this->request->input('enabled'));
+        $this->settings->set('unionpay.enabled', $this->request->input('enabled'));
 
-        $this->settings->set('unionpay.merId',$this->request->input('merId'));
+        $this->settings->set('unionpay.merId', $this->request->input('merId'));
 
-        $this->settings->set('unionpay.key',$this->request->input('key'));
+        $this->settings->set('unionpay.key', $this->request->input('key'));
 
-        $this->settings->set('unionpay.version','5.0');
+        $this->settings->set('unionpay.version', '5.0');
 
-        $this->settings->set('unionpay.signMethod','01');
+        $this->settings->set('unionpay.signMethod', '01');
 
-        $this->settings->set('unionpay.encoding','utf-8');
+        $this->settings->set('unionpay.encoding', 'utf-8');
 
         return true;
     }

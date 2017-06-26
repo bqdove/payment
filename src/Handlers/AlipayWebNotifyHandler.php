@@ -17,6 +17,7 @@ use Notadd\Multipay\Alipay;
 /*
  * Classs AlipayWebNotifyHandler
  */
+
 class AlipayWebNotifyHandler extends Handler
 {
     /**

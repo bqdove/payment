@@ -5,6 +5,7 @@
  * Date: 2017/5/24
  * Time: 11:54
  */
+
 namespace Notadd\Multipay\Handlers;
 
 use Illuminate\Container\Container;
@@ -41,19 +42,19 @@ class GetAlipayconfHandler extends DataHandler
     public function data()
     {
         return [
-            'alipay_enabled'=> $this->settings->get('alipay.alipay_enabled',false),
+            'alipay_enabled' => $this->settings->get('alipay.alipay_enabled', false),
 
-            'sign_type'=> $this->settings->get('alipay.sign_type'),
-            
+            'sign_type' => $this->settings->get('alipay.sign_type'),
+
             'version' => $this->settings->get('alipay.version'),
 
-            'app_id'=> $this->settings->get('alipay.app_id'),
+            'app_id' => $this->settings->get('alipay.app_id'),
 
-            'private_key'=> $this->settings->get('alipay.private_key'),
+            'private_key' => $this->settings->get('alipay.private_key'),
 
-            'public_key'=> $this->settings->get('alipay.public_key'),
-            
-            'input_charset'=> $this->settings->get('alipay.input_charset'),
+            'public_key' => $this->settings->get('alipay.public_key'),
+
+            'input_charset' => $this->settings->get('alipay.input_charset'),
         ];
     }
 

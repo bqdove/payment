@@ -15,6 +15,7 @@ use Illuminate\Container\Container;
 /*
  * Classs QueryHandler
  */
+
 class QueryHandler extends Handler
 {
     /**
@@ -32,15 +33,16 @@ class QueryHandler extends Handler
     /*
      * Execute Handler
      */
-    public function execute(){
+    public function execute()
+    {
         $data = $this->multipay->query();
         $result = ['data' => $data];
 
         if ($data) {
             $this->withCode(200)->withData($result)->withMessage('获取查询结果成功');
-        } elseif($data == 402) {
+        } elseif ($data == 402) {
             $this->withCode(402)->withError('缺少关键查询参数,详情请参见接口文档');
-        }else{
+        } else {
             $this->withCode(500)->withError('获取查询结果失败');
         }
     }

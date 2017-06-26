@@ -7,6 +7,7 @@
  */
 
 namespace Notadd\Multipay\Controllers;
+
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Notadd\Multipay\Handlers\CancelHandler;
 use Notadd\Multipay\Handlers\PayHandler;
@@ -14,7 +15,8 @@ use Notadd\Multipay\Handlers\QueryHandler;
 use Notadd\Multipay\Handlers\RefundHandler;
 
 
-class PayController extends Controller{
+class PayController extends Controller
+{
 
     /**
      * @var \Notadd\Multipay\Multipay

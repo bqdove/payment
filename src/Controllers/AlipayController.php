@@ -6,6 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:26
  */
+
 namespace Notadd\Multipay\Controllers;
 
 use Notadd\Foundation\Routing\Abstracts\Controller;
@@ -42,17 +43,17 @@ class AlipayController extends Controller
      * @throws \Exception
      */
 
-    public function set(SetAlipayconfHandler $handler,Request $request)
+    public function set(SetAlipayconfHandler $handler, Request $request)
     {
-        $this->validate($request,[
-            'app_id'=>'required|regex:/\w{16}/',
-            'public_key'=>'required',
-            'private_key'=>'required'
-        ],[
-            'app_id.required'=>'app_id不能为空',
-            'app_id.regex'=>'app_id必须为16位',
-            'public_key.required'=>'公钥为必填字段',
-            'private_key.required'=>'私钥为必填字段'
+        $this->validate($request, [
+            'app_id' => 'required|regex:/\w{16}/',
+            'public_key' => 'required',
+            'private_key' => 'required'
+        ], [
+            'app_id.required' => 'app_id不能为空',
+            'app_id.regex' => 'app_id必须为16位',
+            'public_key.required' => '公钥为必填字段',
+            'private_key.required' => '私钥为必填字段'
         ]);
         return $handler->toResponse()->generateHttpResponse();
     }
