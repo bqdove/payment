@@ -46,12 +46,12 @@ class AlipayController extends Controller
     public function set(SetAlipayconfHandler $handler, Request $request)
     {
         $this->validate($request, [
-            'app_id' => 'required|regex:/\w{16}/',
+            'app_id' => 'required|regex:/^[0-9]{16}/',
             'public_key' => 'required',
             'private_key' => 'required'
         ], [
             'app_id.required' => 'app_id不能为空',
-            'app_id.regex' => 'app_id必须为16位',
+            'app_id.regex' => 'app_id必须为16位数字',
             'public_key.required' => '公钥为必填字段',
             'private_key.required' => '私钥为必填字段'
         ]);
