@@ -772,9 +772,10 @@
                                  ref="orderList">
                         </i-table>
                         <div class="page">
-                            <page :total="page.total"
+                            <page :current="1"
+                                  :total="page.total"
                                   :page-size="page.per_page"
-                                  @on-change="changePage(page)"
+                                  @on-change="changePage"
                                   show-elevator></page>
                         </div>
                     </card>
