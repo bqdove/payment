@@ -25,6 +25,8 @@
             const reg1 = /^\d{10}$/;
             const reg2 = /^\d{15}$/;
             const reg3 = /^\d{16}$/;
+            const reg4 = /^[0-9a-zA-Z]{18}$/;
+            const reg5 = /^[0-9a-zA-Z]{32}$/;
             const validatorMch = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('商户ID不能为空'));
@@ -48,6 +50,33 @@
                     callback(new Error('APP_ID不能为空'));
                 } else if (!reg3.test(value)) {
                     callback(new Error('APP_ID必须为16位数字'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorWechatId = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('APP_ID不能为空'));
+                } else if (!reg4.test(value)) {
+                    callback(new Error('APP_ID必须为18位数字,字母组成的字符串(不含特殊字符)'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorAppSecret = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('APP_SECRET不能为空'));
+                } else if (!reg5.test(value)) {
+                    callback(new Error('APP_SECRET必须为32位数字,字母组成的字符串(不含特殊字符)'));
+                } else {
+                    callback();
+                }
+            };
+            const validatorWeChatKey = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('商户密钥不能为空'));
+                } else if (!reg5.test(value)) {
+                    callback(new Error('商户密钥必须为32位数字,字母组成的字符串(不含特殊字符)'));
                 } else {
                     callback();
                 }
@@ -241,21 +270,16 @@
                 weChatRules: {
                     app_id: [
                         {
-                            message: 'APP_ID不能为空',
                             required: true,
-                            trigger: 'blur',
-                        },
-                        {
-                            len: 18,
-                            message: 'APP_ID必须为18位字符串',
                             trigger: 'change',
+                            validator: validatorWechatId,
                         },
                     ],
                     app_secret: [
                         {
-                            message: 'APPSECRET不能为空',
                             required: true,
-                            trigger: 'blur',
+                            trigger: 'change',
+                            validator: validatorAppSecret,
                         },
                     ],
                     cert: [
@@ -274,14 +298,9 @@
                     ],
                     key: [
                         {
-                            message: '商户密钥不能为空',
                             required: true,
-                            trigger: 'blur',
-                        },
-                        {
-                            len: 32,
-                            message: '商户密钥必须为32位字符串',
                             trigger: 'change',
+                            validator: validatorWeChatKey,
                         },
                     ],
                     mch_id: [
@@ -509,7 +528,7 @@
                                     </row>
                                     <row>
                                         <i-col span="12">
-                                            <form-item label="APPSECRET" prop="app_secret">
+                                            <form-item label="APP_SECRET" prop="app_secret">
                                                 <i-input v-model="weChatForm.app_secret"></i-input>
                                                 <p class="tip">
                                                     在微信公众平台中“开发者中心”栏目可以产看到
