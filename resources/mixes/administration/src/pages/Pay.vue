@@ -10,6 +10,7 @@
                 next(vm => {
                     vm.orderData = data.data;
                     vm.page.total = data.total;
+                    vm.current_page = data.current_page;
                     vm.page.per_page = data.per_page;
                     vm.page.last_page = data.last_page;
                     vm.page.to = data.to;
@@ -210,6 +211,7 @@
                     },
                 ],
                 page: {
+                    current_page: 1,
                     from: 1,
                     last_page: 0,
                     per_page: 0,
@@ -392,6 +394,7 @@
                     const data = response.data.data;
                     this.orderData = data.data;
                     this.page.total = data.total;
+                    this.page.current_page = data.current_page;
                     this.page.per_page = data.per_page;
                     this.page.last_page = data.last_page;
                     this.page.to = data.to;
@@ -411,6 +414,7 @@
                 });
             },
             search() {
+                injection.loading.start();
                 const self = this;
                 let filterSearchParam;
                 if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
@@ -465,10 +469,12 @@
                 self.$http.post('http://pay.ibenchu.xyz:8080/api/multipay/order', filterSearchParam).then(response => {
                     const data = response.data.data;
                     this.orderData = data.data;
+                    this.page.current_page = 1;
                     this.page.total = data.total;
                     this.page.per_page = data.per_page;
                     this.page.last_page = data.last_page;
                     this.page.to = data.to;
+                    injection.loading.finish();
                 }).finally(() => {
                     self.loading = false;
                 });
@@ -819,7 +825,7 @@
                                         <li class="store-body-header-right">
                                             <i-input v-model="filterSearch.search" placeholder="请输入关键词进行搜索">
                                                 <span slot="prepend" style="width: 100px;">商户单号</span>
-                                                <i-button slot="append" type="primary" @click.native="search">搜索</i-button>
+                                                <i-button slot="append" type="primary" @click.native="search()">搜索</i-button>
                                             </i-input>
                                         </li>
                                     </ul>
