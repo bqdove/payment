@@ -210,6 +210,7 @@
                     },
                 ],
                 page: {
+                    from: 1,
                     last_page: 0,
                     per_page: 0,
                     to: 0,
@@ -336,7 +337,67 @@
                 });
             },
             changePage(page) {
-                console.log(page);
+                const self = this;
+                let filterSearchParam;
+                if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: '',
+                        start: '',
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end === '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: this.filterSearch.search,
+                        start: '',
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end !== '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: '',
+                        start: '',
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end === '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: '',
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else if (this.filterSearch.start === '' && this.filterSearch.end !== '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: this.filterSearch.search,
+                        start: '',
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end === '' && this.filterSearch.search !== '') {
+                    filterSearchParam = {
+                        end: '',
+                        search: this.filterSearch.search,
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else if (this.filterSearch.start !== '' && this.filterSearch.end !== '' && this.filterSearch.search === '') {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: '',
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                } else {
+                    filterSearchParam = {
+                        end: new Date(this.filterSearch.end).toLocaleString(),
+                        search: this.filterSearch.search,
+                        start: new Date(this.filterSearch.start).toLocaleString(),
+                    };
+                }
+                self.$http.post(`http://pay.ibenchu.xyz:8080/api/multipay/order?page=${page}`, filterSearchParam).then(response => {
+                    const data = response.data.data;
+                    this.orderData = data.data;
+                    this.page.total = data.total;
+                    this.page.per_page = data.per_page;
+                    this.page.last_page = data.last_page;
+                    this.page.to = data.to;
+                }).finally(() => {
+                    self.loading = false;
+                });
             },
             getOrderBegin() {
                 return Date.parse(this.filterSearch.start);
