@@ -13,7 +13,6 @@ use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Omnipay\Omnipay;
 use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Notadd\Multipay\Models\Order;
-use Illuminate\Support\Facades\Log;
 
 class Alipay implements Payment
 {
