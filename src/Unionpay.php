@@ -14,7 +14,7 @@ use Omnipay\Omnipay;
 use Notadd\Multipay\Models\Order;
 
 
-class Unionpay
+class Unionpay implements Payment
 {
     protected $settings;
     protected $gateway;

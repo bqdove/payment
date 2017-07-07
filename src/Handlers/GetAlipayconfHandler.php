@@ -73,6 +73,6 @@ class GetAlipayconfHandler extends DataHandler
 
     public function execute()
     {
-
+        $this->data();
     }
 }

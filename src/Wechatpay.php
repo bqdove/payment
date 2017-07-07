@@ -17,7 +17,7 @@ use Notadd\Multipay\Models\Order;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 
-class Wechatpay
+class Wechatpay implements Payment
 {
     protected $settings;
     protected $gateway;

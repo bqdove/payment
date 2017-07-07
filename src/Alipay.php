@@ -15,7 +15,7 @@ use Notadd\Multipay\Handlers\GetAlipayconfHandler;
 use Notadd\Multipay\Models\Order;
 use Illuminate\Support\Facades\Log;
 
-class Alipay
+class Alipay implements Payment
 {
     /**
      * @var \Notadd\Foundation\Setting\Contracts\SettingsRepository
@@ -187,15 +187,15 @@ class Alipay
     /**
      * 交易撤销接口
      */
-    public function cancel(Array $para)
+    public function cancel()
     {
-        $request = $this->gateway->cancel();
-
-        $request->setBizContent($para);
-
-        $response = $request->send();
-
-        dd($response->data()['alipay_trade_refund_response']);//get cancel information
+//        $request = $this->gateway->cancel();
+//
+//        $request->setBizContent($para);
+//
+//        $response = $request->send();
+//
+//        dd($response->data()['alipay_trade_refund_response']);//get cancel information
     }
 
 }
